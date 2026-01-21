@@ -17,3 +17,6 @@ Thumbs.db
 node_modules/
 __pycache__/
 *.pyc
+
+# 무관한 프로젝트
+crash_detection_system/
