@@ -1,0 +1,19 @@
+# 환경 변수
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 의존성
+node_modules/
+__pycache__/
+*.pyc

@@ -1,0 +1,10 @@
+2026-01-21 20:16:04,823 - SignalMailerSystem - INFO - ============================================================
+2026-01-21 20:16:04,824 - SignalMailerSystem - INFO - 신호 확인 시작
+2026-01-21 20:16:04,824 - SignalMailerSystem - INFO - ============================================================
+2026-01-21 20:16:05,867 - SignalMailerSystem - INFO - 신호 상태: DANGER
+2026-01-21 20:16:05,867 - SignalMailerSystem - INFO - 이전 상태: None
+2026-01-21 20:16:05,867 - SignalMailerSystem - INFO - 상태 변화: False
+2026-01-21 20:16:05,868 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-21 20:16:05,868 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
+2026-01-21 20:16:05,868 - SignalMailerSystem - INFO - 신호 확인 완료
+
