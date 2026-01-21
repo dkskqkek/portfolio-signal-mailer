@@ -9,11 +9,11 @@ email:
   # Gmail의 경우 "앱 비밀번호" 생성 필요: https://myaccount.google.com/apppasswords
   smtp_server: "smtp.gmail.com"
   smtp_port: 587
-  sender_email: "your_email@gmail.com"  # 수정 필요
-  sender_password: "your_app_password"   # 수정 필요 (2FA 앱 비밀번호)
+  sender_email: "gamjatangjo@gmail.com"
+  sender_password: "skekcgozubcmjjqq"
   
   # 수신자 설정
-  recipient_email: "your_email@gmail.com"  # 수정 필요
+  recipient_email: "gamjatangjo@gmail.com"
   
   # 이메일 제목/본문 템플릿
   subject_template: "[포트폴리오 신호] QQQ->XLP 전환 {status}"

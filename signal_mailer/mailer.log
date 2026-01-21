@@ -8,3 +8,34 @@
 2026-01-21 20:16:05,868 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
 2026-01-21 20:16:05,868 - SignalMailerSystem - INFO - 신호 확인 완료
 
+2026-01-21 20:38:13,216 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-21 20:38:15,390 - MailerService - ERROR - 이메일 발송 실패: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-c5edf32d68asm14326661a12.18 - gsmtp')
+2026-01-21 20:39:06,870 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-21 20:39:09,451 - MailerService - ERROR - 이메일 발송 실패: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-353032f5e46sm855367a91.7 - gsmtp')
+2026-01-21 20:45:51,380 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-21 20:45:54,533 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:17:17,730 - MailerService - ERROR - config.yaml의 이메일 설정을 완료하세요.
+2026-01-22 00:20:54,803 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:20:54,837 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 00:31:45,743 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:31:45,747 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 00:40:14,520 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:40:14,524 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 00:46:56,672 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:46:56,676 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 00:48:06,165 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:48:06,169 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 00:49:03,336 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 00:49:03,339 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 01:01:00,155 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 01:01:00,159 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 01:06:10,463 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 01:06:10,468 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 01:14:53,038 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 01:14:53,042 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 01:28:43,761 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 01:28:43,765 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 01:36:23,227 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 01:36:23,231 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 01:55:23,342 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 01:55:23,345 - MailerService - INFO - 신호 이력 저장: DANGER
