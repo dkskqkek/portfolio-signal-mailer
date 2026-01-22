@@ -14,8 +14,7 @@ from typing import Dict, Tuple, Optional
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+# matplotlib and seaborn will be imported lazily in visualization methods
 
 # Custom modules
 sys.path.insert(0, str(Path(__file__).parent))
@@ -354,6 +353,10 @@ class CrashDetectionPipeline:
         logger.info("="*60)
         
         try:
+            # Lazy import visualization libraries
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+            
             os.makedirs(output_dir, exist_ok=True)
             
             # Figure 1: Cumulative Returns
