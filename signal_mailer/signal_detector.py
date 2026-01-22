@@ -2,7 +2,6 @@
 import pandas as pd
 import numpy as np
 import yfinance as yf
-import requests
 from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
@@ -11,18 +10,14 @@ class SignalDetector:
     """QQQ->XLP 전환 신호를 감지하는 클래스"""
     
     def __init__(self):
-        # GitHub Actions 등 가상 환경에서의 차단을 피하기 위해 User-Agent 설정
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
-        })
-        
-        self.spy = yf.Ticker("SPY", session=self.session)
-        self.schd = yf.Ticker("SCHD", session=self.session)
-        self.qqq_ticker = yf.Ticker("QQQ", session=self.session)
-        self.xlp_ticker = yf.Ticker("XLP", session=self.session)
-        self.kospi200 = yf.Ticker("^KS200", session=self.session)
-        self.gld_ticker = yf.Ticker("GLD", session=self.session)
+        # yfinance 최신 버전은 자체적으로 curl_cffi 세션을 관리합니다
+        # 커스텀 세션을 전달하면 오류가 발생하므로 제거
+        self.spy = yf.Ticker("SPY")
+        self.schd = yf.Ticker("SCHD")
+        self.qqq_ticker = yf.Ticker("QQQ")
+        self.xlp_ticker = yf.Ticker("XLP")
+        self.kospi200 = yf.Ticker("^KS200")
+        self.gld_ticker = yf.Ticker("GLD")
         
     def fetch_data(self, days_back=300):
         """최근 데이터 수집"""
