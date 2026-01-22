@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-01-22T14:34:21.081302",
+  "ticker": "SPY",
+  "period": {
+    "start": "2020-01-01",
+    "end": "2026-01-22"
+  },
+  "backtest_results": {
+    "total_return": 93.5736359975403,
+    "benchmark_return": 130.23257816504366,
+    "cagr": 11.528550901288149,
+    "benchmark_cagr": 14.77010319894756,
+    "max_drawdown": -20.352860400694222,
+    "sharpe_ratio": 1.0135955950058506,
+    "sortino_ratio": 1.1327964476407528,
+    "win_rate": 41.157133464825776
+  },
+  "data_summary": {
+    "total_rows": 1521,
+    "date_range": "2020-01-02 00:00:00 to 2026-01-21 00:00:00",
+    "close_price_range": "205.50 ~ 695.16"
+  },
+  "signal_summary": {
+    "total_signals": 1521,
+    "strong_sell": 217,
+    "sell": 199,
+    "neutral": 1105,
+    "buy": 0,
+    "strong_buy": 0,
+    "signal_explanation": {
+      "neutral_reason": "All signals suppressed by ADX filter (weak trend) OR no sell conditions met",
+      "adx_threshold": "< 20 = Weak Trend (suppress signals)",
+      "crisis_threshold": "HMM State = 2 AND RSI < 45",
+      "normal_threshold": "Condition A (RSI spike down) AND Condition C (VIX > 30)"
+    }
+  }
+}

@@ -1,0 +1,3 @@
+Performance Comparison Report
+Basic Only: Final $119,787, CAGR 4.16%, MDD -16.63%
+ML Enhanced: Final $212,960, CAGR 18.52%, MDD -18.76%

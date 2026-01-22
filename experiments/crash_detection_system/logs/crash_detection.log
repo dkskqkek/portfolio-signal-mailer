@@ -3480,3 +3480,1387 @@ Name: count, dtype: int64
 2026-01-22 01:55:20,286 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
 2026-01-22 01:55:20,286 - main - INFO - ======================================================================
 2026-01-22 01:55:23,345 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 12:10:14,747 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 12:10:14,748 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 12:10:14,748 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 12:10:14,748 - main - INFO - CrashDetectionPipeline initialized: SPY (2021-01-23 to 2026-01-22)
+2026-01-22 12:10:14,748 - main - INFO - 
+======================================================================
+2026-01-22 12:10:14,748 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 12:10:14,748 - main - INFO - ======================================================================
+2026-01-22 12:10:14,748 - main - INFO - ============================================================
+2026-01-22 12:10:14,749 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 12:10:14,749 - main - INFO - ============================================================
+2026-01-22 12:10:14,749 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2021-01-23 to 2026-01-22)
+2026-01-22 12:10:14,749 - data_fetcher - INFO - Fetching SPY data from 2021-01-23 to 2026-01-22
+2026-01-22 12:10:15,224 - data_fetcher - INFO - Successfully fetched 1254 rows for SPY
+2026-01-22 12:10:15,224 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 12:10:15,224 - data_fetcher - INFO - Fetching VIX and VVIX data from 2021-01-23 to 2026-01-22
+2026-01-22 12:10:15,600 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 12:10:15,600 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 12:10:15,600 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 12:10:16,028 - data_fetcher - INFO - VIX proxy created with shape: (1230, 2)
+2026-01-22 12:10:16,028 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 12:10:16,841 - data_fetcher - INFO - Credit spread proxy computed, shape: (1254,)
+2026-01-22 12:10:16,841 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 12:10:17,308 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 12:10:17,720 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 12:10:18,179 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 12:10:18,669 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 12:10:19,118 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 12:10:19,484 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 12:10:19,922 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 12:10:20,351 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 12:10:20,798 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 12:10:21,248 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 12:10:21,249 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 12:10:21,252 - data_fetcher - WARNING - Remaining NaN values after filling: 1254
+2026-01-22 12:10:21,253 - data_fetcher - INFO - Comprehensive dataset created: shape=(1254, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 12:10:21,253 - main - INFO - Data shape: (1254, 9)
+2026-01-22 12:10:21,253 - main - INFO - Date range: 2021-01-25 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 12:10:21,254 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 12:10:21,254 - signal_processor - INFO - Realized volatility computed. Shape: (1254,)
+2026-01-22 12:10:21,254 - main - INFO - Basic indicators computed
+2026-01-22 12:10:21,255 - main - INFO - Returns mean: 0.000517, std: 0.010768
+2026-01-22 12:10:21,255 - main - INFO - Volatility mean: 0.154475
+2026-01-22 12:10:21,256 - main - INFO - NaN count after preparation: 1275
+2026-01-22 12:10:21,256 - main - WARNING - Remaining NaN values: 1275
+2026-01-22 12:10:21,257 - main - INFO - NaN values after filling: 1254
+2026-01-22 12:10:21,257 - main - INFO - ============================================================
+2026-01-22 12:10:21,257 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 12:10:21,257 - main - INFO - ============================================================
+2026-01-22 12:10:21,257 - main - INFO - Applying Kalman Filter...
+2026-01-22 12:10:28,361 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 12:10:28,656 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1254,)
+2026-01-22 12:10:28,656 - main - INFO - Training HMM for regime detection...
+2026-01-22 12:10:30,350 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 12:10:30,351 - signal_processor - INFO - Training data shape: (1254, 2)
+2026-01-22 12:10:34,033 - signal_processor - INFO - HMM training complete
+2026-01-22 12:10:34,033 - signal_processor - INFO - Transition matrix:
+[[7.19353567e-04 9.99279207e-01 1.43983957e-06]
+ [9.82536550e-01 3.77803313e-03 1.36854174e-02]
+ [3.78934545e-03 1.23570043e-02 9.83853650e-01]]
+2026-01-22 12:10:34,033 - signal_processor - INFO - Means:
+[[1.09565582e-03 1.16987302e-01]
+ [1.94051572e-04 1.17786448e-01]
+ [2.17473242e-04 2.41570839e-01]]
+2026-01-22 12:10:34,034 - main - INFO - Predicting regimes...
+2026-01-22 12:10:34,034 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 12:10:34,037 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 12:10:34,039 - signal_processor - INFO - State distribution:
+0    437
+1    443
+2    374
+Name: count, dtype: int64
+2026-01-22 12:10:34,039 - main - INFO - Calculating technical indicators...
+2026-01-22 12:10:34,039 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 12:10:34,042 - signal_processor - INFO - RSI calculation complete. Mean: 79.87, Std: 38.58
+2026-01-22 12:10:34,042 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 12:10:34,046 - signal_processor - INFO - ADX calculation complete. Shape: (1254,)
+2026-01-22 12:10:34,046 - signal_processor - INFO - ADX mean: 33.20, std: 12.96
+2026-01-22 12:10:34,046 - main - INFO - Generating hybrid signals...
+2026-01-22 12:10:34,046 - strategy - INFO - Generating hybrid signals
+2026-01-22 12:10:34,173 - strategy - INFO - Signals generated: 193 STRONG_SELL, 141 SELL
+2026-01-22 12:10:34,174 - main - INFO - Signal generation complete:
+2026-01-22 12:10:34,175 - main - INFO - Signal distribution:
+signal
+-2    193
+-1    141
+ 0    920
+Name: count, dtype: int64
+2026-01-22 12:10:34,175 - main - INFO - ============================================================
+2026-01-22 12:10:34,175 - main - INFO - STAGE 3: Backtesting
+2026-01-22 12:10:34,175 - main - INFO - ============================================================
+2026-01-22 12:10:34,178 - main - INFO - Backtest Results:
+2026-01-22 12:10:34,178 - main - INFO -   Total Return: 57.45% (Benchmark: 91.02%)
+2026-01-22 12:10:34,179 - main - INFO -   CAGR: 9.53% (Benchmark: 13.85%)
+2026-01-22 12:10:34,179 - main - INFO -   Max Drawdown: -21.03%
+2026-01-22 12:10:34,179 - main - INFO -   Sharpe Ratio: 0.874
+2026-01-22 12:10:34,179 - main - INFO -   Sortino Ratio: 0.997
+2026-01-22 12:10:34,179 - main - INFO -   Win Rate: 41.07%
+2026-01-22 12:10:34,179 - main - WARNING - [WARN] Sortino Ratio target not met (current: 0.997)
+2026-01-22 12:10:34,180 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 12:10:34,180 - main - INFO - ============================================================
+2026-01-22 12:10:34,180 - main - INFO - STAGE 4: Visualization
+2026-01-22 12:10:34,180 - main - INFO - ============================================================
+2026-01-22 12:10:35,358 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 12:10:35,943 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 12:10:36,304 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 12:10:36,320 - main - INFO - All visualizations saved
+2026-01-22 12:10:36,320 - main - INFO - ============================================================
+2026-01-22 12:10:36,321 - main - INFO - STAGE 5: Report Generation
+2026-01-22 12:10:36,321 - main - INFO - ============================================================
+2026-01-22 12:10:36,322 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 12:10:36,323 - main - INFO - 
+======================================================================
+2026-01-22 12:10:36,324 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 12:10:36,324 - main - INFO - ======================================================================
+2026-01-22 12:10:39,841 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 13:13:52,969 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 13:13:52,969 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 13:13:52,970 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 13:13:52,970 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 13:13:52,970 - main - INFO - 
+======================================================================
+2026-01-22 13:13:52,970 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 13:13:52,970 - main - INFO - ======================================================================
+2026-01-22 13:13:52,970 - main - INFO - ============================================================
+2026-01-22 13:13:52,970 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 13:13:52,970 - main - INFO - ============================================================
+2026-01-22 13:13:52,971 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 13:13:52,971 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 13:13:53,453 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 13:13:53,454 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 13:13:53,454 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 13:13:53,913 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 13:13:53,913 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 13:13:53,914 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 13:13:54,400 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 13:13:54,400 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 13:13:55,373 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 13:13:55,373 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 13:13:55,876 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 13:13:56,443 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 13:13:56,892 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 13:13:57,315 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 13:13:57,769 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 13:13:58,208 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 13:13:58,835 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 13:13:59,350 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 13:13:59,821 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 13:14:00,330 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 13:14:00,331 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 13:14:00,334 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 13:14:00,336 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 13:14:00,336 - main - INFO - Data shape: (1521, 9)
+2026-01-22 13:14:00,336 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 13:14:00,336 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 13:14:00,337 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 13:14:00,337 - main - INFO - Basic indicators computed
+2026-01-22 13:14:00,337 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 13:14:00,338 - main - INFO - Volatility mean: 0.173120
+2026-01-22 13:14:00,338 - main - INFO - NaN count after preparation: 1542
+2026-01-22 13:14:00,338 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 13:14:00,339 - main - INFO - NaN values after filling: 1521
+2026-01-22 13:14:00,339 - main - INFO - ============================================================
+2026-01-22 13:14:00,339 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 13:14:00,339 - main - INFO - ============================================================
+2026-01-22 13:14:00,340 - main - INFO - Applying Kalman Filter...
+2026-01-22 13:14:04,261 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 13:14:04,526 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 13:14:04,526 - main - INFO - Training HMM for regime detection...
+2026-01-22 13:14:04,758 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 13:14:04,758 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 13:14:07,500 - signal_processor - INFO - HMM training complete
+2026-01-22 13:14:07,501 - signal_processor - INFO - Transition matrix:
+[[1.28513764e-03 9.98714857e-01 5.08646559e-09]
+ [9.77216411e-01 1.06297438e-02 1.21538456e-02]
+ [1.12911249e-02 2.27963428e-03 9.86429241e-01]]
+2026-01-22 13:14:07,501 - signal_processor - INFO - Means:
+[[ 1.22714815e-03  1.21127889e-01]
+ [ 3.94339591e-04  1.21287646e-01]
+ [-4.53275513e-05  2.86199433e-01]]
+2026-01-22 13:14:07,501 - main - INFO - Predicting regimes...
+2026-01-22 13:14:07,502 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 13:14:07,504 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 13:14:07,506 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 13:14:07,506 - main - INFO - Calculating technical indicators...
+2026-01-22 13:14:07,506 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 13:14:07,509 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 13:14:07,509 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 13:14:07,512 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 13:14:07,512 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 13:14:07,512 - main - INFO - Generating hybrid signals...
+2026-01-22 13:14:07,512 - strategy - INFO - Generating hybrid signals
+2026-01-22 13:14:07,638 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 13:14:07,639 - main - INFO - Signal generation complete:
+2026-01-22 13:14:07,640 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 13:14:07,640 - main - INFO - ============================================================
+2026-01-22 13:14:07,640 - main - INFO - STAGE 3: Backtesting
+2026-01-22 13:14:07,640 - main - INFO - ============================================================
+2026-01-22 13:14:07,642 - main - INFO - Backtest Results:
+2026-01-22 13:14:07,642 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 13:14:07,643 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 13:14:07,643 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 13:14:07,643 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 13:14:07,643 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 13:14:07,643 - main - INFO -   Win Rate: 41.16%
+2026-01-22 13:14:07,643 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 13:14:07,643 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 13:14:07,643 - main - INFO - ============================================================
+2026-01-22 13:14:07,644 - main - INFO - STAGE 4: Visualization
+2026-01-22 13:14:07,644 - main - INFO - ============================================================
+2026-01-22 13:14:08,151 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 13:14:08,531 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 13:14:08,802 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 13:14:08,816 - main - INFO - All visualizations saved
+2026-01-22 13:14:08,816 - main - INFO - ============================================================
+2026-01-22 13:14:08,816 - main - INFO - STAGE 5: Report Generation
+2026-01-22 13:14:08,817 - main - INFO - ============================================================
+2026-01-22 13:14:08,818 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 13:14:08,819 - main - INFO - 
+======================================================================
+2026-01-22 13:14:08,819 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 13:14:08,819 - main - INFO - ======================================================================
+2026-01-22 13:17:38,808 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 13:17:38,808 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 13:17:38,808 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 13:17:38,808 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 13:17:38,808 - main - INFO - 
+======================================================================
+2026-01-22 13:17:38,808 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 13:17:38,809 - main - INFO - ======================================================================
+2026-01-22 13:17:38,809 - main - INFO - ============================================================
+2026-01-22 13:17:38,809 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 13:17:38,809 - main - INFO - ============================================================
+2026-01-22 13:17:38,809 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 13:17:38,809 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 13:17:39,293 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 13:17:39,293 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 13:17:39,293 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 13:17:39,651 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 13:17:39,651 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 13:17:39,652 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 13:17:40,165 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 13:17:40,165 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 13:17:41,278 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 13:17:41,279 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 13:17:41,758 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 13:17:42,243 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 13:17:42,693 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 13:17:43,133 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 13:17:43,568 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 13:17:44,010 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 13:17:44,493 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 13:17:45,006 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 13:17:45,476 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 13:17:46,000 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 13:17:46,001 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 13:17:46,003 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 13:17:46,004 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 13:17:46,004 - main - INFO - Data shape: (1521, 9)
+2026-01-22 13:17:46,004 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 13:17:46,005 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 13:17:46,005 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 13:17:46,006 - main - INFO - Basic indicators computed
+2026-01-22 13:17:46,006 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 13:17:46,006 - main - INFO - Volatility mean: 0.173120
+2026-01-22 13:17:46,007 - main - INFO - NaN count after preparation: 1542
+2026-01-22 13:17:46,007 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 13:17:46,007 - main - INFO - NaN values after filling: 1521
+2026-01-22 13:17:46,008 - main - INFO - ============================================================
+2026-01-22 13:17:46,008 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 13:17:46,008 - main - INFO - ============================================================
+2026-01-22 13:17:46,008 - main - INFO - Applying Kalman Filter...
+2026-01-22 13:17:46,671 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 13:17:46,928 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 13:17:46,928 - main - INFO - Training HMM for regime detection...
+2026-01-22 13:17:47,065 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 13:17:47,066 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 13:17:49,368 - signal_processor - INFO - HMM training complete
+2026-01-22 13:17:49,369 - signal_processor - INFO - Transition matrix:
+[[1.28509399e-03 9.98714901e-01 5.08483551e-09]
+ [9.77216583e-01 1.06295890e-02 1.21538279e-02]
+ [1.12907704e-02 2.27998737e-03 9.86429242e-01]]
+2026-01-22 13:17:49,369 - signal_processor - INFO - Means:
+[[ 1.22716426e-03  1.21127797e-01]
+ [ 3.94325845e-04  1.21287581e-01]
+ [-4.53293138e-05  2.86199625e-01]]
+2026-01-22 13:17:49,369 - main - INFO - Predicting regimes...
+2026-01-22 13:17:49,369 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 13:17:49,371 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 13:17:49,372 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 13:17:49,372 - main - INFO - Calculating technical indicators...
+2026-01-22 13:17:49,372 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 13:17:49,374 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 13:17:49,374 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 13:17:49,377 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 13:17:49,377 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 13:17:49,378 - main - INFO - Generating hybrid signals...
+2026-01-22 13:17:49,378 - strategy - INFO - Generating hybrid signals
+2026-01-22 13:17:49,504 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 13:17:49,504 - main - INFO - Signal generation complete:
+2026-01-22 13:17:49,505 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 13:17:49,506 - main - INFO - ============================================================
+2026-01-22 13:17:49,506 - main - INFO - STAGE 3: Backtesting
+2026-01-22 13:17:49,506 - main - INFO - ============================================================
+2026-01-22 13:17:49,508 - main - INFO - Backtest Results:
+2026-01-22 13:17:49,508 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 13:17:49,508 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 13:17:49,508 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 13:17:49,508 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 13:17:49,508 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 13:17:49,509 - main - INFO -   Win Rate: 41.16%
+2026-01-22 13:17:49,509 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 13:17:49,509 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 13:17:49,509 - main - INFO - ============================================================
+2026-01-22 13:17:49,509 - main - INFO - STAGE 4: Visualization
+2026-01-22 13:17:49,509 - main - INFO - ============================================================
+2026-01-22 13:17:49,989 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 13:17:50,371 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 13:17:50,647 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 13:17:50,663 - main - INFO - All visualizations saved
+2026-01-22 13:17:50,663 - main - INFO - ============================================================
+2026-01-22 13:17:50,663 - main - INFO - STAGE 5: Report Generation
+2026-01-22 13:17:50,663 - main - INFO - ============================================================
+2026-01-22 13:17:50,664 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 13:17:50,665 - main - INFO - 
+======================================================================
+2026-01-22 13:17:50,665 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 13:17:50,665 - main - INFO - ======================================================================
+2026-01-22 13:31:15,284 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 13:31:15,285 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 13:31:15,285 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 13:31:15,285 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 13:31:15,285 - main - INFO - 
+======================================================================
+2026-01-22 13:31:15,285 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 13:31:15,285 - main - INFO - ======================================================================
+2026-01-22 13:31:15,285 - main - INFO - ============================================================
+2026-01-22 13:31:15,285 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 13:31:15,286 - main - INFO - ============================================================
+2026-01-22 13:31:15,286 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 13:31:15,286 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 13:31:15,747 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 13:31:15,747 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 13:31:15,748 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 13:31:16,128 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 13:31:16,129 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 13:31:16,129 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 13:31:16,482 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 13:31:16,482 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 13:31:17,458 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 13:31:17,459 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 13:31:17,959 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 13:31:18,428 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 13:31:18,858 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 13:31:19,215 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 13:31:19,709 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 13:31:20,241 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 13:31:20,743 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 13:31:21,299 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 13:31:21,754 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 13:31:22,271 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 13:31:22,271 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 13:31:22,273 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 13:31:22,274 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 13:31:22,274 - main - INFO - Data shape: (1521, 9)
+2026-01-22 13:31:22,274 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 13:31:22,275 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 13:31:22,275 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 13:31:22,276 - main - INFO - Basic indicators computed
+2026-01-22 13:31:22,276 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 13:31:22,276 - main - INFO - Volatility mean: 0.173120
+2026-01-22 13:31:22,276 - main - INFO - NaN count after preparation: 1542
+2026-01-22 13:31:22,277 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 13:31:22,277 - main - INFO - NaN values after filling: 1521
+2026-01-22 13:31:22,277 - main - INFO - ============================================================
+2026-01-22 13:31:22,278 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 13:31:22,278 - main - INFO - ============================================================
+2026-01-22 13:31:22,278 - main - INFO - Applying Kalman Filter...
+2026-01-22 13:31:22,939 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 13:31:23,217 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 13:31:23,217 - main - INFO - Training HMM for regime detection...
+2026-01-22 13:31:23,381 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 13:31:23,381 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 13:31:25,674 - signal_processor - INFO - HMM training complete
+2026-01-22 13:31:25,675 - signal_processor - INFO - Transition matrix:
+[[1.28515081e-03 9.98714844e-01 5.08400885e-09]
+ [9.77216331e-01 1.06299049e-02 1.21537642e-02]
+ [1.12906747e-02 2.27998890e-03 9.86429336e-01]]
+2026-01-22 13:31:25,675 - signal_processor - INFO - Means:
+[[ 1.22715962e-03  1.21127736e-01]
+ [ 3.94330589e-04  1.21287514e-01]
+ [-4.53280691e-05  2.86199394e-01]]
+2026-01-22 13:31:25,675 - main - INFO - Predicting regimes...
+2026-01-22 13:31:25,676 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 13:31:25,678 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 13:31:25,678 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 13:31:25,679 - main - INFO - Calculating technical indicators...
+2026-01-22 13:31:25,679 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 13:31:25,680 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 13:31:25,680 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 13:31:25,684 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 13:31:25,684 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 13:31:25,684 - main - INFO - Generating hybrid signals...
+2026-01-22 13:31:25,684 - strategy - INFO - Generating hybrid signals
+2026-01-22 13:31:25,806 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 13:31:25,806 - main - INFO - Signal generation complete:
+2026-01-22 13:31:25,807 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 13:31:25,807 - main - INFO - ============================================================
+2026-01-22 13:31:25,807 - main - INFO - STAGE 3: Backtesting
+2026-01-22 13:31:25,807 - main - INFO - ============================================================
+2026-01-22 13:31:25,809 - main - INFO - Backtest Results:
+2026-01-22 13:31:25,810 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 13:31:25,810 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 13:31:25,810 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 13:31:25,810 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 13:31:25,810 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 13:31:25,810 - main - INFO -   Win Rate: 41.16%
+2026-01-22 13:31:25,810 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 13:31:25,810 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 13:31:25,811 - main - INFO - ============================================================
+2026-01-22 13:31:25,811 - main - INFO - STAGE 4: Visualization
+2026-01-22 13:31:25,811 - main - INFO - ============================================================
+2026-01-22 13:31:26,299 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 13:31:26,670 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 13:31:26,932 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 13:31:26,946 - main - INFO - All visualizations saved
+2026-01-22 13:31:26,946 - main - INFO - ============================================================
+2026-01-22 13:31:26,946 - main - INFO - STAGE 5: Report Generation
+2026-01-22 13:31:26,946 - main - INFO - ============================================================
+2026-01-22 13:31:26,948 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 13:31:26,948 - main - INFO - 
+======================================================================
+2026-01-22 13:31:26,948 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 13:31:26,948 - main - INFO - ======================================================================
+2026-01-22 13:52:57,210 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 13:52:57,210 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 13:52:57,211 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 13:52:57,211 - main - INFO - CrashDetectionPipeline initialized: SPY (2021-01-23 to 2026-01-22)
+2026-01-22 13:52:57,211 - main - INFO - 
+======================================================================
+2026-01-22 13:52:57,211 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 13:52:57,211 - main - INFO - ======================================================================
+2026-01-22 13:52:57,211 - main - INFO - ============================================================
+2026-01-22 13:52:57,211 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 13:52:57,212 - main - INFO - ============================================================
+2026-01-22 13:52:57,212 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2021-01-23 to 2026-01-22)
+2026-01-22 13:52:57,212 - data_fetcher - INFO - Fetching SPY data from 2021-01-23 to 2026-01-22
+2026-01-22 13:52:57,647 - data_fetcher - INFO - Successfully fetched 1254 rows for SPY
+2026-01-22 13:52:57,647 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 13:52:57,647 - data_fetcher - INFO - Fetching VIX and VVIX data from 2021-01-23 to 2026-01-22
+2026-01-22 13:52:58,009 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 13:52:58,010 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 13:52:58,010 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 13:52:58,455 - data_fetcher - INFO - VIX proxy created with shape: (1230, 2)
+2026-01-22 13:52:58,455 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 13:52:59,285 - data_fetcher - INFO - Credit spread proxy computed, shape: (1254,)
+2026-01-22 13:52:59,285 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 13:52:59,709 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 13:53:00,122 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 13:53:00,504 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 13:53:00,867 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 13:53:01,329 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 13:53:01,690 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 13:53:02,119 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 13:53:02,622 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 13:53:03,055 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 13:53:03,492 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 13:53:03,492 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 13:53:03,494 - data_fetcher - WARNING - Remaining NaN values after filling: 1254
+2026-01-22 13:53:03,495 - data_fetcher - INFO - Comprehensive dataset created: shape=(1254, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 13:53:03,495 - main - INFO - Data shape: (1254, 9)
+2026-01-22 13:53:03,495 - main - INFO - Date range: 2021-01-25 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 13:53:03,496 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 13:53:03,496 - signal_processor - INFO - Realized volatility computed. Shape: (1254,)
+2026-01-22 13:53:03,496 - main - INFO - Basic indicators computed
+2026-01-22 13:53:03,497 - main - INFO - Returns mean: 0.000517, std: 0.010768
+2026-01-22 13:53:03,497 - main - INFO - Volatility mean: 0.154475
+2026-01-22 13:53:03,497 - main - INFO - NaN count after preparation: 1275
+2026-01-22 13:53:03,497 - main - WARNING - Remaining NaN values: 1275
+2026-01-22 13:53:03,498 - main - INFO - NaN values after filling: 1254
+2026-01-22 13:53:03,498 - main - INFO - ============================================================
+2026-01-22 13:53:03,498 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 13:53:03,498 - main - INFO - ============================================================
+2026-01-22 13:53:03,499 - main - INFO - Applying Kalman Filter...
+2026-01-22 13:53:04,355 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 13:53:04,570 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1254,)
+2026-01-22 13:53:04,570 - main - INFO - Training HMM for regime detection...
+2026-01-22 13:53:04,777 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 13:53:04,778 - signal_processor - INFO - Training data shape: (1254, 2)
+2026-01-22 13:53:07,176 - signal_processor - INFO - HMM training complete
+2026-01-22 13:53:07,176 - signal_processor - INFO - Transition matrix:
+[[7.19350892e-04 9.99279209e-01 1.43994812e-06]
+ [9.82536541e-01 3.77805137e-03 1.36854077e-02]
+ [3.78942011e-03 1.23569526e-02 9.83853627e-01]]
+2026-01-22 13:53:07,177 - signal_processor - INFO - Means:
+[[1.09564622e-03 1.16987348e-01]
+ [1.94054107e-04 1.17786488e-01]
+ [2.17480085e-04 2.41570966e-01]]
+2026-01-22 13:53:07,177 - main - INFO - Predicting regimes...
+2026-01-22 13:53:07,177 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 13:53:07,180 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 13:53:07,181 - signal_processor - INFO - State distribution:
+0    437
+1    443
+2    374
+Name: count, dtype: int64
+2026-01-22 13:53:07,181 - main - INFO - Calculating technical indicators...
+2026-01-22 13:53:07,181 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 13:53:07,183 - signal_processor - INFO - RSI calculation complete. Mean: 79.87, Std: 38.58
+2026-01-22 13:53:07,183 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 13:53:07,186 - signal_processor - INFO - ADX calculation complete. Shape: (1254,)
+2026-01-22 13:53:07,186 - signal_processor - INFO - ADX mean: 33.20, std: 12.96
+2026-01-22 13:53:07,187 - main - INFO - Generating hybrid signals...
+2026-01-22 13:53:07,187 - strategy - INFO - Generating hybrid signals
+2026-01-22 13:53:07,293 - strategy - INFO - Signals generated: 193 STRONG_SELL, 141 SELL
+2026-01-22 13:53:07,294 - main - INFO - Signal generation complete:
+2026-01-22 13:53:07,295 - main - INFO - Signal distribution:
+signal
+-2    193
+-1    141
+ 0    920
+Name: count, dtype: int64
+2026-01-22 13:53:07,295 - main - INFO - ============================================================
+2026-01-22 13:53:07,295 - main - INFO - STAGE 3: Backtesting
+2026-01-22 13:53:07,295 - main - INFO - ============================================================
+2026-01-22 13:53:07,297 - main - INFO - Backtest Results:
+2026-01-22 13:53:07,297 - main - INFO -   Total Return: 57.45% (Benchmark: 91.02%)
+2026-01-22 13:53:07,297 - main - INFO -   CAGR: 9.53% (Benchmark: 13.85%)
+2026-01-22 13:53:07,297 - main - INFO -   Max Drawdown: -21.03%
+2026-01-22 13:53:07,298 - main - INFO -   Sharpe Ratio: 0.874
+2026-01-22 13:53:07,298 - main - INFO -   Sortino Ratio: 0.997
+2026-01-22 13:53:07,298 - main - INFO -   Win Rate: 41.07%
+2026-01-22 13:53:07,298 - main - WARNING - [WARN] Sortino Ratio target not met (current: 0.997)
+2026-01-22 13:53:07,298 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 13:53:07,298 - main - INFO - ============================================================
+2026-01-22 13:53:07,298 - main - INFO - STAGE 4: Visualization
+2026-01-22 13:53:07,298 - main - INFO - ============================================================
+2026-01-22 13:53:07,690 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 13:53:08,194 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 13:53:08,495 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 13:53:08,511 - main - INFO - All visualizations saved
+2026-01-22 13:53:08,511 - main - INFO - ============================================================
+2026-01-22 13:53:08,511 - main - INFO - STAGE 5: Report Generation
+2026-01-22 13:53:08,511 - main - INFO - ============================================================
+2026-01-22 13:53:08,513 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 13:53:08,513 - main - INFO - 
+======================================================================
+2026-01-22 13:53:08,513 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 13:53:08,514 - main - INFO - ======================================================================
+2026-01-22 13:53:12,113 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 13:57:43,579 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 13:57:43,579 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 13:57:43,579 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 13:57:43,579 - main - INFO - CrashDetectionPipeline initialized: SPY (2021-01-23 to 2026-01-22)
+2026-01-22 13:57:43,579 - main - INFO - 
+======================================================================
+2026-01-22 13:57:43,579 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 13:57:43,579 - main - INFO - ======================================================================
+2026-01-22 13:57:43,579 - main - INFO - ============================================================
+2026-01-22 13:57:43,580 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 13:57:43,580 - main - INFO - ============================================================
+2026-01-22 13:57:43,580 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2021-01-23 to 2026-01-22)
+2026-01-22 13:57:43,580 - data_fetcher - INFO - Fetching SPY data from 2021-01-23 to 2026-01-22
+2026-01-22 13:57:44,885 - data_fetcher - INFO - Successfully fetched 1254 rows for SPY
+2026-01-22 13:57:44,886 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 13:57:44,886 - data_fetcher - INFO - Fetching VIX and VVIX data from 2021-01-23 to 2026-01-22
+2026-01-22 13:57:45,248 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 13:57:45,248 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 13:57:45,248 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 13:57:45,682 - data_fetcher - INFO - VIX proxy created with shape: (1230, 2)
+2026-01-22 13:57:45,682 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 13:57:46,466 - data_fetcher - INFO - Credit spread proxy computed, shape: (1254,)
+2026-01-22 13:57:46,466 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 13:57:46,908 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 13:57:47,299 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 13:57:47,732 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 13:57:48,126 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 13:57:48,579 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 13:57:48,929 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 13:57:49,342 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 13:57:49,828 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 13:57:50,218 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 13:57:50,676 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 13:57:50,677 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 13:57:50,679 - data_fetcher - WARNING - Remaining NaN values after filling: 1254
+2026-01-22 13:57:50,680 - data_fetcher - INFO - Comprehensive dataset created: shape=(1254, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 13:57:50,680 - main - INFO - Data shape: (1254, 9)
+2026-01-22 13:57:50,680 - main - INFO - Date range: 2021-01-25 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 13:57:50,680 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 13:57:50,681 - signal_processor - INFO - Realized volatility computed. Shape: (1254,)
+2026-01-22 13:57:50,681 - main - INFO - Basic indicators computed
+2026-01-22 13:57:50,682 - main - INFO - Returns mean: 0.000517, std: 0.010768
+2026-01-22 13:57:50,682 - main - INFO - Volatility mean: 0.154475
+2026-01-22 13:57:50,682 - main - INFO - NaN count after preparation: 1275
+2026-01-22 13:57:50,683 - main - WARNING - Remaining NaN values: 1275
+2026-01-22 13:57:50,683 - main - INFO - NaN values after filling: 1254
+2026-01-22 13:57:50,683 - main - INFO - ============================================================
+2026-01-22 13:57:50,684 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 13:57:50,684 - main - INFO - ============================================================
+2026-01-22 13:57:50,684 - main - INFO - Applying Kalman Filter...
+2026-01-22 13:57:51,381 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 13:57:51,589 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1254,)
+2026-01-22 13:57:51,590 - main - INFO - Training HMM for regime detection...
+2026-01-22 13:57:51,734 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 13:57:51,734 - signal_processor - INFO - Training data shape: (1254, 2)
+2026-01-22 13:57:54,028 - signal_processor - INFO - HMM training complete
+2026-01-22 13:57:54,028 - signal_processor - INFO - Transition matrix:
+[[7.19306657e-04 9.99279253e-01 1.43990513e-06]
+ [9.82536787e-01 3.77781560e-03 1.36853973e-02]
+ [3.78964984e-03 1.23567254e-02 9.83853625e-01]]
+2026-01-22 13:57:54,028 - signal_processor - INFO - Means:
+[[1.09564759e-03 1.16987337e-01]
+ [1.94057504e-04 1.17786460e-01]
+ [2.17474836e-04 2.41571036e-01]]
+2026-01-22 13:57:54,029 - main - INFO - Predicting regimes...
+2026-01-22 13:57:54,029 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 13:57:54,031 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 13:57:54,032 - signal_processor - INFO - State distribution:
+0    437
+1    443
+2    374
+Name: count, dtype: int64
+2026-01-22 13:57:54,032 - main - INFO - Calculating technical indicators...
+2026-01-22 13:57:54,032 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 13:57:54,034 - signal_processor - INFO - RSI calculation complete. Mean: 79.87, Std: 38.58
+2026-01-22 13:57:54,034 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 13:57:54,037 - signal_processor - INFO - ADX calculation complete. Shape: (1254,)
+2026-01-22 13:57:54,037 - signal_processor - INFO - ADX mean: 33.20, std: 12.96
+2026-01-22 13:57:54,037 - main - INFO - Generating hybrid signals...
+2026-01-22 13:57:54,038 - strategy - INFO - Generating hybrid signals
+2026-01-22 13:57:54,145 - strategy - INFO - Signals generated: 193 STRONG_SELL, 141 SELL
+2026-01-22 13:57:54,145 - main - INFO - Signal generation complete:
+2026-01-22 13:57:54,146 - main - INFO - Signal distribution:
+signal
+-2    193
+-1    141
+ 0    920
+Name: count, dtype: int64
+2026-01-22 13:57:54,146 - main - INFO - ============================================================
+2026-01-22 13:57:54,147 - main - INFO - STAGE 3: Backtesting
+2026-01-22 13:57:54,147 - main - INFO - ============================================================
+2026-01-22 13:57:54,149 - main - INFO - Backtest Results:
+2026-01-22 13:57:54,149 - main - INFO -   Total Return: 57.45% (Benchmark: 91.02%)
+2026-01-22 13:57:54,149 - main - INFO -   CAGR: 9.53% (Benchmark: 13.85%)
+2026-01-22 13:57:54,149 - main - INFO -   Max Drawdown: -21.03%
+2026-01-22 13:57:54,149 - main - INFO -   Sharpe Ratio: 0.874
+2026-01-22 13:57:54,149 - main - INFO -   Sortino Ratio: 0.997
+2026-01-22 13:57:54,149 - main - INFO -   Win Rate: 41.07%
+2026-01-22 13:57:54,150 - main - WARNING - [WARN] Sortino Ratio target not met (current: 0.997)
+2026-01-22 13:57:54,150 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 13:57:54,150 - main - INFO - ============================================================
+2026-01-22 13:57:54,150 - main - INFO - STAGE 4: Visualization
+2026-01-22 13:57:54,150 - main - INFO - ============================================================
+2026-01-22 13:57:54,491 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 13:57:55,003 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 13:57:55,278 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 13:57:55,292 - main - INFO - All visualizations saved
+2026-01-22 13:57:55,292 - main - INFO - ============================================================
+2026-01-22 13:57:55,292 - main - INFO - STAGE 5: Report Generation
+2026-01-22 13:57:55,292 - main - INFO - ============================================================
+2026-01-22 13:57:55,294 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 13:57:55,294 - main - INFO - 
+======================================================================
+2026-01-22 13:57:55,295 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 13:57:55,295 - main - INFO - ======================================================================
+2026-01-22 13:57:58,459 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 14:08:48,151 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 14:08:48,151 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 14:08:48,151 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 14:08:48,151 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:08:48,151 - main - INFO - 
+======================================================================
+2026-01-22 14:08:48,151 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 14:08:48,152 - main - INFO - ======================================================================
+2026-01-22 14:08:48,152 - main - INFO - ============================================================
+2026-01-22 14:08:48,152 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 14:08:48,152 - main - INFO - ============================================================
+2026-01-22 14:08:48,152 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:08:48,152 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 14:08:48,660 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 14:08:48,660 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 14:08:48,660 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 14:08:49,010 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 14:08:49,011 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 14:08:49,011 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 14:08:49,496 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 14:08:49,496 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 14:08:50,443 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 14:08:50,444 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 14:08:50,916 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 14:08:51,358 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 14:08:51,894 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 14:08:52,257 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 14:08:52,741 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 14:08:53,164 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 14:08:53,650 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 14:08:54,187 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 14:08:54,659 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 14:08:55,173 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 14:08:55,173 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 14:08:55,175 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 14:08:55,176 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 14:08:55,176 - main - INFO - Data shape: (1521, 9)
+2026-01-22 14:08:55,176 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 14:08:55,177 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 14:08:55,177 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 14:08:55,178 - main - INFO - Basic indicators computed
+2026-01-22 14:08:55,178 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 14:08:55,178 - main - INFO - Volatility mean: 0.173120
+2026-01-22 14:08:55,178 - main - INFO - NaN count after preparation: 1542
+2026-01-22 14:08:55,179 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 14:08:55,179 - main - INFO - NaN values after filling: 1521
+2026-01-22 14:08:55,179 - main - INFO - ============================================================
+2026-01-22 14:08:55,180 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 14:08:55,180 - main - INFO - ============================================================
+2026-01-22 14:08:55,180 - main - INFO - Applying Kalman Filter...
+2026-01-22 14:08:55,870 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 14:08:56,129 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 14:08:56,129 - main - INFO - Training HMM for regime detection...
+2026-01-22 14:08:56,271 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 14:08:56,272 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 14:08:58,644 - signal_processor - INFO - HMM training complete
+2026-01-22 14:08:58,645 - signal_processor - INFO - Transition matrix:
+[[1.28509153e-03 9.98714903e-01 5.08335517e-09]
+ [9.77216713e-01 1.06295380e-02 1.21537491e-02]
+ [1.12905227e-02 2.28015512e-03 9.86429322e-01]]
+2026-01-22 14:08:58,645 - signal_processor - INFO - Means:
+[[ 1.22716758e-03  1.21127755e-01]
+ [ 3.94331177e-04  1.21287543e-01]
+ [-4.53400769e-05  2.86199530e-01]]
+2026-01-22 14:08:58,645 - main - INFO - Predicting regimes...
+2026-01-22 14:08:58,646 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 14:08:58,648 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 14:08:58,648 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 14:08:58,649 - main - INFO - Calculating technical indicators...
+2026-01-22 14:08:58,649 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 14:08:58,650 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 14:08:58,650 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 14:08:58,653 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 14:08:58,654 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 14:08:58,654 - main - INFO - Generating hybrid signals...
+2026-01-22 14:08:58,654 - strategy - INFO - Generating hybrid signals
+2026-01-22 14:08:58,780 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 14:08:58,780 - main - INFO - Signal generation complete:
+2026-01-22 14:08:58,781 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 14:08:58,781 - main - INFO - ============================================================
+2026-01-22 14:08:58,782 - main - INFO - STAGE 3: Backtesting
+2026-01-22 14:08:58,782 - main - INFO - ============================================================
+2026-01-22 14:08:58,784 - main - INFO - Backtest Results:
+2026-01-22 14:08:58,784 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 14:08:58,784 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 14:08:58,784 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 14:08:58,784 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 14:08:58,784 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 14:08:58,784 - main - INFO -   Win Rate: 41.16%
+2026-01-22 14:08:58,784 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 14:08:58,785 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 14:08:58,785 - main - INFO - ============================================================
+2026-01-22 14:08:58,785 - main - INFO - STAGE 4: Visualization
+2026-01-22 14:08:58,785 - main - INFO - ============================================================
+2026-01-22 14:08:59,265 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 14:08:59,651 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 14:08:59,928 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 14:08:59,942 - main - INFO - All visualizations saved
+2026-01-22 14:08:59,943 - main - INFO - ============================================================
+2026-01-22 14:08:59,943 - main - INFO - STAGE 5: Report Generation
+2026-01-22 14:08:59,943 - main - INFO - ============================================================
+2026-01-22 14:08:59,945 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 14:08:59,945 - main - INFO - 
+======================================================================
+2026-01-22 14:08:59,945 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 14:08:59,945 - main - INFO - ======================================================================
+2026-01-22 14:22:14,783 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 14:22:14,784 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 14:22:14,784 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 14:22:14,784 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:22:14,784 - main - INFO - 
+======================================================================
+2026-01-22 14:22:14,784 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 14:22:14,784 - main - INFO - ======================================================================
+2026-01-22 14:22:14,785 - main - INFO - ============================================================
+2026-01-22 14:22:14,785 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 14:22:14,785 - main - INFO - ============================================================
+2026-01-22 14:22:14,785 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:22:14,785 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 14:22:15,285 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 14:22:15,285 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 14:22:15,285 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 14:22:15,661 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 14:22:15,661 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 14:22:15,661 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 14:22:16,118 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 14:22:16,119 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 14:22:17,127 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 14:22:17,127 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 14:22:17,672 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 14:22:18,146 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 14:22:18,641 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 14:22:19,117 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 14:22:19,573 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 14:22:20,007 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 14:22:20,502 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 14:22:21,029 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 14:22:21,501 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 14:22:22,060 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 14:22:22,061 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 14:22:22,075 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 14:22:22,077 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 14:22:22,077 - main - INFO - Data shape: (1521, 9)
+2026-01-22 14:22:22,077 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 14:22:22,078 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 14:22:22,079 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 14:22:22,079 - main - INFO - Basic indicators computed
+2026-01-22 14:22:22,079 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 14:22:22,079 - main - INFO - Volatility mean: 0.173120
+2026-01-22 14:22:22,080 - main - INFO - NaN count after preparation: 1542
+2026-01-22 14:22:22,080 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 14:22:22,081 - main - INFO - NaN values after filling: 1521
+2026-01-22 14:22:22,082 - main - INFO - ============================================================
+2026-01-22 14:22:22,082 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 14:22:22,082 - main - INFO - ============================================================
+2026-01-22 14:22:22,082 - main - INFO - Applying Kalman Filter...
+2026-01-22 14:22:23,023 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 14:22:23,313 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 14:22:23,313 - main - INFO - Training HMM for regime detection...
+2026-01-22 14:22:23,547 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 14:22:23,547 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 14:22:26,201 - signal_processor - INFO - HMM training complete
+2026-01-22 14:22:26,201 - signal_processor - INFO - Transition matrix:
+[[1.28510249e-03 9.98714892e-01 5.08500881e-09]
+ [9.77216632e-01 1.06295718e-02 1.21537965e-02]
+ [1.12909654e-02 2.27976772e-03 9.86429267e-01]]
+2026-01-22 14:22:26,201 - signal_processor - INFO - Means:
+[[ 1.22715209e-03  1.21127870e-01]
+ [ 3.94336297e-04  1.21287632e-01]
+ [-4.53296959e-05  2.86199682e-01]]
+2026-01-22 14:22:26,202 - main - INFO - Predicting regimes...
+2026-01-22 14:22:26,202 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 14:22:26,205 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 14:22:26,207 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 14:22:26,207 - main - INFO - Calculating technical indicators...
+2026-01-22 14:22:26,208 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 14:22:26,211 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 14:22:26,211 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 14:22:26,214 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 14:22:26,214 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 14:22:26,215 - main - INFO - Generating hybrid signals...
+2026-01-22 14:22:26,215 - strategy - INFO - Generating hybrid signals
+2026-01-22 14:22:26,352 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 14:22:26,352 - main - INFO - Signal generation complete:
+2026-01-22 14:22:26,353 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 14:22:26,353 - main - INFO - ============================================================
+2026-01-22 14:22:26,353 - main - INFO - STAGE 3: Backtesting
+2026-01-22 14:22:26,354 - main - INFO - ============================================================
+2026-01-22 14:22:26,357 - main - INFO - Backtest Results:
+2026-01-22 14:22:26,357 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 14:22:26,357 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 14:22:26,358 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 14:22:26,358 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 14:22:26,358 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 14:22:26,358 - main - INFO -   Win Rate: 41.16%
+2026-01-22 14:22:26,358 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 14:22:26,358 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 14:22:26,359 - main - INFO - ============================================================
+2026-01-22 14:22:26,359 - main - INFO - STAGE 4: Visualization
+2026-01-22 14:22:26,359 - main - INFO - ============================================================
+2026-01-22 14:22:26,934 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 14:22:27,363 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 14:22:27,680 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 14:22:27,699 - main - INFO - All visualizations saved
+2026-01-22 14:22:27,700 - main - INFO - ============================================================
+2026-01-22 14:22:27,700 - main - INFO - STAGE 5: Report Generation
+2026-01-22 14:22:27,700 - main - INFO - ============================================================
+2026-01-22 14:22:27,702 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 14:22:27,702 - main - INFO - 
+======================================================================
+2026-01-22 14:22:27,702 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 14:22:27,702 - main - INFO - ======================================================================
+2026-01-22 14:30:59,272 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 14:30:59,272 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 14:30:59,272 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 14:30:59,273 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:30:59,273 - main - INFO - 
+======================================================================
+2026-01-22 14:30:59,273 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 14:30:59,273 - main - INFO - ======================================================================
+2026-01-22 14:30:59,273 - main - INFO - ============================================================
+2026-01-22 14:30:59,273 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 14:30:59,273 - main - INFO - ============================================================
+2026-01-22 14:30:59,273 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:30:59,274 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 14:30:59,312 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 14:30:59,312 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 14:30:59,312 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 14:30:59,662 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 14:30:59,662 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 14:30:59,662 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 14:30:59,688 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 14:30:59,688 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 14:31:00,618 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 14:31:00,618 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 14:31:01,101 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 14:31:01,563 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 14:31:02,006 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 14:31:02,409 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 14:31:02,871 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 14:31:03,261 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 14:31:03,779 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 14:31:04,321 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 14:31:04,768 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 14:31:05,299 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 14:31:05,300 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 14:31:05,301 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 14:31:05,302 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 14:31:05,303 - main - INFO - Data shape: (1521, 9)
+2026-01-22 14:31:05,303 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 14:31:05,303 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 14:31:05,304 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 14:31:05,304 - main - INFO - Basic indicators computed
+2026-01-22 14:31:05,305 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 14:31:05,305 - main - INFO - Volatility mean: 0.173120
+2026-01-22 14:31:05,306 - main - INFO - NaN count after preparation: 1542
+2026-01-22 14:31:05,306 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 14:31:05,307 - main - INFO - NaN values after filling: 1521
+2026-01-22 14:31:05,307 - main - INFO - ============================================================
+2026-01-22 14:31:05,307 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 14:31:05,307 - main - INFO - ============================================================
+2026-01-22 14:31:05,307 - main - INFO - Applying Kalman Filter...
+2026-01-22 14:31:06,122 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 14:31:06,440 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 14:31:06,441 - main - INFO - Training HMM for regime detection...
+2026-01-22 14:31:06,592 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 14:31:06,594 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 14:31:09,212 - signal_processor - INFO - HMM training complete
+2026-01-22 14:31:09,212 - signal_processor - INFO - Transition matrix:
+[[1.28516276e-03 9.98714832e-01 5.08388053e-09]
+ [9.77216421e-01 1.06299442e-02 1.21536344e-02]
+ [1.12907588e-02 2.27975328e-03 9.86429488e-01]]
+2026-01-22 14:31:09,212 - signal_processor - INFO - Means:
+[[ 1.22715777e-03  1.21127798e-01]
+ [ 3.94330472e-04  1.21287563e-01]
+ [-4.53268446e-05  2.86199250e-01]]
+2026-01-22 14:31:09,213 - main - INFO - Predicting regimes...
+2026-01-22 14:31:09,213 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 14:31:09,216 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 14:31:09,217 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 14:31:09,217 - main - INFO - Calculating technical indicators...
+2026-01-22 14:31:09,217 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 14:31:09,219 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 14:31:09,219 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 14:31:09,223 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 14:31:09,223 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 14:31:09,223 - main - INFO - Generating hybrid signals...
+2026-01-22 14:31:09,224 - strategy - INFO - Generating hybrid signals
+2026-01-22 14:31:09,393 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 14:31:09,393 - main - INFO - Signal generation complete:
+2026-01-22 14:31:09,394 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 14:31:09,394 - main - INFO - ============================================================
+2026-01-22 14:31:09,395 - main - INFO - STAGE 3: Backtesting
+2026-01-22 14:31:09,395 - main - INFO - ============================================================
+2026-01-22 14:31:09,397 - main - INFO - Backtest Results:
+2026-01-22 14:31:09,397 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 14:31:09,397 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 14:31:09,397 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 14:31:09,397 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 14:31:09,397 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 14:31:09,398 - main - INFO -   Win Rate: 41.16%
+2026-01-22 14:31:09,398 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 14:31:09,398 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 14:31:09,398 - main - INFO - ============================================================
+2026-01-22 14:31:09,398 - main - INFO - STAGE 4: Visualization
+2026-01-22 14:31:09,398 - main - INFO - ============================================================
+2026-01-22 14:31:09,898 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 14:31:10,289 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 14:31:10,587 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 14:31:10,602 - main - INFO - All visualizations saved
+2026-01-22 14:31:10,602 - main - INFO - ============================================================
+2026-01-22 14:31:10,603 - main - INFO - STAGE 5: Report Generation
+2026-01-22 14:31:10,603 - main - INFO - ============================================================
+2026-01-22 14:31:10,604 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 14:31:10,605 - main - INFO - 
+======================================================================
+2026-01-22 14:31:10,605 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 14:31:10,605 - main - INFO - ======================================================================
+2026-01-22 14:32:04,739 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 14:32:04,739 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 14:32:04,739 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 14:32:04,739 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:32:04,740 - main - INFO - 
+======================================================================
+2026-01-22 14:32:04,740 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 14:32:04,740 - main - INFO - ======================================================================
+2026-01-22 14:32:04,740 - main - INFO - ============================================================
+2026-01-22 14:32:04,740 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 14:32:04,740 - main - INFO - ============================================================
+2026-01-22 14:32:04,740 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:32:04,741 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 14:32:04,776 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 14:32:04,776 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 14:32:04,776 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 14:32:05,148 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 14:32:05,148 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 14:32:05,148 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 14:32:05,174 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 14:32:05,174 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 14:32:06,102 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 14:32:06,102 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 14:32:06,638 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 14:32:07,104 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 14:32:07,560 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 14:32:07,981 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 14:32:08,447 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 14:32:08,889 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 14:32:09,394 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 14:32:10,003 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 14:32:10,477 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 14:32:10,959 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 14:32:10,960 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 14:32:10,962 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 14:32:10,963 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 14:32:10,963 - main - INFO - Data shape: (1521, 9)
+2026-01-22 14:32:10,963 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 14:32:10,964 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 14:32:10,964 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 14:32:10,965 - main - INFO - Basic indicators computed
+2026-01-22 14:32:10,965 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 14:32:10,965 - main - INFO - Volatility mean: 0.173120
+2026-01-22 14:32:10,966 - main - INFO - NaN count after preparation: 1542
+2026-01-22 14:32:10,966 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 14:32:10,966 - main - INFO - NaN values after filling: 1521
+2026-01-22 14:32:10,967 - main - INFO - ============================================================
+2026-01-22 14:32:10,967 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 14:32:10,967 - main - INFO - ============================================================
+2026-01-22 14:32:10,967 - main - INFO - Applying Kalman Filter...
+2026-01-22 14:32:11,686 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 14:32:12,005 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 14:32:12,006 - main - INFO - Training HMM for regime detection...
+2026-01-22 14:32:12,154 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 14:32:12,155 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 14:32:14,404 - signal_processor - INFO - HMM training complete
+2026-01-22 14:32:14,404 - signal_processor - INFO - Transition matrix:
+[[1.28504619e-03 9.98714949e-01 5.08456464e-09]
+ [9.77217050e-01 1.06292090e-02 1.21537414e-02]
+ [1.12907935e-02 2.27997446e-03 9.86429232e-01]]
+2026-01-22 14:32:14,405 - signal_processor - INFO - Means:
+[[ 1.22716224e-03  1.21127951e-01]
+ [ 3.94331768e-04  1.21287721e-01]
+ [-4.53390417e-05  2.86199950e-01]]
+2026-01-22 14:32:14,405 - main - INFO - Predicting regimes...
+2026-01-22 14:32:14,405 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 14:32:14,407 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 14:32:14,408 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 14:32:14,408 - main - INFO - Calculating technical indicators...
+2026-01-22 14:32:14,408 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 14:32:14,410 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 14:32:14,411 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 14:32:14,414 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 14:32:14,414 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 14:32:14,414 - main - INFO - Generating hybrid signals...
+2026-01-22 14:32:14,415 - strategy - INFO - Generating hybrid signals
+2026-01-22 14:32:14,545 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 14:32:14,546 - main - INFO - Signal generation complete:
+2026-01-22 14:32:14,547 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 14:32:14,547 - main - INFO - ============================================================
+2026-01-22 14:32:14,547 - main - INFO - STAGE 3: Backtesting
+2026-01-22 14:32:14,547 - main - INFO - ============================================================
+2026-01-22 14:32:14,550 - main - INFO - Backtest Results:
+2026-01-22 14:32:14,551 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 14:32:14,551 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 14:32:14,551 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 14:32:14,551 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 14:32:14,551 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 14:32:14,551 - main - INFO -   Win Rate: 41.16%
+2026-01-22 14:32:14,552 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 14:32:14,552 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 14:32:14,552 - main - INFO - ============================================================
+2026-01-22 14:32:14,552 - main - INFO - STAGE 4: Visualization
+2026-01-22 14:32:14,552 - main - INFO - ============================================================
+2026-01-22 14:32:15,075 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 14:32:15,459 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 14:32:15,755 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 14:32:15,769 - main - INFO - All visualizations saved
+2026-01-22 14:32:15,769 - main - INFO - ============================================================
+2026-01-22 14:32:15,770 - main - INFO - STAGE 5: Report Generation
+2026-01-22 14:32:15,770 - main - INFO - ============================================================
+2026-01-22 14:32:15,771 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 14:32:15,772 - main - INFO - 
+======================================================================
+2026-01-22 14:32:15,772 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 14:32:15,772 - main - INFO - ======================================================================
+2026-01-22 14:33:29,688 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 14:33:29,688 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 14:33:29,688 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 14:33:29,689 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:33:29,689 - main - INFO - 
+======================================================================
+2026-01-22 14:33:29,689 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 14:33:29,689 - main - INFO - ======================================================================
+2026-01-22 14:33:29,689 - main - INFO - ============================================================
+2026-01-22 14:33:29,689 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 14:33:29,689 - main - INFO - ============================================================
+2026-01-22 14:33:29,689 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:33:29,689 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 14:33:29,730 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 14:33:29,730 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 14:33:29,730 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 14:33:30,091 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 14:33:30,091 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 14:33:30,091 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 14:33:30,119 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 14:33:30,120 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 14:33:30,927 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 14:33:30,927 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 14:33:31,418 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 14:33:31,937 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 14:33:32,374 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 14:33:32,826 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 14:33:33,280 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 14:33:33,723 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 14:33:34,217 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 14:33:34,796 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 14:33:35,267 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 14:33:35,809 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 14:33:35,810 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 14:33:35,812 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 14:33:35,813 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 14:33:35,814 - main - INFO - Data shape: (1521, 9)
+2026-01-22 14:33:35,814 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 14:33:35,814 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 14:33:35,815 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 14:33:35,815 - main - INFO - Basic indicators computed
+2026-01-22 14:33:35,816 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 14:33:35,816 - main - INFO - Volatility mean: 0.173120
+2026-01-22 14:33:35,816 - main - INFO - NaN count after preparation: 1542
+2026-01-22 14:33:35,816 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 14:33:35,818 - main - INFO - NaN values after filling: 1521
+2026-01-22 14:33:35,818 - main - INFO - ============================================================
+2026-01-22 14:33:35,818 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 14:33:35,818 - main - INFO - ============================================================
+2026-01-22 14:33:35,818 - main - INFO - Applying Kalman Filter...
+2026-01-22 14:33:36,686 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 14:33:36,999 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 14:33:37,000 - main - INFO - Training HMM for regime detection...
+2026-01-22 14:33:37,161 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 14:33:37,162 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 14:33:39,452 - signal_processor - INFO - HMM training complete
+2026-01-22 14:33:39,452 - signal_processor - INFO - Transition matrix:
+[[1.28506639e-03 9.98714929e-01 5.08525040e-09]
+ [9.77217043e-01 1.06292920e-02 1.21536650e-02]
+ [1.12909732e-02 2.27965854e-03 9.86429368e-01]]
+2026-01-22 14:33:39,452 - signal_processor - INFO - Means:
+[[ 1.22715732e-03  1.21127941e-01]
+ [ 3.94343927e-04  1.21287691e-01]
+ [-4.53434086e-05  2.86199851e-01]]
+2026-01-22 14:33:39,453 - main - INFO - Predicting regimes...
+2026-01-22 14:33:39,453 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 14:33:39,455 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 14:33:39,456 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 14:33:39,456 - main - INFO - Calculating technical indicators...
+2026-01-22 14:33:39,457 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 14:33:39,458 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 14:33:39,458 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 14:33:39,461 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 14:33:39,461 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 14:33:39,461 - main - INFO - Generating hybrid signals...
+2026-01-22 14:33:39,461 - strategy - INFO - Generating hybrid signals
+2026-01-22 14:33:39,599 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 14:33:39,600 - main - INFO - Signal generation complete:
+2026-01-22 14:33:39,601 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 14:33:39,601 - main - INFO - ============================================================
+2026-01-22 14:33:39,601 - main - INFO - STAGE 3: Backtesting
+2026-01-22 14:33:39,602 - main - INFO - ============================================================
+2026-01-22 14:33:39,604 - main - INFO - Backtest Results:
+2026-01-22 14:33:39,604 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 14:33:39,604 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 14:33:39,605 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 14:33:39,605 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 14:33:39,605 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 14:33:39,605 - main - INFO -   Win Rate: 41.16%
+2026-01-22 14:33:39,605 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 14:33:39,605 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 14:33:39,605 - main - INFO - ============================================================
+2026-01-22 14:33:39,606 - main - INFO - STAGE 4: Visualization
+2026-01-22 14:33:39,606 - main - INFO - ============================================================
+2026-01-22 14:33:40,191 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 14:33:40,608 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 14:33:40,941 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 14:33:40,957 - main - INFO - All visualizations saved
+2026-01-22 14:33:40,957 - main - INFO - ============================================================
+2026-01-22 14:33:40,957 - main - INFO - STAGE 5: Report Generation
+2026-01-22 14:33:40,957 - main - INFO - ============================================================
+2026-01-22 14:33:40,959 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 14:33:40,959 - main - INFO - 
+======================================================================
+2026-01-22 14:33:40,960 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 14:33:40,960 - main - INFO - ======================================================================
+2026-01-22 14:34:09,859 - data_fetcher - INFO - DataFetcher initialized with output_dir=D:\gg\crash_detection_system\data
+2026-01-22 14:34:09,859 - signal_processor - INFO - SignalProcessor initialized
+2026-01-22 14:34:09,859 - strategy - INFO - Strategy initialized with default parameters
+2026-01-22 14:34:09,859 - main - INFO - CrashDetectionPipeline initialized: SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:34:09,859 - main - INFO - 
+======================================================================
+2026-01-22 14:34:09,860 - main - INFO - STARTING CRASH DETECTION PIPELINE
+2026-01-22 14:34:09,860 - main - INFO - ======================================================================
+2026-01-22 14:34:09,860 - main - INFO - ============================================================
+2026-01-22 14:34:09,860 - main - INFO - STAGE 1: Data Fetching and Preparation
+2026-01-22 14:34:09,860 - main - INFO - ============================================================
+2026-01-22 14:34:09,860 - data_fetcher - INFO - Creating comprehensive dataset for SPY (2020-01-01 to 2026-01-22)
+2026-01-22 14:34:09,861 - data_fetcher - INFO - Fetching SPY data from 2020-01-01 to 2026-01-22
+2026-01-22 14:34:09,899 - data_fetcher - INFO - Successfully fetched 1521 rows for SPY
+2026-01-22 14:34:09,899 - data_fetcher - INFO - Columns: ['Open', 'High', 'Low', 'Close', 'Volume']
+2026-01-22 14:34:09,899 - data_fetcher - INFO - Fetching VIX and VVIX data from 2020-01-01 to 2026-01-22
+2026-01-22 14:34:10,253 - data_fetcher - ERROR - Error fetching VIX data: 'Adj Close'
+2026-01-22 14:34:10,253 - data_fetcher - WARNING - Using SPY volatility as VIX proxy
+2026-01-22 14:34:10,253 - data_fetcher - INFO - Creating VIX proxy from SPY volatility
+2026-01-22 14:34:10,278 - data_fetcher - INFO - VIX proxy created with shape: (1497, 2)
+2026-01-22 14:34:10,279 - data_fetcher - INFO - Fetching credit spread proxy (HYG vs IEF)
+2026-01-22 14:34:11,256 - data_fetcher - INFO - Credit spread proxy computed, shape: (1521,)
+2026-01-22 14:34:11,257 - data_fetcher - INFO - Computing market breadth proxy
+2026-01-22 14:34:11,792 - data_fetcher - WARNING - Could not fetch AAPL
+2026-01-22 14:34:12,258 - data_fetcher - WARNING - Could not fetch MSFT
+2026-01-22 14:34:12,702 - data_fetcher - WARNING - Could not fetch GOOGL
+2026-01-22 14:34:13,146 - data_fetcher - WARNING - Could not fetch AMZN
+2026-01-22 14:34:13,605 - data_fetcher - WARNING - Could not fetch NVDA
+2026-01-22 14:34:14,046 - data_fetcher - WARNING - Could not fetch TSLA
+2026-01-22 14:34:14,537 - data_fetcher - WARNING - Could not fetch JPM
+2026-01-22 14:34:15,055 - data_fetcher - WARNING - Could not fetch JNJ
+2026-01-22 14:34:15,518 - data_fetcher - WARNING - Could not fetch V
+2026-01-22 14:34:16,044 - data_fetcher - WARNING - Could not fetch WMT
+2026-01-22 14:34:16,045 - data_fetcher - INFO - Market breadth proxy computed, shape: (0,)
+2026-01-22 14:34:16,047 - data_fetcher - WARNING - Remaining NaN values after filling: 1521
+2026-01-22 14:34:16,049 - data_fetcher - INFO - Comprehensive dataset created: shape=(1521, 9), columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VIX', 'VVIX', 'Credit_Spread', 'Breadth']
+2026-01-22 14:34:16,049 - main - INFO - Data shape: (1521, 9)
+2026-01-22 14:34:16,049 - main - INFO - Date range: 2020-01-02 00:00:00 to 2026-01-21 00:00:00
+2026-01-22 14:34:16,049 - signal_processor - INFO - Calculating realized volatility with window=20
+2026-01-22 14:34:16,050 - signal_processor - INFO - Realized volatility computed. Shape: (1521,)
+2026-01-22 14:34:16,050 - main - INFO - Basic indicators computed
+2026-01-22 14:34:16,051 - main - INFO - Returns mean: 0.000549, std: 0.013063
+2026-01-22 14:34:16,051 - main - INFO - Volatility mean: 0.173120
+2026-01-22 14:34:16,051 - main - INFO - NaN count after preparation: 1542
+2026-01-22 14:34:16,052 - main - WARNING - Remaining NaN values: 1542
+2026-01-22 14:34:16,053 - main - INFO - NaN values after filling: 1521
+2026-01-22 14:34:16,053 - main - INFO - ============================================================
+2026-01-22 14:34:16,053 - main - INFO - STAGE 2: Signal Processing
+2026-01-22 14:34:16,053 - main - INFO - ============================================================
+2026-01-22 14:34:16,053 - main - INFO - Applying Kalman Filter...
+2026-01-22 14:34:16,814 - signal_processor - INFO - Applying Kalman Filter with Q=0.0001, R=0.1
+2026-01-22 14:34:17,171 - signal_processor - INFO - Kalman smoothing complete. Output shape: (1521,)
+2026-01-22 14:34:17,171 - main - INFO - Training HMM for regime detection...
+2026-01-22 14:34:17,329 - signal_processor - INFO - Training HMM with 3 states
+2026-01-22 14:34:17,330 - signal_processor - INFO - Training data shape: (1521, 2)
+2026-01-22 14:34:19,589 - signal_processor - INFO - HMM training complete
+2026-01-22 14:34:19,590 - signal_processor - INFO - Transition matrix:
+[[1.28499220e-03 9.98715003e-01 5.08541600e-09]
+ [9.77217542e-01 1.06287562e-02 1.21537017e-02]
+ [1.12904054e-02 2.28031596e-03 9.86429279e-01]]
+2026-01-22 14:34:19,590 - signal_processor - INFO - Means:
+[[ 1.22713507e-03  1.21127918e-01]
+ [ 3.94361681e-04  1.21287690e-01]
+ [-4.53420062e-05  2.86200001e-01]]
+2026-01-22 14:34:19,590 - main - INFO - Predicting regimes...
+2026-01-22 14:34:19,591 - signal_processor - INFO - Predicting regimes using HMM
+2026-01-22 14:34:19,593 - signal_processor - INFO - Regime prediction complete. Unique states: [0 1 2]
+2026-01-22 14:34:19,594 - signal_processor - INFO - State distribution:
+0    527
+1    527
+2    467
+Name: count, dtype: int64
+2026-01-22 14:34:19,595 - main - INFO - Calculating technical indicators...
+2026-01-22 14:34:19,595 - signal_processor - INFO - Calculating RSI with period=14
+2026-01-22 14:34:19,596 - signal_processor - INFO - RSI calculation complete. Mean: 78.84, Std: 39.37
+2026-01-22 14:34:19,597 - signal_processor - INFO - Calculating ADX with period=14
+2026-01-22 14:34:19,600 - signal_processor - INFO - ADX calculation complete. Shape: (1521,)
+2026-01-22 14:34:19,600 - signal_processor - INFO - ADX mean: 33.44, std: 12.92
+2026-01-22 14:34:19,600 - main - INFO - Generating hybrid signals...
+2026-01-22 14:34:19,601 - strategy - INFO - Generating hybrid signals
+2026-01-22 14:34:19,772 - strategy - INFO - Signals generated: 217 STRONG_SELL, 199 SELL
+2026-01-22 14:34:19,772 - main - INFO - Signal generation complete:
+2026-01-22 14:34:19,773 - main - INFO - Signal distribution:
+signal
+-2     217
+-1     199
+ 0    1105
+Name: count, dtype: int64
+2026-01-22 14:34:19,774 - main - INFO - ============================================================
+2026-01-22 14:34:19,774 - main - INFO - STAGE 3: Backtesting
+2026-01-22 14:34:19,774 - main - INFO - ============================================================
+2026-01-22 14:34:19,777 - main - INFO - Backtest Results:
+2026-01-22 14:34:19,777 - main - INFO -   Total Return: 93.57% (Benchmark: 130.23%)
+2026-01-22 14:34:19,777 - main - INFO -   CAGR: 11.53% (Benchmark: 14.77%)
+2026-01-22 14:34:19,777 - main - INFO -   Max Drawdown: -20.35%
+2026-01-22 14:34:19,777 - main - INFO -   Sharpe Ratio: 1.014
+2026-01-22 14:34:19,777 - main - INFO -   Sortino Ratio: 1.133
+2026-01-22 14:34:19,778 - main - INFO -   Win Rate: 41.16%
+2026-01-22 14:34:19,778 - main - WARNING - [WARN] Sortino Ratio target not met (current: 1.133)
+2026-01-22 14:34:19,778 - main - INFO - [PASS] Max Drawdown target (<50%) ACHIEVED
+2026-01-22 14:34:19,778 - main - INFO - ============================================================
+2026-01-22 14:34:19,778 - main - INFO - STAGE 4: Visualization
+2026-01-22 14:34:19,778 - main - INFO - ============================================================
+2026-01-22 14:34:20,315 - main - INFO - Saved: results/01_cumulative_returns.png
+2026-01-22 14:34:20,752 - main - INFO - Saved: results/02_signals_and_indicators.png
+2026-01-22 14:34:21,065 - main - INFO - Saved: results/03_hmm_regimes.png
+2026-01-22 14:34:21,080 - main - INFO - All visualizations saved
+2026-01-22 14:34:21,080 - main - INFO - ============================================================
+2026-01-22 14:34:21,080 - main - INFO - STAGE 5: Report Generation
+2026-01-22 14:34:21,080 - main - INFO - ============================================================
+2026-01-22 14:34:21,082 - main - INFO - Report saved to results/backtest_report.json
+2026-01-22 14:34:21,083 - main - INFO - 
+======================================================================
+2026-01-22 14:34:21,083 - main - INFO - PIPELINE EXECUTION COMPLETE [OK]
+2026-01-22 14:34:21,083 - main - INFO - ======================================================================
+2026-01-22 14:38:35,780 - MailerService - INFO - 신호 이력 저장: DANGER

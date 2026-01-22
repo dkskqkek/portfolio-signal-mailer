@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
+from scipy.stats import norm
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -18,103 +19,120 @@ class SignalDetector:
         self.xlp_ticker = yf.Ticker("XLP")
         self.kospi200 = yf.Ticker("^KS200")
         self.gld_ticker = yf.Ticker("GLD")
+        self.vix_ticker = yf.Ticker("^VIX")
         
-    def fetch_data(self, days_back=300):
-        """최근 데이터 수집"""
+    def fetch_data(self, days_back=450):
+        """최근 데이터 및 지표용 선행 데이터 수집"""
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days_back)
         
         try:
-            spy_data = self.spy.history(start=start_date, end=end_date)['Close']
-            kospi_data = self.kospi200.history(start=start_date, end=end_date)['Close']
+            # yfinance history 사용 시 auto_adjust=False 설정 권장 (배당 미포함 종가 산출 위해)
+            spy_data = self.spy.history(start=start_date, end=end_date, auto_adjust=False)['Close']
+            kospi_data = self.kospi200.history(start=start_date, end=end_date, auto_adjust=False)['Close']
+            vix_data = self.vix_ticker.history(start=start_date, end=end_date, auto_adjust=False)['Close']
             
             # 데이터가 비어있는지 확인
-            if spy_data.empty or kospi_data.empty:
+            if spy_data.empty or kospi_data.empty or vix_data.empty:
                 print("⚠️ 데이터가 비어있습니다. (YFinance 응답 오류 의심)")
-                return None, None
+                return None, None, None
 
-            # 타임존 제거 (안전한 접근)
-            if hasattr(spy_data.index, 'tz') and spy_data.index.tz is not None:
-                spy_data.index = spy_data.index.tz_localize(None)
-            if hasattr(kospi_data.index, 'tz') and kospi_data.index.tz is not None:
-                kospi_data.index = kospi_data.index.tz_localize(None)
+            # 타임존 제거
+            for df in [spy_data, kospi_data, vix_data]:
+                if hasattr(df.index, 'tz') and df.index.tz is not None:
+                    df.index = df.index.tz_localize(None)
                 
-            return spy_data, kospi_data
+            return spy_data, kospi_data, vix_data
             
         except Exception as e:
             print(f"데이터 수집 오류: {e}")
-            return None, None
+            return None, None, None
     
-    def calculate_danger_signal(self, spy_data):
+    def calculate_multifactor_score(self, spy_data, vix_data, lookback=126):
+        """사용자 제공 멀티팩터 CDF 스코어링 (0~100)"""
+        if spy_data is None or vix_data is None or len(spy_data) < lookback:
+            return 50.0 # 기본값
+            
+        # 1. EMA 200 이격도
+        ema200 = spy_data.ewm(span=200, adjust=False).mean()
+        ema_dist = (spy_data - ema200) / ema200
+        
+        # 2. RSI 14
+        delta = spy_data.diff()
+        gain = (delta.where(delta > 0, 0)).rolling(14).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
+        rsi = 100 - (100 / (1 + gain/loss.replace(0, np.nan))).fillna(100)
+        
+        # 정규화 함수 (CDF)
+        def get_score(series, inv=False):
+            m = series.rolling(lookback).mean()
+            s = series.rolling(lookback).std()
+            z = (series - m) / (s + 1e-6)
+            score = norm.cdf(z.iloc[-1]) * 100
+            return 100 - score if inv else score
+            
+        s_trend = get_score(ema_dist, inv=True)
+        s_mom = get_score(rsi, inv=True)
+        s_vol = get_score(vix_data, inv=False)
+        
+        # 최종 점수 (3일 평균 가중치)
+        # 실제 운영에서는 최신 데이터의 CDF 점수를 가중 평균
+        score = (s_trend * 0.2 + s_mom * 0.4 + s_vol * 0.4)
+        return score
+
+    def calculate_danger_signal(self, spy_data, vix_data):
         """
-        위험신호 계산 (최적화된 파라미터)
-        
-        최적 파라미터 (백테스트 결과):
-        - MA Window: 15일 (기존 20일)
-        - Vol Window: 30일 (기존 20일)
-        - MA Percentile: 25 (유지)
-        - Vol Percentile: 65 (기존 75)
-        
-        성과 (SPY 기준):
-        - CAGR: 21.04% (기존 19.99%)
-        - Sharpe: 1.48 (기존 1.38)
-        - MDD: -20.92% (기존 -23.12%)
+        [최적화 융합 모델] 위함신호 계산
+        - Sentinel (M1): 15d MA / 30d Vol
+        - Validator (M2): Multifactor CDF Score <= 40
         """
-        if spy_data is None or len(spy_data) < 30:  # Vol window가 30이므로 최소 30일 필요
-            return {
-                'is_danger': False,
-                'reason': '데이터 부족',
-                'date': datetime.now(),
-                'error': True
-            }
+        if spy_data is None or len(spy_data) < 126:
+            return {'is_danger': False, 'reason': '데이터 부족', 'date': datetime.now(), 'error': True}
         
-        # 로그 수익률 계산
+        # 1. 기존 Sentinel 시그널 계산
         log_returns = np.log(spy_data.values[1:] / spy_data.values[:-1])
-        
-        # 최적화된 윈도우: MA 15일, Vol 30일
         ma15_returns = pd.Series(log_returns).rolling(15).mean().values
         std30_returns = pd.Series(log_returns).rolling(30).std().values
         
-        # 최적화된 임계값: MA 25%, Vol 65%
         ma_threshold = np.nanpercentile(ma15_returns, 25)
         vol_threshold = np.nanpercentile(std30_returns, 65)
         
-        # 최신 값
         latest_ma = ma15_returns[-1]
         latest_vol = std30_returns[-1]
         
-        # 위험신호 판정
+        m1_danger = (latest_ma < ma_threshold) or (latest_vol > vol_threshold)
+        
+        # 2. Multifactor Validator 점수 계산
+        mf_score = self.calculate_multifactor_score(spy_data, vix_data)
+        
+        # 3. 융합 판정 (Dual-Confirmation)
         is_danger = False
         reason = ""
         
-        if latest_ma < ma_threshold:
-            is_danger = True
-            reason = f"15일 이동평균({latest_ma:.6f}) < 25% 임계값({ma_threshold:.6f})"
-        
-        if latest_vol > vol_threshold:
-            is_danger = True
-            if reason:
-                reason += " AND "
-            reason += f"30일 변동성({latest_vol:.6f}) > 65% 임계값({vol_threshold:.6f})"
-        
-        if not is_danger:
-            reason = "정상 상태: 신호 없음"
+        if m1_danger:
+            if mf_score <= 40:
+                is_danger = True
+                reason = f"이중 확정 위험: 기술지표 위기(Sentinel) & 심리지수 과열({mf_score:.1f}점)"
+            else:
+                is_danger = False
+                reason = f"정상(필터링): 기술지표는 위험하나 심리지수({mf_score:.1f}점)가 지지함"
+        else:
+            is_danger = False
+            reason = f"정상 상태: 기술지표 안정 (심리점수: {mf_score:.1f}점)"
         
         return {
             'is_danger': is_danger,
             'reason': reason,
             'date': datetime.now(),
-            'ma15': latest_ma,
-            'volatility_30': latest_vol,
-            'ma_threshold': ma_threshold,
-            'vol_threshold': vol_threshold,
+            'mf_score': mf_score,
+            'm1_danger': m1_danger,
             'error': False
         }
     
     def detect(self):
         """신호 감지 실행"""
-        spy_data, kospi_data = self.fetch_data()
-        signal_info = self.calculate_danger_signal(spy_data)
+        spy_data, kospi_data, vix_data = self.fetch_data()
+        signal_info = self.calculate_danger_signal(spy_data, vix_data)
         
         return signal_info
     

@@ -39,3 +39,15 @@
 2026-01-22 01:36:23,231 - MailerService - INFO - 신호 이력 저장: DANGER
 2026-01-22 01:55:23,342 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
 2026-01-22 01:55:23,345 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 12:10:39,798 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 12:10:39,841 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 13:53:12,108 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 13:53:12,113 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 13:57:58,446 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 13:57:58,459 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 14:38:35,776 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 14:38:35,780 - MailerService - INFO - 신호 이력 저장: DANGER
+2026-01-22 16:04:42,709 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:04:42,723 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:14:22,005 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:14:22,007 - MailerService - INFO - 신호 이력 저장: NORMAL

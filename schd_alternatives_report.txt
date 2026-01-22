@@ -1,0 +1,11 @@
+SCHD vs Best Dividend Growth ETFs: Performance Comparison
+Strategy: Fusion Model (Sentinel + Validator)
+Evaluation Period: 2020-05-22 to Present (JEPI Incl.)
+===============================================================================================
+ETF Ticker | Final Value ($)    | CAGR (%)   | MDD (%)    | Sharpe   | Trades
+-----------------------------------------------------------------------------------------------
+FDVV       |            216,658 |      14.19 |     -25.91 |     0.96 |     24
+DGRW       |            213,161 |      13.88 |     -25.59 |     0.95 |     24
+DGRO       |            209,688 |      13.56 |     -26.53 |     0.95 |     24
+VIG        |            209,389 |      13.53 |     -26.86 |     0.93 |     24
+SCHD       |            204,181 |      13.04 |     -25.50 |     0.93 |     24

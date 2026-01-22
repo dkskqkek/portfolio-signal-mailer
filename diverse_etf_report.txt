@@ -1,0 +1,14 @@
+Diverse ETF Performance Comparison (High Sharpe Focus)
+Strategy: Fusion Model (Hybrid Defense)
+Costs: Slippage, Dividends Tax, Capital Gains Tax Included
+====================================================================================================
+ETF Ticker | Category        | Final ($)       | CAGR (%)   | MDD (%)    | Sharpe  
+----------------------------------------------------------------------------------------------------
+COWZ       | Cash Flow       |         224,276 |      14.87 |     -23.75 |     0.97
+FDVV       | Div/Tech        |         216,658 |      14.19 |     -25.91 |     0.96
+SCHD       | Div Growth      |         204,181 |      13.04 |     -25.50 |     0.93
+MOAT       | Wide Moat       |         213,489 |      13.91 |     -27.80 |     0.90
+VTI        | Total Market    |         215,794 |      14.12 |     -28.94 |     0.90
+SPGP       | GARP            |         215,097 |      14.05 |     -27.64 |     0.89
+QUAL       | Quality         |         212,948 |      13.86 |     -30.09 |     0.89
+VGT        | Tech Growth     |         230,272 |      15.39 |     -32.81 |     0.84

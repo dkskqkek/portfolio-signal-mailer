@@ -140,8 +140,8 @@ class MailerService:
             'status': signal_status,
             'is_danger': signal_info.get('is_danger', False),
             'reason': signal_info.get('reason', ''),
-            'ma20': float(signal_info.get('ma20', 0)),
-            'volatility_20': float(signal_info.get('volatility_20', 0))
+            'mf_score': float(signal_info.get('mf_score', 0)),
+            'm1_danger': bool(signal_info.get('m1_danger', False))
         }
         
         try:

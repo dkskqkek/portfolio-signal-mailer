@@ -1,0 +1,9 @@
+=== Strategy Backtest Results ===
+========================================
+Metric          Strategy        Benchmark      
+---------------------------------------------
+Final Value     $240,612        $248,622       
+Total Return    140.61%         148.62%        
+CAGR            15.61%          16.23%         
+MDD             -26.58%         -26.58%        
+Sharpe          1.11            1.06           

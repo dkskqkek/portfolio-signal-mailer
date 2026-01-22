@@ -1,0 +1,138 @@
+{
+  "analysis_date": "2026-01-21T21:03:47.324874",
+  "period": "2016-01-24 to 2026-01-21",
+  "metrics": {
+    "XLP": {
+      "Total Return (%)": 120.2,
+      "Annual Return (%)": 8.24,
+      "Annual Volatility (%)": 14.63,
+      "Daily Volatility (%)": 0.92,
+      "Sharpe Ratio": 0.427,
+      "Sortino Ratio": 0.544,
+      "Max Drawdown (%)": -24.51,
+      "Calmar Ratio": 0.336,
+      "Win Rate (%)": 52.77,
+      "Data Points": 2512
+    },
+    "XLU": {
+      "Total Return (%)": 172.1,
+      "Annual Return (%)": 10.56,
+      "Annual Volatility (%)": 19.18,
+      "Daily Volatility (%)": 1.21,
+      "Sharpe Ratio": 0.447,
+      "Sortino Ratio": 0.573,
+      "Max Drawdown (%)": -36.07,
+      "Calmar Ratio": 0.293,
+      "Win Rate (%)": 54.4,
+      "Data Points": 2512
+    },
+    "XLV": {
+      "Total Return (%)": 173.06,
+      "Annual Return (%)": 10.6,
+      "Annual Volatility (%)": 16.57,
+      "Daily Volatility (%)": 1.04,
+      "Sharpe Ratio": 0.519,
+      "Sortino Ratio": 0.684,
+      "Max Drawdown (%)": -28.4,
+      "Calmar Ratio": 0.373,
+      "Win Rate (%)": 53.13,
+      "Data Points": 2512
+    },
+    "VTV": {
+      "Total Return (%)": 238.74,
+      "Annual Return (%)": 13.02,
+      "Annual Volatility (%)": 16.74,
+      "Daily Volatility (%)": 1.05,
+      "Sharpe Ratio": 0.658,
+      "Sortino Ratio": 0.79,
+      "Max Drawdown (%)": -36.78,
+      "Calmar Ratio": 0.354,
+      "Win Rate (%)": 53.64,
+      "Data Points": 2512
+    },
+    "SCHD": {
+      "Total Return (%)": 232.1,
+      "Annual Return (%)": 12.8,
+      "Annual Volatility (%)": 16.73,
+      "Daily Volatility (%)": 1.05,
+      "Sharpe Ratio": 0.645,
+      "Sortino Ratio": 0.803,
+      "Max Drawdown (%)": -33.37,
+      "Calmar Ratio": 0.383,
+      "Win Rate (%)": 54.48,
+      "Data Points": 2512
+    },
+    "SCHP": {
+      "Total Return (%)": 34.01,
+      "Annual Return (%)": 2.98,
+      "Annual Volatility (%)": 5.63,
+      "Daily Volatility (%)": 0.35,
+      "Sharpe Ratio": 0.174,
+      "Sortino Ratio": 0.24,
+      "Max Drawdown (%)": -14.26,
+      "Calmar Ratio": 0.209,
+      "Win Rate (%)": 51.77,
+      "Data Points": 2512
+    },
+    "AGG": {
+      "Total Return (%)": 20.49,
+      "Annual Return (%)": 1.89,
+      "Annual Volatility (%)": 5.37,
+      "Daily Volatility (%)": 0.34,
+      "Sharpe Ratio": -0.021,
+      "Sortino Ratio": -0.026,
+      "Max Drawdown (%)": -18.43,
+      "Calmar Ratio": 0.102,
+      "Win Rate (%)": 52.13,
+      "Data Points": 2512
+    },
+    "BND": {
+      "Total Return (%)": 21.34,
+      "Annual Return (%)": 1.96,
+      "Annual Volatility (%)": 5.5,
+      "Daily Volatility (%)": 0.35,
+      "Sharpe Ratio": -0.007,
+      "Sortino Ratio": -0.009,
+      "Max Drawdown (%)": -18.58,
+      "Calmar Ratio": 0.105,
+      "Win Rate (%)": 51.61,
+      "Data Points": 2512
+    },
+    "VCIT": {
+      "Total Return (%)": 40.99,
+      "Annual Return (%)": 3.51,
+      "Annual Volatility (%)": 6.26,
+      "Daily Volatility (%)": 0.39,
+      "Sharpe Ratio": 0.241,
+      "Sortino Ratio": 0.311,
+      "Max Drawdown (%)": -20.56,
+      "Calmar Ratio": 0.171,
+      "Win Rate (%)": 52.09,
+      "Data Points": 2512
+    },
+    "SPY": {
+      "Total Return (%)": 326.07,
+      "Annual Return (%)": 15.65,
+      "Annual Volatility (%)": 17.94,
+      "Daily Volatility (%)": 1.13,
+      "Sharpe Ratio": 0.761,
+      "Sortino Ratio": 0.913,
+      "Max Drawdown (%)": -33.72,
+      "Calmar Ratio": 0.464,
+      "Win Rate (%)": 55.52,
+      "Data Points": 2512
+    }
+  },
+  "etf_descriptions": {
+    "XLP": "Consumer Staples ()",
+    "XLU": "Utilities ()",
+    "XLV": "Healthcare ()",
+    "VTV": "Value ETF",
+    "SCHD": "Dividend Equity",
+    "SCHP": "U.S. Dividend Equity",
+    "AGG": "Bond (Aggregate)",
+    "BND": "Bond (Total)",
+    "VCIT": "Bond (Intermediate)",
+    "SPY": "S&P 500 ()"
+  }
+}
