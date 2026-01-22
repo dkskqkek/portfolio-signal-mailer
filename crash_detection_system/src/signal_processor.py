@@ -8,8 +8,7 @@ import logging
 import numpy as np
 import pandas as pd
 from typing import Tuple, Optional
-from pykalman import KalmanFilter
-from hmmlearn.hmm import GaussianHMM
+# pykalman and hmmlearn will be imported lazily in methods that use them
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -30,8 +29,8 @@ class SignalProcessor:
     
     def __init__(self):
         """Initialize SignalProcessor with default parameters."""
-        self.kalman_filter: Optional[KalmanFilter] = None
-        self.hmm_model: Optional[GaussianHMM] = None
+        self.kalman_filter: Optional[any] = None  # Will be KalmanFilter when loaded
+        self.hmm_model: Optional[any] = None  # Will be GaussianHMM when loaded
         self.is_trained = False
         logger.info("SignalProcessor initialized")
     
@@ -68,6 +67,9 @@ class SignalProcessor:
         - 큰 R (measurement variance)는 더 강하게 평활화
         """
         try:
+            # Lazy import
+            from pykalman import KalmanFilter
+            
             logger.info(f"Applying Kalman Filter with Q={process_variance}, R={measurement_variance}")
             
             # 1차 모델: x_t = x_{t-1} (상수 속도 모델)
@@ -199,6 +201,9 @@ class SignalProcessor:
         - 3개 상태: 이론적으로 시장의 주요 패턴 (bull, correction, crisis)를 표현
         """
         try:
+            # Lazy import
+            from hmmlearn.hmm import GaussianHMM
+            
             logger.info(f"Training HMM with {n_states} states")
             
             # 데이터 준비 (NaN 제거)
