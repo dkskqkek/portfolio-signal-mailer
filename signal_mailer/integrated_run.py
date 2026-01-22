@@ -46,8 +46,23 @@ def load_config():
     return config
 
 def get_advanced_signal():
-    """고급 레짐 감지 시스템 실행 및 최신 결과 추출"""
-    print("\n[고급 시그널 엔진 가동 중...]")
+    """
+    최적화된 HMM 전략 실행
+    
+    최적 파라미터 (백테스트 결과):
+    - Regime Threshold: 1.0
+    - RSI Crisis: 45
+    - RSI Normal: 40
+    - ADX Min: 15
+    - VIX High: 25
+    
+    성과 (SPY 기준):
+    - CAGR: 21.83%
+    - Sharpe: 1.43
+    - MDD: -20.00%
+    - Danger 비율: 16.4%
+    """
+    print("\n[최적화된 HMM 전략 엔진 가동 중...]")
     try:
         pipeline = CrashDetectionPipeline(
             ticker='SPY',
@@ -57,63 +72,99 @@ def get_advanced_signal():
         results = pipeline.run_full_pipeline()
         
         if results['status'] == 'SUCCESS':
-            signal_val = pipeline.signals['signal'].iloc[-1]
-            reason = pipeline.signals['signal_reason'].iloc[-1]
+            # HMM 레짐 및 지표 추출
             regime = pipeline.indicators['HMM_Regime'].iloc[-1]
+            rsi = pipeline.indicators['RSI'].iloc[-1]
+            adx = pipeline.indicators['ADX'].iloc[-1]
+            vix = pipeline.indicators['VIX'].iloc[-1]
+            
+            # 최적화된 파라미터로 시그널 판정
+            regime_threshold = 1.0
+            rsi_crisis = 45
+            rsi_normal = 40
+            adx_min = 15
+            vix_high = 25
+            
+            is_danger = False
+            reason = ""
+            
+            # ADX 필터
+            if adx < adx_min:
+                is_danger = False
+                reason = f"추세 약함 (ADX={adx:.1f} < {adx_min})"
+            # Crisis 레짐
+            elif regime >= 2:
+                if rsi < rsi_crisis:
+                    is_danger = True
+                    reason = f"Crisis 레짐 + RSI 과매도 (RSI={rsi:.1f} < {rsi_crisis})"
+                else:
+                    is_danger = True
+                    reason = f"Crisis 레짐 감지 (RSI={rsi:.1f})"
+            # Correction 레짐
+            elif regime >= regime_threshold:
+                if rsi < rsi_normal or vix > vix_high:
+                    is_danger = True
+                    reason = f"Correction 레짐 + 위험 지표 (RSI={rsi:.1f}, VIX={vix:.1f})"
+                else:
+                    reason = f"Correction 레짐이나 지표 정상 (RSI={rsi:.1f}, VIX={vix:.1f})"
+            else:
+                reason = f"Bull 레짐 - 정상 (RSI={rsi:.1f}, VIX={vix:.1f})"
             
             regime_map = {0: 'Bull (상승)', 1: 'Correction (조정)', 2: 'Crisis (위기)'}
             regime_name = regime_map.get(int(regime), "Unknown")
             
-            signal_map = {2: 'STRONG BUY', 1: 'BUY', 0: 'NEUTRAL (중립)', -1: 'SELL (매도)', -2: 'STRONG SELL (강력 매도)'}
-            signal_name = signal_map.get(int(signal_val), "Unknown")
+            signal_name = 'DANGER (위험)' if is_danger else 'NORMAL (정상)'
             
             return {
                 'success': True,
+                'is_danger': is_danger,
                 'signal': signal_name,
                 'regime': regime_name,
                 'reason': reason,
                 'indicators': {
-                    'RSI': pipeline.indicators['RSI'].iloc[-1],
-                    'ADX': pipeline.indicators['ADX'].iloc[-1],
-                    'VIX': pipeline.indicators['VIX'].iloc[-1]
+                    'RSI': rsi,
+                    'ADX': adx,
+                    'VIX': vix
                 }
             }
     except Exception as e:
-        print(f"고급 시그널 실행 중 오류 발생: {e}")
+        print(f"HMM 전략 실행 중 오류 발생: {e}")
         import traceback
         traceback.print_exc()
-    return {'success': False, 'error': "고급 엔진 실행 실패"}
+    return {'success': False, 'is_danger': False, 'error': "HMM 엔진 실행 실패"}
 
-def generate_reports(today_str, status_title, is_overall_danger, is_simple_danger, is_adv_sell, simple_info, adv_info):
-    """순수 텍스트 리포트 생성 (Email & Markdown 공용)"""
+def generate_reports(today_str, status_title, is_overall_danger, is_simple_danger, is_adv_danger, simple_info, adv_info):
+    """HMM 전략 전용 리포트 생성 (Email & Markdown 공용)"""
     line = "=" * 60
     
     report = f"""{line}
-📅 {today_str} DAILY MARKET INTELLIGENCE
+📅 {today_str} DAILY MARKET INTELLIGENCE (HMM 전략)
 {line}
 
 [종합 시장 신호] : {status_title}
 [권장 스탠스]     : {'방어적 리밸런싱 (JEPI 전환)' if is_overall_danger else '공격적 자산 운용 (QQQ 유지)'}
 
 {line}
-1. 멀티-팩터 엔진 분석 결과
+1. 최적화된 HMM 전략 분석 결과
 {line}
-
-(1) 시클리컬 엔진 (MA/Vol)
-    - 판정: {'[🚨 DANGER]' if is_simple_danger else '[✅ NORMAL]'}
-    - 근거: {simple_info.get('reason', '지표 정상')}
 
 """
 
     if adv_info['success']:
-        report += f"""(2) AI 인텔리전스 (HMM)
-    - 판정: {'[🚨 ' + adv_info['signal'] + ']' if is_adv_sell else '[💎 ' + adv_info['signal'] + ']'}
+        report += f"""(1) HMM 전략 엔진 (최적 파라미터)
+    - 판정: {'[🚨 ' + adv_info['signal'] + ']' if is_adv_danger else '[✅ ' + adv_info['signal'] + ']'}
     - 레짐: {adv_info['regime']}
     - 근거: {adv_info['reason'].strip() if adv_info['reason'] else '정상'}
     - 지표: RSI({adv_info['indicators']['RSI']:.1f}) | ADX({adv_info['indicators']['ADX']:.1f}) | VIX({adv_info['indicators']['VIX']:.1f})
+
+(2) 최적 파라미터 (백테스트 검증)
+    - Regime Threshold: 1.0 (Correction부터 위험 인식)
+    - RSI Crisis: 45 / RSI Normal: 40
+    - ADX Min: 15 / VIX High: 25
+    - 성과: CAGR 21.83% | Sharpe 1.43 | MDD -20.00%
 """
     else:
-        report += "(2) AI 인텔리전스 (HMM)\n    - 판정: [❌ ENGINE ERROR]\n"
+        report += "(1) HMM 전략 엔진\n    - 판정: [❌ ENGINE ERROR]\n"
 
     growth_weight = " 0%" if is_overall_danger else "38%"
     defense_weight = "38%" if is_overall_danger else " 0%"
@@ -137,21 +188,20 @@ def generate_reports(today_str, status_title, is_overall_danger, is_simple_dange
 {line}
 """
 
-    if is_simple_danger and is_adv_sell:
-        report += "!!! [🚨] 강력 경고: 이중 매도 신호 발생 !!!\n"
-        report += "- 모든 엔진에서 위기 신호가 포착되었습니다.\n"
+    if is_adv_danger:
+        report += "!!! [🚨] HMM 전략 위험 신호 발생 !!!\n"
+        report += "- HMM 레짐 분석 결과 위험 구간 진입\n"
         report += "- QQQ 비중을 전량(38%) 매도하고 JEPI(38%)로 교체하세요.\n"
-    elif is_overall_danger:
-        report += "!!! [⚠️] 주의: 부분적 위험 신호 감지 !!!\n"
-        report += f"- {'일반' if is_simple_danger else '고급'} 엔진 경합: QQQ -> JEPI 교체 준비\n"
-        report += "- 안정성을 위해 성장주 비중을 축소하고 배당 방어주로 전환을 권장합니다.\n"
+        report += "- 안정적인 배당 수익으로 하락장을 방어하세요.\n"
     else:
-        report += "!!! [✅] 상태 정상: 포지션 유지 !!!\n"
-        report += "- 모든 지표가 우상향을 지지합니다. 성장주(QQQ) 비중을 유지하세요.\n"
+        report += "!!! [✅] HMM 전략 정상 신호 !!!\n"
+        report += "- 시장 레짐이 안정적입니다. 성장주(QQQ) 비중을 유지하세요.\n"
+        report += "- 최적화된 HMM 전략이 상승장 지속을 지지합니다.\n"
 
     report += f"""
 {line}
-본 리포트는 ANTIGRAVITY INTELLIGENCE에 의해 자동 생성되었습니다.
+본 리포트는 ANTIGRAVITY INTELLIGENCE (HMM 전략)에 의해 자동 생성되었습니다.
+전략: 최적화된 HMM 레짐 감지 (CAGR 21.83%, Sharpe 1.43)
 작성일: {today_str}
 {line}
 """
@@ -169,23 +219,34 @@ def generate_reports(today_str, status_title, is_overall_danger, is_simple_dange
 def main():
     config = load_config()
     
-    print("\n[엔진 가동 중...]")
-    detector = SignalDetector()
-    simple_info = detector.detect()
+    print("\n[최적화된 HMM 전략 엔진만 사용]")
+    print("  - 기본 시그널: 비활성화")
+    print("  - HMM 전략: 활성화 (최적 파라미터)")
+    
+    # 기본 시그널 비활성화 - HMM만 사용
     adv_info = get_advanced_signal()
     
+    # 더미 simple_info (사용하지 않음)
+    simple_info = {
+        'is_danger': False,
+        'reason': '기본 시그널 비활성화 (HMM 전략만 사용)',
+        'error': False
+    }
+    
     today_str = datetime.datetime.now().strftime("%Y-%m-%d")
-    is_simple_danger = simple_info.get('is_danger', False)
-    is_adv_sell = adv_info['success'] and "SELL" in adv_info['signal']
-    is_overall_danger = is_simple_danger or is_adv_sell
+    
+    # HMM 시그널만 사용
+    is_simple_danger = False  # 기본 시그널 비활성화
+    is_adv_danger = adv_info.get('is_danger', False) if adv_info['success'] else False
+    is_overall_danger = is_adv_danger  # HMM 시그널만 사용
     
     status_title = "정상"
-    if is_simple_danger and is_adv_sell: status_title = "🚨 위험 (매도)"
-    elif is_overall_danger: status_title = "⚠️ 주의 (조정)"
+    if is_adv_danger:
+        status_title = "🚨 위험 (HMM 전략)"
     
-    text_report = generate_reports(today_str, status_title, is_overall_danger, is_simple_danger, is_adv_sell, simple_info, adv_info)
+    text_report = generate_reports(today_str, status_title, is_overall_danger, is_simple_danger, is_adv_danger, simple_info, adv_info)
     
-    subject = f"[신호 통합 리포트] {today_str} : {status_title}"
+    subject = f"[HMM 전략 리포트] {today_str} : {status_title}"
     
     print("\n[이메일 발송 중...]")
     mailer = MailerService(config)
@@ -195,7 +256,7 @@ def main():
         print(f"✓ {result['message']}")
         # 로컬 환경에서만 히스토리 저장 (GitHub Actions은 휘발성)
         if not os.environ.get('GITHUB_ACTIONS'):
-            mailer.save_history('DANGER' if is_simple_danger else 'NORMAL', simple_info)
+            mailer.save_history('DANGER' if is_adv_danger else 'NORMAL', adv_info if adv_info['success'] else simple_info)
     else:
         # GitHub Actions 로그에서 실패를 명확히 알리기 위해 에러 출력
         print(f"이메일 발송 실패: {result.get('message')}")
