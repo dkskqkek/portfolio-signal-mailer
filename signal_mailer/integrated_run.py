@@ -18,9 +18,11 @@ from pathlib import Path
 # 경로 설정 (GitHub Actions 환경 대응)
 BASE_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE_DIR / 'signal_mailer'))
+sys.path.insert(0, str(BASE_DIR / 'crash_detection_system' / 'src'))
 
 from signal_detector import SignalDetector
 from mailer import MailerService
+from main import CrashDetectionPipeline
 
 def load_config():
     """설정 로드 (환경 변수 우선, 없으면 config.yaml)"""
@@ -44,9 +46,43 @@ def load_config():
     return config
 
 def get_advanced_signal():
-    """고급 시그널 엔진 (현재 비활성화 - 단순 시그널만 사용)"""
-    # GitHub Actions 환경에서는 단순 시그널만 사용
-    return {'success': False, 'disabled': True}
+    """고급 레짐 감지 시스템 실행 및 최신 결과 추출"""
+    print("\n[고급 시그널 엔진 가동 중...]")
+    try:
+        pipeline = CrashDetectionPipeline(
+            ticker='SPY',
+            start_date=(datetime.datetime.now() - datetime.timedelta(days=365*5)).strftime('%Y-%m-%d'),
+            cache_dir=str(BASE_DIR / 'crash_detection_system' / 'data')
+        )
+        results = pipeline.run_full_pipeline()
+        
+        if results['status'] == 'SUCCESS':
+            signal_val = pipeline.signals['signal'].iloc[-1]
+            reason = pipeline.signals['signal_reason'].iloc[-1]
+            regime = pipeline.indicators['HMM_Regime'].iloc[-1]
+            
+            regime_map = {0: 'Bull (상승)', 1: 'Correction (조정)', 2: 'Crisis (위기)'}
+            regime_name = regime_map.get(int(regime), "Unknown")
+            
+            signal_map = {2: 'STRONG BUY', 1: 'BUY', 0: 'NEUTRAL (중립)', -1: 'SELL (매도)', -2: 'STRONG SELL (강력 매도)'}
+            signal_name = signal_map.get(int(signal_val), "Unknown")
+            
+            return {
+                'success': True,
+                'signal': signal_name,
+                'regime': regime_name,
+                'reason': reason,
+                'indicators': {
+                    'RSI': pipeline.indicators['RSI'].iloc[-1],
+                    'ADX': pipeline.indicators['ADX'].iloc[-1],
+                    'VIX': pipeline.indicators['VIX'].iloc[-1]
+                }
+            }
+    except Exception as e:
+        print(f"고급 시그널 실행 중 오류 발생: {e}")
+        import traceback
+        traceback.print_exc()
+    return {'success': False, 'error': "고급 엔진 실행 실패"}
 
 def generate_reports(today_str, status_title, is_overall_danger, is_simple_danger, is_adv_sell, simple_info, adv_info):
     """순수 텍스트 리포트 생성 (Email & Markdown 공용)"""
@@ -60,15 +96,24 @@ def generate_reports(today_str, status_title, is_overall_danger, is_simple_dange
 [권장 스탠스]     : {'방어적 리밸런싱 (JEPI 전환)' if is_overall_danger else '공격적 자산 운용 (QQQ 유지)'}
 
 {line}
-1. 시장 분석 결과 (MA/Volatility 엔진)
+1. 멀티-팩터 엔진 분석 결과
 {line}
 
-- 판정: {'[🚨 DANGER]' if is_simple_danger else '[✅ NORMAL]'}
-- 근거: {simple_info.get('reason', '지표 정상')}
-- SPY 추세: {simple_info.get('spy_trend', 'N/A')}
-- KS200 추세: {simple_info.get('kospi_trend', 'N/A')}
+(1) 시클리컬 엔진 (MA/Vol)
+    - 판정: {'[🚨 DANGER]' if is_simple_danger else '[✅ NORMAL]'}
+    - 근거: {simple_info.get('reason', '지표 정상')}
 
 """
+
+    if adv_info['success']:
+        report += f"""(2) AI 인텔리전스 (HMM)
+    - 판정: {'[🚨 ' + adv_info['signal'] + ']' if is_adv_sell else '[💎 ' + adv_info['signal'] + ']'}
+    - 레짐: {adv_info['regime']}
+    - 근거: {adv_info['reason'].strip() if adv_info['reason'] else '정상'}
+    - 지표: RSI({adv_info['indicators']['RSI']:.1f}) | ADX({adv_info['indicators']['ADX']:.1f}) | VIX({adv_info['indicators']['VIX']:.1f})
+"""
+    else:
+        report += "(2) AI 인텔리전스 (HMM)\n    - 판정: [❌ ENGINE ERROR]\n"
 
     growth_weight = " 0%" if is_overall_danger else "38%"
     defense_weight = "38%" if is_overall_danger else " 0%"
