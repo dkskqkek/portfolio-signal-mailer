@@ -26,18 +26,31 @@ portfolio:
   
   # 포지션 조정
   normal_mode:
-    schd_weight: 0.34
-    qqq_weight: 0.34
-    xlp_weight: 0.0
-    kospi_weight: 0.17
-    gold_weight: 0.15
+    schd_weight: 0.38
+    qqq_weight: 0.38
+    jepi_weight: 0 # Only used in danger mode
+    ks200_weight: 0.19
+    gold_weight: 0.05
+    vix_weight: 0
   
   danger_mode:
-    schd_weight: 0.34
-    qqq_weight: 0.0      # QQQ 제로로 축소
-    xlp_weight: 0.34     # XLP로 전환
-    kospi_weight: 0.17
-    gold_weight: 0.15
+    schd_weight: 0.38
+    qqq_weight: 0
+    jepi_weight: 0.38
+    ks200_weight: 0.19
+    gold_weight: 0.05
+    vix_weight: 0
+
+strategy:
+  # 전략 모드 선택
+  # 'ma_only': 단일 장기 이평선(SMA) 전략 [최종 선정: SMA 150]
+  # 'fusion': MA + VIX + RSI 복합 전략
+  # 'hybrid': Fusion + MA Floor (이중 안전장치)
+  mode: 'ma_only' 
+
+  # 이동평균선(MA) 설정
+  ma_period_short: 15
+  ma_period_long: 150
 
 # 신호 이력 저장 경로
 history_file: "d:/gg/signal_mailer/signal_history.json"

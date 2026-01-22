@@ -40,26 +40,42 @@ def load_config():
     
     return config
 
-def generate_reports(today_str, status_title, is_danger, signal_info):
+def generate_reports(today_str, status_title, is_danger, signal_info, config):
     """최적화 하이브리드(Fusion) 모델 리포트 생성 (메일용/로컬용 분리)"""
     mf_score = signal_info.get('mf_score', 50.0)
     m1_danger = signal_info.get('m1_danger', False)
+    
+    # 0. 설정에서 자산 관리 정보 추출
+    portfolio_cfg = config.get('portfolio', {})
+    mode_cfg = portfolio_cfg.get('danger_mode' if is_danger else 'normal_mode', {})
+    
+    # Tickers and Weights from config
+    schd_w = f"{mode_cfg.get('schd_weight', 0)*100:.0f}%"
+    qqq_w = f"{mode_cfg.get('qqq_weight', 0)*100:.0f}%"
+    jepi_w = f"{mode_cfg.get('jepi_weight', 0)*100:.0f}%"
+    ks200_w = f"{mode_cfg.get('ks200_weight', 0)*100:.0f}%"
+    gold_w = f"{mode_cfg.get('gold_weight', 0)*100:.0f}%"
     
     # 1. 메일용 텍스트 포맷 (기존의 텍스트+기호 방식)
     line = "=" * 60
     bar_len = 20
     filled = int(mf_score / 100 * bar_len)
     bar = "■" * filled + "□" * (bar_len - filled)
+
+    # SMA 150 Detail
+    current_px = signal_info.get('current_price', 0)
+    ma_val = signal_info.get('ma_value', 0)
+    ma_status = "상회 (정상)" if current_px > ma_val else "하회 (🚨위험)"
     
     mail_content = f"""{line}
-📅 {today_str} DAILY MARKET INTELLIGENCE (Optimized Fusion)
+📅 {today_str} DAILY MARKET INTELLIGENCE (Pure SMA 150)
 {line}
 
 [종합 시장 신호] : {status_title}
 [권장 스탠스]     : {'방어적 리밸런싱 (JEPI 전환)' if is_danger else '공격적 자산 운용 (QQQ 유지)'}
 
 {line}
-1. 최적화 하이브리드 엔진 분석 (Sentinel + Validator)
+1. 시장 지표 분석 (Price vs SMA 150)
 {line}
 
 (1) 시그널 판정
@@ -67,30 +83,25 @@ def generate_reports(today_str, status_title, is_danger, signal_info):
     - 판정 근거: {signal_info.get('reason', '정상 범위 내 동작 중')}
 
 (2) 세부 데이터 분석
-    - 기술적 위기 감지 (Sentinel): {'[ON]' if m1_danger else '[OFF]'}
-    - 멀티팩터 심리 점수 (Validator): {mf_score:.1f}점
-      [Fear 0 {bar} 100 Greed]
+    - QQQ 현재가 : ${current_px:.2f}
+    - SMA 150선 : ${ma_val:.2f}
+    - 이평선 상태: {ma_status}
 
-(3) 엔진 스펙 (Optimized Hybrid)
-    - 로직: 기술지표(15d MA/30d Vol) + 통계적 멀티팩터 CDF 융합
-    - 성과: CAGR 13.01% | Sharpe 0.92 | MDD -25.5%
-"""
+(3) 전략 엔진 (SMA 150 Only)
+    - 로직: QQQ 가격이 150일 단순 이동평균선(SMA) 위에 있으면 유지, 아래면 매도.
+    - 성과: CAGR 12.1% | Sharpe 1.13 | MDD -15.6% (2020.06~현재)
 
-    growth_weight = " 0%" if is_danger else "38%"
-    defense_weight = "38%" if is_danger else " 0%"
-    
-    mail_content += f"""
 {line}
 2. 전략적 자산 배분 제안
 {line}
 
 (Ticker) | (기본 비중) | (권장 비중) | (Action)
 ------------------------------------------------------------
- SCHD    |    38%     |    38%     |   HOLD
- QQQ     |    38%     |   {growth_weight}     |   {'SELL' if is_danger else 'HOLD'}
- JEPI    |     0%     |   {defense_weight}     |   {'BUY ' if is_danger else ' -  '}
- KS200   |    19%     |    19%     |   HOLD
- GOLD    |     5%     |     5%     |   HOLD
+ SCHD    |    38%     |    {schd_w}     |   HOLD
+ QQQ     |    38%     |    {qqq_w}     |   {'SELL' if is_danger else 'HOLD'}
+ JEPI    |     0%     |    {jepi_w}     |   {'BUY ' if is_danger else ' -  '}
+ KS200   |    19%     |    {ks200_w}     |   HOLD
+ GLD     |     5%     |    {gold_w}     |   HOLD
 ------------------------------------------------------------
 
 {line}
@@ -98,7 +109,7 @@ def generate_reports(today_str, status_title, is_danger, signal_info):
 {line}
 """
     if is_danger:
-        mail_content += "!!! [🚨] 이중 확정 위험: 방어 자산 전환 !!!\n- 기술지표와 시장 심리가 모두 약세장 진입에 동의했습니다.\n- QQQ 비중을 전량(38%) 매도하고 JEPI(38%)로 교체하세요.\n"
+        mail_content += f"!!! [🚨] 이중 확정 위험: 방어 자산 전환 !!!\n- 기술지표와 시장 심리가 모두 약세장 진입에 동의했습니다.\n- QQQ 비중을 전량 매도하고 JEPI({jepi_w})로 교체하세요.\n"
     elif m1_danger:
         mail_content += "!!! [⚖️] 주의: 기술지표 약세이나 심리 지수가 방어 중 !!!\n- 일시적 노이즈일 가능성이 높습니다. 포지션을 유지하며 관망하세요.\n"
     else:
@@ -113,16 +124,16 @@ def generate_reports(today_str, status_title, is_danger, signal_info):
 
 ---
 
-## 1. 하이브리드 엔진 정밀 분석
+## 1. 시장 지표 분석 (SMA 150)
 
 ### 🔍 시그널 판정
 - **최종 상태**: {'🚨 **DANGER (위험)**' if is_danger else '✅ **NORMAL (정상)**'}
 - **판정 근거**: {signal_info.get('reason', '정상 범위 내 동작 중')}
 
 ### 📈 데이터 디테일
-- **기술적 위기 감지 (Sentinel)**: `{'ON' if m1_danger else 'OFF'}`
-- **멀티팩터 심리 점수 (Validator)**: **{mf_score:.1f}** / 100
-  - `[Fear 0 {bar} 100 Greed]`
+- **QQQ 현재가**: `${current_px:.2f}`
+- **SMA 150선**: `${ma_val:.2f}`
+- **이평선 상태**: **{ma_status}**
 
 ---
 
@@ -130,22 +141,20 @@ def generate_reports(today_str, status_title, is_danger, signal_info):
 
 | Ticker | 역할 | 기본 비중 | **권장 비중** | 액션 |
 | :--- | :--- | :---: | :---: | :--- |
-| **SCHD** | 배당 코어 | 38% | 38% | **HOLD** |
-| **QQQ** | 성장 엔진 | 38% | **{growth_weight}** | {'🚨 SELL' if is_danger else '✅ HOLD'} |
-| **JEPI** | 하락 방어 | 0% | **{defense_weight}** | {'🚀 BUY' if is_danger else '-'} |
-| **KS200** | 국내 시장 | 19% | 19% | HOLD |
-| **GOLD** | 안전 자산 | 5% | 5% | HOLD |
+| **SCHD** | 배당 코어 | 38% | {schd_w} | **HOLD** |
+| **QQQ** | 성장 엔진 | 38% | **{qqq_w}** | {'🚨 SELL' if is_danger else '✅ HOLD'} |
+| **JEPI** | 하락 방어 | 0% | **{jepi_w}** | {'🚀 BUY' if is_danger else '-'} |
+| **KS200** | 국내 시장 | 19% | {ks200_w} | HOLD |
+| **GLD** | 안전 자산 | 5% | {gold_w} | HOLD |
 
 ---
 
 ## 💡 투자 가이드
 """
     if is_danger:
-        md_report += "> [!CAUTION]\n> **이중 확정 위험: 방어 자산 전환**\n> 기술지표와 시장 심리가 모두 약세장 진입에 동의했습니다. QQQ 전량을 JEPI로 교체하십시오.\n"
-    elif m1_danger:
-        md_report += "> [!IMPORTANT]\n> **주의: 기술지표 약세이나 심리 지수가 유효**\n> 일시적 노이즈일 가능성이 높습니다. 포지션을 유지하며 관망하십시오.\n"
+        md_report += f"> [!CAUTION]\n> **추세 이탈: 위험 자산 매도**\n> QQQ 가격이 150일 이평선을 하회했습니다. 자산을 JEPI({jepi_w})로 교체하십시오.\n"
     else:
-        md_report += "> [!NOTE]\n> **상태 평온: 공격적 포지션 유지**\n> 시장의 추세와 심리가 모두 우호적입니다. 성장을 온전히 누리시기 바랍니다.\n"
+        md_report += "> [!NOTE]\n> **상세 평온: 상승 추세 지속**\n> QQQ 가격이 150일 이평선 위에서 안정적으로 움직이고 있습니다. 공격적 포지션을 유지하십시오.\n"
 
     md_report += f"\n---\n*본 리포트는 ANTIGRAVITY HYBRID 엔진에 의해 자동 생성되었습니다. ({today_str})*"
     
@@ -174,7 +183,7 @@ def main():
     today_str = datetime.datetime.now().strftime("%Y-%m-%d")
     status_title = "🚨 위험 (방어 전환)" if is_danger else "✅ 정상 (QQQ 유지)"
     
-    text_report = generate_reports(today_str, status_title, is_danger, signal_info)
+    text_report = generate_reports(today_str, status_title, is_danger, signal_info, config)
     
     subject = f"[시장 신호 리포트] {today_str} : {status_title}"
     
