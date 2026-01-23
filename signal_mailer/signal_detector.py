@@ -219,6 +219,7 @@ class SignalDetector:
 
         is_danger = signal_info["is_danger"]
         current_status = signal_info["status_label"]
+        # [Korean Defense Proxy Mapping]
         def_assets = signal_info["defensive_assets"]
         def_asset_str = ", ".join(def_assets)
         emoji = "🔴" if is_danger else "🟢"
@@ -230,6 +231,21 @@ class SignalDetector:
             if is_danger
             else "CORE HOLDING (QLD/KOSPI)"
         )
+
+        korea_proxy_map = {
+            "GLD": "ACE KRX금현물",
+            "BIL": "TIGER/KODEX CD금리액티브",
+            "IEF": "TIGER 미국채10년선물",
+            "TLT": "ACE 미국30년국채액티브(H)",
+            "UUP": "KOSEF 미국달러선물",
+            "DBC": "ACE KRX금현물(대체)",  # Commodities fallback
+        }
+
+        def_korea = []
+        for asset in def_assets:
+            proxy = korea_proxy_map.get(asset, "TIGER CD금리액티브(기본)")
+            def_korea.append(f"{asset}→{proxy}")
+        def_korea_str = " / ".join(def_korea)
 
         body = f"""
 ============================================================
@@ -244,11 +260,13 @@ QQQ 현재가    : ${signal_info["current_price"]:.2f}
 SMA 110 (중기): ${signal_info["ma110"]:.2f}
 SMA 250 (장기): ${signal_info["ma250"]:.2f}
 
-[2] TOP-3 DEFENSIVE ENSEMBLE (최적 방패 3종)
+[2] TOP-3 DEFENSIVE ENSEMBLE (미국/국내 대응)
 ------------------------------------------------------------
-선정된 방어 자산: {def_asset_str} (각 15% 배분)
-- 8개월 상대 모멘텀 상위 3종 균등 분산
-- Absolute Momentum 필터(모멘텀 < 0일 시 현금 대피) 적용
+미국 계좌 방어: {def_asset_str} (각 15% 배분)
+국내 대안(Proxy): {def_korea_str}
+
+※ 국내 계좌(ISA/연금) 간편 대응 가이드:
+   👉 DANGER 시 [금현물 50% + CD금리 50%] 반반 전략 권장
 
 [3] ACTIONABLE ALLOCATION GUIDE
 ------------------------------------------------------------
