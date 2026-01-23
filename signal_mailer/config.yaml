@@ -16,41 +16,20 @@ email:
   recipient_email: "gamjatangjo@gmail.com"
   
   # 이메일 제목/본문 템플릿
-  subject_template: "[포트폴리오 신호] QQQ->XLP 전환 {status}"
+  subject_template: "[포트폴리오 신호] {status}"
   
-portfolio:
-  # 포트폴리오 구성 및 신호 기준
-  # 위험신호 발생 기준:
-  # 1. 20일 이동평균 < 25 percentile
-  # 2. 20일 변동성 > 75 percentile
-  
-  # 포지션 조정
-  normal_mode:
-    schd_weight: 0.38
-    qqq_weight: 0.38
-    jepi_weight: 0 # Only used in danger mode
-    ks200_weight: 0.19
-    gold_weight: 0.05
-    vix_weight: 0
-  
-  danger_mode:
-    schd_weight: 0.38
-    qqq_weight: 0
-    jepi_weight: 0.38
-    ks200_weight: 0.19
-    gold_weight: 0.05
-    vix_weight: 0
-
-strategy:
-  # 전략 모드 선택
-  # 'ma_only': 단일 장기 이평선(SMA) 전략 [최종 선정: SMA 150]
-  # 'fusion': MA + VIX + RSI 복합 전략
-  # 'hybrid': Fusion + MA Floor (이중 안전장치)
-  mode: 'ma_only' 
-
-  # 이동평균선(MA) 설정
-  ma_period_short: 15
-  ma_period_long: 150
+# Portfolio Strategy Configuration
+# Current Strategy: QLD (2x Nasdaq) + Top-3 Defensive Ensemble
+# Signal Logic: Dual SMA (110/250) with Hysteresis
+# 
+# Portfolio Weights (Hardcoded in signal_detector.py):
+# - Tactical Asset: 45% (QLD in NORMAL, Top-3 Ensemble in DANGER)
+# - KOSPI: 20%
+# - SPY: 20%
+# - GOLD: 15%
+#
+# Note: This section is for documentation only. 
+# Actual weights are managed in signal_detector.py code.
 
 # 신호 이력 저장 경로
 history_file: "d:/gg/signal_mailer/signal_history.json"

@@ -28,13 +28,13 @@ def main():
     print("포트폴리오 신호 감지 (GitHub Actions)")
     print("="*60)
     
-    # 신호 감지
-    detector = SignalDetector()
-    signal_info = detector.detect()
-    
-    # 이전 상태 조회
+    # 설정 로드 및 서비스 초기화
     mailer = MailerService(config)
     previous_status = mailer.get_previous_status()
+    
+    # 신호 감지 (이전 상태를 반영하여 Hysteresis 적용)
+    detector = SignalDetector()
+    signal_info = detector.detect(previous_status=previous_status)
     
     # 신호 리포트 생성
     report = SignalDetector.format_signal_report(signal_info, previous_status)

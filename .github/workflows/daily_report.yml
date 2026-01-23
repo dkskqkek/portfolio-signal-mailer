@@ -2,7 +2,7 @@ name: Portfolio Signal Mailer
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # KST 오전 9시 (UTC 00:00)
+    - cron: '30 22 * * *'  # KST 오전 7시 30분 (UTC 22:30, 전일 기준) - GitHub 지연(1~2시간) 고려
   workflow_dispatch:      # 수동 실행 가능
 
 # 저장소 쓰기 권한 허용 (히스토리 커밋용)

@@ -32,13 +32,13 @@ def main():
     print("데일리 포트폴리오 리포트 생성 중...")
     print("="*60)
     
-    # 신호 감지
-    detector = SignalDetector()
-    signal_info = detector.detect()
-    
-    # 이전 상태 조회
+    # 설정 로드 및 서비스 초기화
     mailer = MailerService(config)
     previous_status = mailer.get_previous_status()
+    
+    # 신호 감지 (이전 상태를 반영하여 Hysteresis 적용)
+    detector = SignalDetector()
+    signal_info = detector.detect(previous_status=previous_status)
     
     # 신호 리포트 생성
     report = SignalDetector.format_signal_report(signal_info, previous_status)
@@ -55,16 +55,19 @@ def main():
     today_str = datetime.datetime.now().strftime("%Y-%m-%d")
     email_config = config.get('email', {})
     
-    # 제목 커스터마이징
-    subject = f"[데일리 리포트] {today_str} 포트폴리오 신호: {report['title']}"
+    # 제목 커스터마이징 (이모지 포함)
+    status_emoji = "🟢" if "NORMAL" in report['title'] else "🔴" if "DANGER" in report['title'] else "⚠️"
+    subject = f"{status_emoji} [데일리 리포트] {today_str} 포트폴리오 신호: {report['status']}"
     
-    # 본문에 설명 추가
-    body_header = f"""
-<h2>📅 {today_str} 데일리 리포트</h2>
-<p>이 메일은 자동화 설정에 의해 매일 아침 발송됩니다.</p>
-<hr>
+    # 본문에 프리미엄 스타일 적용 (ASCII 정렬 보존을 위해 <pre> 사용)
+    full_body = f"""
+<div style="font-family: 'Courier New', Courier, monospace; background-color: #f8f9fa; padding: 20px; border-radius: 10px; color: #333;">
+<pre style="line-height: 1.2;">
+{report['body']}
+</pre>
+<p style="font-size: 12px; color: #777; text-align: center;">본 메일은 설정된 주기에 따라 자동 발성되었습니다.</p>
+</div>
 """
-    full_body = body_header + report['body']
     
     result = mailer.send_email(subject, full_body)
     

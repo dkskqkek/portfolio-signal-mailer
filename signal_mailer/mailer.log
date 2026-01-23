@@ -51,3 +51,99 @@
 2026-01-22 16:04:42,723 - MailerService - INFO - 신호 이력 저장: NORMAL
 2026-01-22 16:14:22,005 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
 2026-01-22 16:14:22,007 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:33:34,950 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:33:34,951 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:35:35,529 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:35:35,531 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:37:53,364 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:37:53,365 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:39:09,809 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:39:09,810 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:42:18,172 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:42:18,186 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 16:43:31,126 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 16:43:31,128 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 20:12:38,883 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 20:12:38,885 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 20:18:44,310 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 20:18:44,320 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 21:14:25,257 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 21:14:25,258 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 21:15:06,084 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 21:15:06,094 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 22:27:06,845 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 22:27:06,845 - MailerService - INFO - [DEBUG 모드] 이메일 발송 시뮬레이션
+2026-01-22 22:27:06,845 - MailerService - INFO -   수신자: gamjatangjo@gmail.com
+2026-01-22 22:27:06,845 - MailerService - INFO -   제목: [데일리 리포트] 2026-01-22 포트폴리오 신호: NORMAL
+2026-01-22 22:27:06,845 - MailerService - INFO -   본문:
+
+<h2>📅 2026-01-22 데일리 리포트</h2>
+<p>이 메일은 자동화 설정에 의해 매일 아침 발송됩니다.</p>
+<hr>
+Portfolio Signal Report
+Time: 2026-01-22 22:27:06
+Status: NORMAL
+Reason: NORMAL (SMA 150): QQQ가 150일 이평선 위에 있습니다. (616.28 > 591.25)
+QQQ Current: 616.28
+QQQ SMA 150: 591.25
+2026-01-22 22:31:45,960 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-22 22:31:49,319 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 22:37:25,193 - MailerService - ERROR - 신호 이력 저장 실패: Object of type bool is not JSON serializable
+2026-01-22 22:37:28,359 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-22 22:40:35,670 - MailerService - ERROR - 신호 이력 저장 실패: Object of type bool is not JSON serializable
+2026-01-22 22:40:38,321 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-23 10:18:47,184 - MailerService - ERROR - 신호 이력 저장 실패: Object of type bool is not JSON serializable
+2026-01-23 10:18:50,949 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-23 12:56:00,501 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-23 12:59:08,652 - SignalMailerSystem - ERROR - 테스트 이메일 발송 실패: 'QQQ'
+2026-01-23 13:01:47,637 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-23 14:38:42,375 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 14:38:42,376 - SignalMailerSystem - INFO - 신호 확인 시작
+2026-01-23 14:38:42,376 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 14:38:44,145 - SignalMailerSystem - INFO - 신호 상태: NORMAL
+2026-01-23 14:38:44,145 - SignalMailerSystem - INFO - 이전 상태: None
+2026-01-23 14:38:44,145 - SignalMailerSystem - INFO - 상태 변화: False
+2026-01-23 14:38:44,146 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-23 14:38:44,147 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
+2026-01-23 14:38:44,147 - SignalMailerSystem - INFO - 신호 확인 완료
+
+2026-01-23 14:44:16,409 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 14:44:16,409 - SignalMailerSystem - INFO - 신호 확인 시작
+2026-01-23 14:44:16,409 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 14:44:18,097 - SignalMailerSystem - INFO - 신호 상태: NORMAL
+2026-01-23 14:44:18,097 - SignalMailerSystem - INFO - 이전 상태: NORMAL
+2026-01-23 14:44:18,098 - SignalMailerSystem - INFO - 상태 변화: False
+2026-01-23 14:44:18,099 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-23 14:44:18,099 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
+2026-01-23 14:44:18,099 - SignalMailerSystem - INFO - 신호 확인 완료
+
+2026-01-23 14:46:08,069 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 14:46:08,069 - SignalMailerSystem - INFO - 신호 확인 시작
+2026-01-23 14:46:08,069 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 14:46:09,714 - SignalMailerSystem - INFO - 신호 상태: NORMAL
+2026-01-23 14:46:09,714 - SignalMailerSystem - INFO - 이전 상태: NORMAL
+2026-01-23 14:46:09,714 - SignalMailerSystem - INFO - 상태 변화: False
+2026-01-23 14:46:09,715 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-23 14:46:09,716 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
+2026-01-23 14:46:09,716 - SignalMailerSystem - INFO - 신호 확인 완료
+
+2026-01-23 15:11:51,872 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 15:11:51,872 - SignalMailerSystem - INFO - 신호 확인 시작
+2026-01-23 15:11:51,872 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 15:11:53,655 - SignalMailerSystem - INFO - 신호 상태: NORMAL
+2026-01-23 15:11:53,655 - SignalMailerSystem - INFO - 이전 상태: NORMAL
+2026-01-23 15:11:53,655 - SignalMailerSystem - INFO - 상태 변화: False
+2026-01-23 15:11:53,657 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-23 15:11:53,657 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
+2026-01-23 15:11:53,657 - SignalMailerSystem - INFO - 신호 확인 완료
+
+2026-01-23 15:29:59,808 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 15:29:59,808 - SignalMailerSystem - INFO - 신호 확인 시작
+2026-01-23 15:29:59,808 - SignalMailerSystem - INFO - ============================================================
+2026-01-23 15:30:01,621 - SignalMailerSystem - INFO - 신호 상태: NORMAL
+2026-01-23 15:30:01,621 - SignalMailerSystem - INFO - 이전 상태: NORMAL
+2026-01-23 15:30:01,621 - SignalMailerSystem - INFO - 상태 변화: False
+2026-01-23 15:30:01,622 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-23 15:30:01,622 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
+2026-01-23 15:30:01,623 - SignalMailerSystem - INFO - 신호 확인 완료
+

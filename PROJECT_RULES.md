@@ -1,22 +1,19 @@
-# 프로젝트 규칙
+## 1. 최우선 원칙: 의도 파악 및 조율 (Ambiguity Check)
+사용자의 프롬프트가 모호하거나 해석의 여지가 많을 경우(예: "이거 좀 봐줘", "어떻게 생각해?", "수정해"), 절대 즉시 작업을 수행하지 않습니다.
 
-## Gemini Added Memories
+반드시 다음 단계를 거쳐 의도를 명확히 한 후 실행해야 합니다:
+1. **Stop & Ask**: "작업 전, 정확한 방향 설정을 위해 다음 n가지를 확인하고 싶습니다."라고 질문합니다.
+2. **Context Mapping**: 사용자의 의도가 [투자/코딩/학습/일상] 중 어디에 해당하는지 파악합니다.
+3. **Option Offering**: 가능한 해결책이나 방향을 몇 가지 제시하여 선택할 수 있게 합니다.
 
-### 커뮤니케이션 및 기록
-- 사용자와의 대화 및 설명은 한국어로 진행합니다.
-- 코드 내 변수명, 함수명, 주석은 **영어(English)**로 작성하여 글로벌 표준과 영어 학습 효과를 확보합니다.
-- 결과물 제출 시 단순 완료 통보가 아닌 **\"요구사항 대비 충족 여부 검증 체크리스트\"**를 함께 요약하여 보고합니다.
-- 복잡한 로직이나 알고리즘 선택 이유에는 주석으로 **'왜 이 방식을 선택했는지(Decision Record)'**를 한국어로 간략히 명시합니다.
+## 2. 사용자 페르소나 및 핵심 가치 (The Intellectual Partner)
+- **정체성**: 30-40대 남성, 정량적 데이터 기반 투자(Quant) 및 공학적 DIY 중심의 **'실용적 탐구자(Rational Builder)'**.
+- **핵심 원칙**: 적당한 타협 금지. 정보의 정확성과 깊이를 최우선으로 하며, 본질을 파고드는 탐구를 지향합니다.
 
-### 인증 및 보안
-- Gemini API를 사용하여 AI 기능을 구현합니다.
-- 앱 비밀번호는 웹 브라우저가 아닌 환경에서 Google 계정에 접근할 때 사용하는 1회성 16자리 비밀번호입니다.
-- 패스키 및 보안키와는 다른 개념입니다.
-- 이메일 발송 기능을 위해 앱 비밀번호를 사용해야 합니다.
-
-### 주의사항
-- API 키와 앱 비밀번호는 `.env` 파일에 저장하고 버전 관리에서 제외합니다.
-- 민감한 정보는 절대 코드에 하드코딩하지 않습니다.
+## 3. 대화 및 사고 모드
+- **Mode A (학습/이해)**: 단순 정의가 아닌 **"왜(Why)"**와 **"구조(Structure)"** 중심의 깊이 우선 탐색.
+- **Mode B (분석/검증)**: **'악마의 변호인(Devil's Advocate)'** 입장에서 데이터의 출처와 통계적 함정을 상시 검증.
+- **Mode C (문제 해결)**: 실행 가능한 코드 제공 및 옵션별 장단점 비교표 제시.
 
 ## 개발 및 자동화 규칙 (Engineering & Quant Style)
 
@@ -37,11 +34,27 @@
 - **경계값 분석(Boundary Value Analysis)**을 통해 극단적인 상황에서의 오류를 사전에 방지합니다.
 - 각 단계별 결과를 구조화된 로그(JSON/CSV)로 남깁니다.
 
-### 데이터 처리 및 검증 (Strict Mode)
-- 제공된 데이터는 임의로 요약하거나 중략하지 않고 **전체를 분석(Full Context)**합니다.
-- 분량이 많을 경우 **분할 처리(Chunking) → 재조합(Reassembly)** 과정을 거쳐 전체 맥락을 유지합니다.
-- 데이터의 타임스탬프, 단위, 출처가 명시되지 않은 경우 불완전 데이터로 간주하고 사용자에게 재확인을 요청합니다.
-- **통계적 유의성**: 매매 횟수가 최소 10회 미만인 경우 신뢰도가 낮은 것으로 간주하고 주의 문구를 추가합니다.
+### 7. 백테스팅 표준 (Mandatory)
+- **기간**: 최소 2008년 금융위기를 포함한 10년 이상 데이터로 검증.
+- **비용**: 슬리피지 0.1%, 수수료 왕복 0.02% 기본 적용.
+- **필수 지표**: CAGR, MDD, Sharpe Ratio, 총 거래 횟수.
+- **시뮬레이션**: Monte Carlo 시뮬레이션(최악의 5% 케이스) 및 벤치마크(SPY, 60/40) 비교 필수.
+
+### 8. 엄격한 금지 사항 (Hard Constraints)
+- **모호한 동의 금지**: "좋은 것 같습니다" 등 막연한 긍정 금지. 데이터 기반 판단 필수.
+- **뻔한 답변 금지**: 일반론적인 요약보다 프로젝트 특화 답변 지향.
+- **자의적 해석 금지**: 불분명한 지시는 반드시 Ambiguity Check 수행.
+- **표면적 처리 금지**: "수정했습니다" 식의 결과 통보 대신 구체적인 변경 위치와 이유 보고.
+
+### 6. 표준 작업 절차 (Standardized Development Workflow)
+모든 개발 및 최적화 작업은 아래 4단계를 엄격히 준수합니다.
+
+1.  **작업 (Job)**: 목표 정의 및 환경 설정. (예: `ma_optimization_engine.py` 고도화)
+2.  **실행 (Run)**: 실제 스크립트 가동 및 데이터 수집. (예: `run_ma_optimization.py` 실행)
+3.  **평가 & 확인 (Eval & Verify)**: 수집된 결과값의 무결성 검증 및 기존 모델 대비 성과 분석.
+4.  **보고 (Report)**: 최종 분석 내용을 `brain` 디렉토리에 마크다운 형식으로 문서화하여 사용자에게 보고.
+
+---
 
 ### 5. 프로젝트 표준 포트폴리오 (Fixed Allocation)
 모든 시스템 운영 및 백테스트는 아래의 고정 비중을 기본값으로 사용합니다.
@@ -103,3 +116,112 @@
 - 작업 목록(Todo List)을 작성하여 진행 상황을 관리합니다.
 - 완료, 진행 중, 미완료 상태를 명확히 구분합니다.
 - 주기적으로 사용자와 진행 상황을 공유합니다.
+
+---
+
+## Development Environment Extensions
+
+본 프로젝트에서 사용 중인 VSCode/Cursor Extension 목록 및 AI 에이전트 활용 가이드입니다.
+
+### Code Quality & Formatting (자동 적용)
+
+#### Ruff (Python Linter/Formatter)
+- **목적**: Python 코드 품질 및 스타일 자동 관리
+- **설정**:
+  - 최대 라인 길이: 100자
+  - Import 정렬: isort 호환
+  - 저장 시 자동 포맷팅 실행
+- **AI 적용**: 코드 생성 시 Ruff 규칙 준수
+
+#### Error Lens
+- **목적**: 에러 및 경고를 코드 라인에 인라인으로 표시
+- **효과**: 스크롤 없이 즉시 문제 확인, 린트 에러 조기 발견
+- **AI 적용**: 코드 제안 시 일반적인 린트 오류 사전 방지
+
+### Documentation & Comments
+
+#### Markdown All in One
+- **목적**: 마크다운 문서 작성 생산성 향상
+- **주요 기능**:
+  - 목차 자동 생성 (`Ctrl+Shift+P` > Create Table of Contents)
+  - 단축키 지원 (Bold, Italic, 링크)
+  - 실시간 프리뷰
+- **AI 적용**: README 및 리포트 작성 시 체계적인 구조 유지
+
+#### autoDocstring (Google Style)
+- **목적**: Python docstring 자동 생성
+- **스타일**: Google docstring 형식 사용
+- **AI 적용**: 함수/클래스 생성 시 Google 스타일 docstring 자동 포함
+
+```python
+def calculate_sharpe_ratio(returns: pd.Series, risk_free_rate: float = 0.04) -> float:
+    """Calculate Sharpe ratio for given returns.
+    
+    Args:
+        returns: Series of portfolio returns
+        risk_free_rate: Annual risk-free rate (default: 4%)
+    
+    Returns:
+        Sharpe ratio value
+    
+    Raises:
+        ValueError: If returns series is empty
+    """
+    pass
+```
+
+### Comment Style (Better Comments)
+
+AI 에이전트가 주석을 작성할 때 다음 형식을 사용합니다:
+
+```python
+# TODO: 향후 구현 예정 기능 (주황색 하이라이트)
+# FIXME: 버그 수정 필요 (빨간색 하이라이트)
+# NOTE: 중요 설명 (파란색 하이라이트)
+# HACK: 임시 해결책 (회색 하이라이트)
+```
+
+### Git Management
+
+#### GitLens
+- **목적**: Git 이력 추적 및 코드 변경 이해도 향상
+- **주요 기능**:
+  - 라인별 blame (누가, 언제 수정했는지)
+  - 파일 히스토리 타임라인
+  - 커밋 비교 및 diff 시각화
+- **AI 적용**: Git 관련 작업 시 변경 이력 참고 권장
+
+### Data Analysis Tools
+
+#### Rainbow CSV
+- **목적**: CSV 파일 가독성 향상
+- **효과**: 컬럼별 색상 구분, SQL-like 쿼리 가능
+- **사용 사례**: `transaction_history.csv`, `optimization_results.csv` 등
+
+#### Jupyter
+- **목적**: 인터랙티브 데이터 분석 및 백테스팅
+- **효과**: 셀 단위 실행으로 빠른 프로토타이핑
+- **사용 사례**: 백테스트 결과 즉시 확인, 차트 시각화
+
+### Utility Extensions
+
+#### Path Intellisense
+- **목적**: 파일 경로 자동완성
+- **효과**: `d:\gg\signal_mailer\...` 등 절대 경로 입력 시 오타 방지
+
+#### YAML
+- **목적**: YAML 파일 문법 검사 및 자동완성
+- **효과**: `config.yaml` 수정 시 들여쓰기 오류 사전 방지
+- **AI 적용**: YAML 파일 생성/수정 시 문법 정확도 보장
+
+---
+
+### AI 에이전트 Extension 활용 원칙
+
+1. **코드 생성 시**: Ruff 규칙 및 Google docstring 형식 준수
+2. **주석 작성 시**: Better Comments 스타일 사용
+3. **문서 작성 시**: Markdown All in One 호환 구조 유지
+4. **경로 입력 시**: 절대 경로 사용 (Path Intellisense 활용)
+5. **설정 파일**: YAML 문법 엄격 준수
+
+**참고**: Extension은 IDE에서 직접 실행되며, AI 에이전트는 Extension의 규칙을 따라 코드를 생성합니다.
