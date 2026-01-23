@@ -1,0 +1,11 @@
+﻿Downloading data for 27 pure 1x assets...
+Simulating Pure 1x QQQ version...
+Simulating Pure 1x VGT version...
+
+--- Pure 1x Strategy Comparison (No Inverse, No Leverage) ---
+Asset      | CAGR       | MDD        | Sharpe    
+--------------------------------------------------
+QQQ (1x)   |     16.37% |    -26.14% |      0.906
+VGT (1x)   |     16.85% |    -26.95% |      0.901
+
+Results saved to pure_1x_strategy_comparison.png

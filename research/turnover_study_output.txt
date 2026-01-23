@@ -1,0 +1,13 @@
+﻿Fetching data for Top-1 vs Top-3 comparison...
+Simulating Top-1 (Concentrated) ...
+Simulating Top-3 (Diversified) ...
+
+--- Concentration vs Diversification Comparison ---
+Strategy        | CAGR       | MDD        | Sharpe     | Switches  
+----------------------------------------------------------------------
+Top-1 Core      |     22.80% |    -32.81% |      0.972 |        100
+Top-3 Ensemble  |     22.91% |    -30.40% |      1.039 |        107
+
+Turnover Reduction: -7.00%
+
+Results saved to turnover_comparison.png

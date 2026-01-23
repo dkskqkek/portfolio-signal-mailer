@@ -17,3 +17,6 @@ Thumbs.db
 node_modules/
 __pycache__/
 *.pyc
+
+# Windows reserved
+nul

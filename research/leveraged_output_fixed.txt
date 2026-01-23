@@ -1,0 +1,18 @@
+﻿Downloading data for 33 assets...
+Simulating Base Super Ensemble...
+Simulating Leveraged Super Ensemble...
+
+--- Defensive Asset Evolution Comparison ---
+Strategy             | CAGR       | MDD        | Sharpe    
+------------------------------------------------------------
+Base (25 assets)     |     16.48% |    -26.14% |      0.914
+Lev (30 assets)      |      9.99% |    -38.62% |      0.365
+
+[Leveraged Defensive Asset Selection frequency]
+SQQQ    60
+TMF     30
+SPXU     7
+TYD      1
+Name: count, dtype: int64
+
+Results saved to leveraged_defensive_comparison.png

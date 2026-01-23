@@ -1,0 +1,15 @@
+﻿Downloading data for 30 assets...
+Simulating QQQ + Refined 2x-capped Defense...
+Simulating QLD (2x) + Refined 2x-capped Defense...
+
+--- Nuanced Leverage Strategy Comparison (Since 2018) ---
+Strategy                            | CAGR       | MDD        | Sharpe    
+---------------------------------------------------------------------------
+QQQ + Legacy Pure 1x                |     16.12% |    -26.14% |      0.847
+QLD + 2x-Capped Defense (NTSX+)     |     22.03% |    -38.23% |      0.852
+
+[Selection Frequency of Portfolio/2x Leverage Defense]
+UBT    29
+Name: count, dtype: int64
+
+Results saved to nuanced_leverage_comparison.png

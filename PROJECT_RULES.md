@@ -56,12 +56,12 @@
 
 ---
 
-### 5. 프로젝트 표준 포트폴리오 (Fixed Allocation)
+### 5. 프로젝트 표준 포트폴리오 (Finalized QLD Strategy)
 모든 시스템 운영 및 백테스트는 아래의 고정 비중을 기본값으로 사용합니다.
-- **SCHD (Dividend Growth)**: 38%
-- **Tactical (QQQ/JEPI)**: 38% (정상 시 QQQ, 위험 시 JEPI 전환)
-- **KOSPI (KS200)**: 19%
-- **GLD (Gold)**: 5%
+- **Tactical (QLD/Top-3 Ensemble)**: 45% (정상 시 QLD, 위험 시 Top-3 앙상블 전환)
+- **KOSPI (KS200)**: 20%
+- **Market Core (SPY)**: 20%
+- **Safe Asset (GLD)**: 15%
 - 입력 데이터의 타입, 결측치, 이상치(Outlier)를 사전에 검사하고 문제 발생 시 즉시 리포트합니다.
 - 테스트 데이터와 실제 데이터를 구분하여 관리합니다.
 - 모든 검증 결과와 처리 과정을 구조화된 로그로 기록하여 추후 분석 및 감사가 가능하게 합니다.

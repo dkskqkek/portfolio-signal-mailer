@@ -1,0 +1,11 @@
+﻿Downloading data for 30 assets...
+Simulating QLD + Pure 1x Defensive Pool...
+Simulating QLD + 2x Leveraged Defensive Pool...
+
+--- QLD Defensive Strategy Comparison (Since 2018) ---
+Defensive Pool            | CAGR       | MDD        | Sharpe    
+-----------------------------------------------------------------
+Pure 1x (23 assets)       |     22.80% |    -32.81% |      0.972
+2x/Portfolio (26 assets)  |     22.60% |    -38.23% |      0.943
+
+Results saved to qld_defensive_comparison.png
