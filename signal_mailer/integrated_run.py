@@ -38,6 +38,9 @@ def load_config():
     return config
 
 
+from portfolio_manager import PortfolioManager
+
+
 def main():
     print(f"[{datetime.now()}] Starting Antigravity v4.1 Engine...")
 
@@ -49,6 +52,10 @@ def main():
 
         detector = SignalDetector(api_key=api_key)
         mailer = MailerService(config)  # Correctly pass config
+        pm = PortfolioManager(
+            state_file=str(Path(__file__).parent.parent / "data/portfolio_state.json")
+        )
+
     except Exception as e:
         print(f"Initialization Failed: {e}")
         return
@@ -60,12 +67,37 @@ def main():
             print(f"Signal Detection Error: {report_data['error']}")
             return
 
+        # 2.1 Calculate Rebalancing Orders
+        # Define Targets based on Signal
+        # report_data['signal'] is typically "RISK ON" or "DEFENSIVE" (or "Uncertain")
+        # Logic: Bull -> High Growth, Bear -> High Defensive
+
+        sig = report_data.get("signal", "DEFENSIVE").upper()
+
+        target_weights = {
+            "Growth": 0.20,
+            "Defensive": 0.70,
+            "Gold": 0.10,
+        }  # Default Bear
+
+        if sig == "RISK ON":
+            target_weights = {"Growth": 0.50, "Defensive": 0.40, "Gold": 0.10}
+
+        print(f"Portfolio Target ({sig}): {target_weights}")
+
+        orders = pm.calculate_rebalancing(target_weights)
+        order_report_text = pm.get_actionable_report(orders)
+
+        # Inject into report_data for HTML generator
+        report_data["rebalancing_orders"] = order_report_text
+        report_data["portfolio_summary"] = pm.get_summary()
+
         # 3. Generate Content
         html_body = generate_html_report(report_data)
 
         # 4. Dispatch
         subject = f"🌌 [Antigravity] {report_data['signal']} | {report_data['date']}"
-        if report_data["signal"] == "DANGER":
+        if report_data["signal"] == "DEFENSIVE":
             subject = f"🛑 [URGENT] DEFENSIVE MODE ACTIVATED | {report_data['date']}"
 
         # Send

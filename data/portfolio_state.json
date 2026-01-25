@@ -1,0 +1,113 @@
+{
+    "updated_at": "2026-01-26",
+    "currency": "KRW",
+    "accounts": [
+        {
+            "name": "ISA (Tax-Advantaged)",
+            "assets": [
+                {
+                    "ticker": "KODEX US S&P500",
+                    "class": "Defensive",
+                    "value": 4533480
+                },
+                {
+                    "ticker": "KODEX US Nasdaq100",
+                    "class": "Growth",
+                    "value": 4491900
+                },
+                {
+                    "ticker": "KODEX Korea Value",
+                    "class": "Defensive",
+                    "value": 2276960
+                },
+                {
+                    "ticker": "ACE Gold",
+                    "class": "Gold",
+                    "value": 657500
+                }
+            ],
+            "cash": 247153
+        },
+        {
+            "name": "Pension (Retirement)",
+            "assets": [
+                {
+                    "ticker": "KODEX US S&P500",
+                    "class": "Defensive",
+                    "value": 30439080
+                },
+                {
+                    "ticker": "KODEX US Nasdaq100",
+                    "class": "Growth",
+                    "value": 20712650
+                },
+                {
+                    "ticker": "TIGER US Div+7%",
+                    "class": "Defensive",
+                    "value": 18536700
+                },
+                {
+                    "ticker": "TIGER Korea Top10",
+                    "class": "Defensive",
+                    "value": 9709200
+                },
+                {
+                    "ticker": "KODEX Korea Value",
+                    "class": "Defensive",
+                    "value": 7405440
+                },
+                {
+                    "ticker": "ACE Gold",
+                    "class": "Gold",
+                    "value": 5029875
+                }
+            ],
+            "cash": 102887
+        },
+        {
+            "name": "Toss (Direct/Overseas)",
+            "assets": [
+                {
+                    "ticker": "GOOGL (Alphabet)",
+                    "class": "Growth",
+                    "value": 29444941
+                },
+                {
+                    "ticker": "VGT (Tech ETF)",
+                    "class": "Growth",
+                    "value": 21097370
+                },
+                {
+                    "ticker": "COWZ (Cash Cow)",
+                    "class": "Defensive",
+                    "value": 14307237
+                },
+                {
+                    "ticker": "XLV (Healthcare)",
+                    "class": "Defensive",
+                    "value": 12052381
+                },
+                {
+                    "ticker": "CVX (Chevron)",
+                    "class": "Defensive",
+                    "value": 11263172
+                },
+                {
+                    "ticker": "VXUS (Intl)",
+                    "class": "Defensive",
+                    "value": 10787354
+                },
+                {
+                    "ticker": "GLDM (Gold)",
+                    "class": "Gold",
+                    "value": 9146912
+                }
+            ],
+            "cash": 0
+        }
+    ],
+    "summary": {
+        "total_value": 212000000,
+        "exchange_rate": 1430
+    }
+}
