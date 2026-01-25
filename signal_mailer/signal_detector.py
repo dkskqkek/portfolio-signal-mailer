@@ -359,8 +359,8 @@ class SignalDetector:
             "error": False,
         }
 
-    @staticmethod
-    def _generate_html_report(signal_info, text_body):
+    @classmethod
+    def _generate_html_report(cls, signal_info, text_body):
         """Generates the 'Midnight Quant' Premium HTML Report with 2-Track Comparison"""
 
         # 1. Basic Data Preparation
