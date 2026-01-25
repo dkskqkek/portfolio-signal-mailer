@@ -53,7 +53,9 @@ def main():
 
     # 신호 탐지 실행
     start_time = datetime.datetime.now()
-    detector = SignalDetector()
+    # Pass Gemini API Key for "The Council" risk module
+    api_key = os.environ.get("GEMINI_API_KEY")
+    detector = SignalDetector(api_key=api_key)
     signal_info = detector.detect()
     signal_info["execution_time"] = start_time
 

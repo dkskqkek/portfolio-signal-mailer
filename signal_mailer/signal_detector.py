@@ -9,6 +9,8 @@ import os
 
 warnings.filterwarnings("ignore")
 
+from debate_council import DebateCouncil
+
 
 class SignalDetector:
     """
@@ -32,12 +34,16 @@ class SignalDetector:
             return val.strftime("%Y-%m-%d %H:%M:%S")
         return val
 
-    def __init__(self):
+    def __init__(self, api_key=None):
         self.spy = yf.Ticker("SPY")
         self.qqq_ticker = yf.Ticker("QQQ")
         self.kospi200 = yf.Ticker("^KS200")
         self.vix_ticker = yf.Ticker("^VIX")
         self.gld_ticker = yf.Ticker("GLD")
+
+        # Initialize The Council
+        self.council = DebateCouncil(api_key) if api_key else None
+
         self.def_pool = [
             "BTAL",
             "XLP",
@@ -171,6 +177,13 @@ class SignalDetector:
             # logging.error(f"Quant Score Calc Failed: {e}")
             return {"total": 0, "breakdown": (0, 0, 0)}
 
+    def _fetch_news_context(self):
+        """
+        Placeholder for news fetching.
+        In future, integrate with a NewsAPI or scrape major headlines.
+        """
+        return "No major breaking news specific to the strategy timeline. Market sentiment implies standard volatility."
+
     def calculate_current_mdd(self, data):
         """Calculate MDD from 1-year peak"""
         window = 252
@@ -295,6 +308,28 @@ class SignalDetector:
         # [NEW] Quant Score Calculation
         q_score = self.calculate_quant_score(data, h_s2)
 
+        # [NEW] The Council: AI Risk Verification
+        # Construct summary for the AI
+        market_metrics = {
+            "vix": float(vix),
+            "quant_score": q_score["total"],
+            "mdd": float(current_mdd),
+            "regime": h_regime,
+            "trend": f"Price ${curr_price:.2f} vs MA {h_ma_slow:.2f}",
+        }
+
+        # Placeholder news context (In production, replace with real news fetcher)
+        news_context = self._fetch_news_context()
+
+        council_verdict = None
+        if self.council:
+            council_verdict = self.council.convene_council(market_metrics, news_context)
+
+        # Apply Discount (Modifier) to Status label if severe
+        # Note: We don't change 'h_status' logic directly to keep integrity,
+        # but we add the verdict to the report.
+        # If discount < 0.8, we might append a warning.
+
         return {
             "is_danger": h_status in ["DANGER", "EMERGENCY (STOP)"],
             "status_label": h_status,  # Primary Status
@@ -306,6 +341,7 @@ class SignalDetector:
             "calculated_mdd": float(current_mdd),
             "quant_score": q_score["total"],
             "score_breakdown": q_score["breakdown"],
+            "council_verdict": council_verdict,  # Pass Object
             "qqq_price": float(curr_price),
             "ma_fast": float(h_ma_fast),
             "ma_slow": float(h_ma_slow),
@@ -606,6 +642,51 @@ class SignalDetector:
             market_status_display = status
             sub_status = "Defensive Mode Activated"
 
+        # The Council HTML Generation
+        council_html = ""
+        council_verdict = signal_info.get("council_verdict")
+
+        if council_verdict:
+            c_discount = council_verdict.discount_factor
+            c_reason = council_verdict.reason
+
+            # Simple color coding for the verdict
+            if c_discount >= 0.9:
+                c_color = "#00FF9D"  # Green
+                c_title = "APPROVED"
+                c_icon = "⚖️"
+            elif c_discount >= 0.7:
+                c_color = "#F5A623"  # Orange
+                c_title = "CAUTION"
+                c_icon = "⚠️"
+            else:
+                c_color = "#FF453A"  # Red
+                c_title = "RESTRICT"
+                c_icon = "🚫"
+
+            percent_view = int(c_discount * 100)
+
+            council_html = f"""
+            <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">⚖️ THE COUNCIL (AI RISK COMMITTEE)</h3>
+            <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px; border-left: 4px solid {c_color};">
+                <div style="margin-bottom: 8px;">
+                    <span style="color: {c_color}; font-size: 14px; font-weight: bold;">{c_icon} {c_title}</span>
+                    <span style="float: right; color: #888; font-size: 12px;">Exposure Cap: {percent_view}%</span>
+                </div>
+                <p style="color: #DDD; font-size: 12px; line-height: 1.5; margin: 0;">
+                    "{c_reason}"
+                </p>
+            </div>
+            """
+        else:
+            # Fallback if no API key or error
+            council_html = """
+            <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">⚖️ THE COUNCIL</h3>
+            <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px;">
+                 <p style="color: #666; font-size: 11px; margin: 0;">AI Risk Module Offline (No API Key or Recess)</p>
+            </div>
+            """
+
         # 3. HTML Template Injection
         html_template = f"""
 <!DOCTYPE html>
@@ -643,6 +724,11 @@ class SignalDetector:
         <tr>
             <td style="padding: 0 20px 20px 20px;">
                 {allocation_section}
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                {council_html}
             </td>
         </tr>
         <tr>
