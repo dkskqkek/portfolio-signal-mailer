@@ -117,18 +117,66 @@ class SignalDetector:
             print(f"Data Fetch Error: {e}")
             return None
 
-    def calculate_current_mdd(self, data, window=252):
+    def calculate_quant_score(self, data, s2_slow):
         """
-        [PATCH] Internal MDD Calculation to avoid 'Ghost MDD' failure.
-        Always uses QQQ as the master risk proxy for the tactical port.
+        [Quant Score Engine v2.0]
+        - Macro Stability (30%): Based on VIX
+        - Trend Integrity (40%): Distance to Slow SMA
+        - Vol Efficiency (30%): Risk-adjusted Momentum
         """
-        if data is None or "QQQ" not in data.columns:
-            return 0.0
+        try:
+            # 1. Data Prep
+            vix = data["^VIX"].iloc[-1]
+            curr_price = data["QQQ"].iloc[-1]
+            ma_slow = data["QQQ"].rolling(s2_slow).mean().iloc[-1]
 
-        # Calculate MDD based on last 252 trading days
-        recent_data = data["QQQ"].iloc[-window:]
-        peak = recent_data.cummax()
-        drawdown = (recent_data - peak) / peak
+            # 2. Component 1: Macro Stability (30 pts)
+            # VIX 12이하 만점, 35이상 0점
+            score_macro = np.clip((35 - vix) / (35 - 12), 0, 1) * 30
+
+            # 3. Component 2: Trend Integrity (40 pts)
+            # MA 대비 +5% 위면 만점, -5% 아래면 0점
+            dist_pct = (curr_price / ma_slow) - 1
+            # -0.05 ~ +0.05 범위를 0 ~ 1로 정규화 -> (val + 0.05) * 10
+            score_trend = np.clip((dist_pct + 0.05) * 10, 0, 1) * 40
+
+            # 4. Component 3: Volatility Efficiency (30 pts)
+            # 최근 20일 수익률 / 최근 20일 변동성 (Simplified Sharpe)
+            recent_ret = data["QQQ"].pct_change(20).iloc[-1]
+            recent_vol = data["QQQ"].pct_change().rolling(20).std().iloc[-1] * np.sqrt(
+                20
+            )
+
+            if recent_vol == 0:
+                efficiency = 0
+            else:
+                efficiency = recent_ret / recent_vol
+
+            # Efficiency가 2.0 이상이면 만점, -1.0 이하면 0점
+            # Range -1 ~ 2 (Span 3)
+            score_vol = np.clip((efficiency + 1) / 3, 0, 1) * 30
+
+            # 5. Final Synthesis
+            total_score = score_macro + score_trend + score_vol
+
+            return {
+                "total": int(total_score),
+                "breakdown": (int(score_macro), int(score_trend), int(score_vol)),
+                "vix": vix,
+                "dist": dist_pct,
+                "efficiency": efficiency,
+            }
+
+        except Exception as e:
+            # logging.error(f"Quant Score Calc Failed: {e}")
+            return {"total": 0, "breakdown": (0, 0, 0)}
+
+    def calculate_current_mdd(self, data):
+        """Calculate MDD from 1-year peak"""
+        window = 252
+        prices = data["QQQ"]
+        peak = prices.rolling(window, min_periods=1).max()
+        drawdown = (prices - peak) / peak
         return drawdown.iloc[-1]
 
     def _load_jarvis_config(self):
@@ -244,6 +292,9 @@ class SignalDetector:
         qqq_usd_ret = data["QQQ"].pct_change().iloc[-1]
         compounded_krw_ret = (1 + qqq_usd_ret) * (1 + fx_ret) - 1
 
+        # [NEW] Quant Score Calculation
+        q_score = self.calculate_quant_score(data, h_s2)
+
         return {
             "is_danger": h_status in ["DANGER", "EMERGENCY (STOP)"],
             "status_label": h_status,  # Primary Status
@@ -253,6 +304,8 @@ class SignalDetector:
             "hybrid_params": (h_s1, h_s2),
             "is_emergency": is_emergency,
             "calculated_mdd": float(current_mdd),
+            "quant_score": q_score["total"],
+            "score_breakdown": q_score["breakdown"],
             "qqq_price": float(curr_price),
             "ma_fast": float(h_ma_fast),
             "ma_slow": float(h_ma_slow),
@@ -456,9 +509,20 @@ class SignalDetector:
         ma_fast = f"${signal_info['ma_fast']:.2f}"
         ma_slow = f"${signal_info['ma_slow']:.2f}"
 
-        # Stability Score (Proxy: 100 - MDD%)
-        quant_score = max(0, 100 - (abs(signal_info["calculated_mdd"]) * 100))
-        quant_score_str = f"{quant_score:.1f}"
+        # Quant Score v2.0
+        quant_score = signal_info.get("quant_score", 0)
+        q_breakdown = signal_info.get("score_breakdown", (0, 0, 0))
+        quant_score_str = f"{quant_score}"  # Integer format
+
+        # Stability Star Rating
+        if quant_score >= 90:
+            stars = "⭐⭐⭐⭐⭐ (Perfect)"
+        elif quant_score >= 70:
+            stars = "⭐⭐⭐⭐ (Healthy)"
+        elif quant_score >= 40:
+            stars = "⭐⭐⭐ (Caution)"
+        else:
+            stars = "⚠️ (Critical)"
 
         # 2. Status Styling & Asset Allocation Logic
         # 2. Status Styling & Asset Allocation Logic
@@ -583,10 +647,38 @@ class SignalDetector:
         </tr>
         <tr>
             <td style="padding: 0 20px 20px 20px;">
+                <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">📊 QUANT SCORE (v2.0)</h3>
+                <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px;">
+                    <div style="margin-bottom: 5px;">
+                        <span style="color: #888; font-size: 11px;">TOTAL SCORE</span>
+                        <span style="float: right; color: {status_color}; font-size: 14px; font-weight: bold;">{quant_score_str} / 100</span>
+                    </div>
+                    <div style="margin: 0 0 10px 0; font-size: 12px; color: #EEE;">{stars}</div>
+                    <div style="height: 4px; background-color: #333; border-radius: 2px; margin-bottom: 10px;">
+                        <div style="height: 4px; background-color: {status_color}; border-radius: 2px; width: {quant_score}%;"></div>
+                    </div>
+                    <table width="100%" cellpadding="2" cellspacing="0">
+                        <tr>
+                            <td style="color: #AAA; font-size: 11px;">Macro (VIX)</td>
+                            <td align="right" style="color: #EEE; font-size: 11px;">{q_breakdown[0]} / 30</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #AAA; font-size: 11px;">Trend (MA)</td>
+                            <td align="right" style="color: #EEE; font-size: 11px;">{q_breakdown[1]} / 40</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #AAA; font-size: 11px;">Efficiency (Vol)</td>
+                            <td align="right" style="color: #EEE; font-size: 11px;">{q_breakdown[2]} / 30</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
                 <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">📊 TECHNICALS</h3>
                 <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px;">
                     <table width="100%">
-                        <tr><td style="color:#888; font-size:11px;">Quant Score (Stability)</td><td align="right" style="color:{status_color}; font-size:12px; font-weight:bold;">{quant_score_str} / 100</td></tr>
                         <tr><td style="color:#888; font-size:11px;">RSI (14)</td><td align="right" style="color:#EEE; font-size:12px;">N/A</td></tr>
                         <tr><td style="color:#888; font-size:11px;">VIX</td><td align="right" style="color:#EEE; font-size:12px;">{signal_info["vix"]:.1f}</td></tr>
                         <tr><td style="color:#888; font-size:11px;">USD/KRW</td><td align="right" style="color:#EEE; font-size:12px;">{signal_info["krw_rate"]:.1f}</td></tr>
