@@ -615,7 +615,7 @@ class SignalDetector:
             tactical = f"DEFENSIVE: {', '.join(signal_info['defensive_assets'])}"
 
         # 1. Text Body
-        text_body = f\"\"\"
+        text_body = f"""
 ============================================================
 📅 [{signal_info["date"].strftime("%Y-%m-%d")}] INTEGRITY HARDENED v3.0 PLUS
 ============================================================
@@ -646,7 +646,7 @@ Data Quality    : Zero Look-Ahead Sync Verified (06:00 KST)
 QQQ: ${signal_info["qqq_price"]:.2f} (MA: {signal_info["ma_fast"]:.0f}/{signal_info["ma_slow"]:.0f})
 VIX: {signal_info["vix"]:.1f} | USD/KRW: {signal_info["krw_rate"]:.1f}
 ============================================================
-\"\"\"
+"""
 
         # 2. HTML Body
         html_body = SignalDetector._generate_html_report(signal_info, text_body)
