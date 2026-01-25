@@ -578,7 +578,7 @@ class SignalDetector:
         </tr>
         <tr>
             <td style="padding: 0 20px 20px 20px;">
-                {allocation_html}
+                {allocation_section}
             </td>
         </tr>
         <tr>
