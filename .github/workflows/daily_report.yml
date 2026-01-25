@@ -2,7 +2,7 @@ name: Portfolio Signal Mailer
 
 on:
   schedule:
-    - cron: "00 00 * * *" # KST 오전 9시 00분 (UTC 00:00) - 사용자 요청 시간
+    - cron: "50 22 * * *" # KST 오전 7시 50분 (UTC 22:50) - 사용자 요청 시간
   workflow_dispatch: # 수동 실행 가능
 
 # 저장소 쓰기 권한 허용 (히스토리 커밋용)
