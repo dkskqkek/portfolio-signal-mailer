@@ -445,7 +445,8 @@ class SignalDetector:
         return html_template
 
     @staticmethod
-    def format_signal_report(signal_info, previous_status=None):
+    @staticmethod
+    def _generate_html_report(signal_info, text_body=None):
         """Generates the 'Midnight Quant' Premium HTML Report"""
 
         # 1. Basic Data Preparation
@@ -587,3 +588,73 @@ class SignalDetector:
 </html>
         """
         return html_template
+
+    @staticmethod
+    def format_signal_report(signal_info, previous_status=None):
+        if signal_info.get("error"):
+            return {
+                "title": "ERROR",
+                "body": str(signal_info),
+                "html_body": None,
+                "status": "ERROR",
+            }
+
+        status = signal_info["status_label"]
+        krw_ratio = signal_info["krw_ratio"]
+        krw_pct, usd_pct = f"{krw_ratio * 100:.0f}%", f"{(1 - krw_ratio) * 100:.0f}%"
+
+        if status == "EMERGENCY (STOP)":
+            emoji = "🛑"
+            tactical = "FORCE EXIT -> 100% BIL (Hard Cut-off Activated)"
+        elif status == "NORMAL":
+            emoji = "🟢"
+            tactical = f"US Portion ({usd_pct}): QLD 50% / QQQ 50%"
+            tactical += f"\n  KRW Portion ({krw_pct}): KOSPI 50% / Gold-Spot 50%"
+        else:  # DANGER
+            emoji = "🔴"
+            tactical = f"DEFENSIVE: {', '.join(signal_info['defensive_assets'])}"
+
+        # 1. Text Body
+        text_body = f\"\"\"
+============================================================
+📅 [{signal_info["date"].strftime("%Y-%m-%d")}] INTEGRITY HARDENED v3.0 PLUS
+============================================================
+
+[1] SYSTEM STATUS: {emoji} {status}
+------------------------------------------------------------
+Regime        : {signal_info["regime"]} (SMA {signal_info["s_params"][0]}/{signal_info["s_params"][1]})
+Emergency Mode: {"🚨 ACTIVE" if signal_info["is_emergency"] else "🟢 STANDBY"}
+Current MDD   : {signal_info["calculated_mdd"] * 100:.1f}%
+
+[2] DYNAMIC WEIGHTING (Adaptive Balance)
+------------------------------------------------------------
+Target Split  : [KRW {krw_pct}] vs [USD {usd_pct}]
+* Alpha Factors: DXY Trend ({signal_info["dxy_90d"] * 100:+.1f}%), KOSPI Mom ({signal_info["kospi_126d"] * 100:+.1f}%)
+
+[3] ACTIONABLE RECOMMENDATION (Tactical 45%)
+------------------------------------------------------------
+Action        : {tactical}
+
+[4] INTEGRITY METRICS
+------------------------------------------------------------
+Volatility Decay: {signal_info["decay_annual"] * 100:.1f}% Annualized (Awareness)
+FX Compounded   : {signal_info["fx_compounded_ret"] * 100:+.2f}% (Daily QQQ-KRW)
+Data Quality    : Zero Look-Ahead Sync Verified (06:00 KST)
+
+[5] TECHNICAL SNAPSHOT
+------------------------------------------------------------
+QQQ: ${signal_info["qqq_price"]:.2f} (MA: {signal_info["ma_fast"]:.0f}/{signal_info["ma_slow"]:.0f})
+VIX: {signal_info["vix"]:.1f} | USD/KRW: {signal_info["krw_rate"]:.1f}
+============================================================
+\"\"\"
+
+        # 2. HTML Body
+        html_body = SignalDetector._generate_html_report(signal_info, text_body)
+
+        return {
+            "title": f"{emoji} {status}: {krw_pct} KRW / {usd_pct} USD",
+            "body": text_body,
+            "html_body": html_body,
+            "status": status,
+            "status_changed": (previous_status != status) if previous_status else False,
+        }
