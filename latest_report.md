@@ -5,7 +5,7 @@
 
 [1] SYSTEM STATUS: 🟢 NORMAL
 ------------------------------------------------------------
-Regime        : Normal (Robust) (SMA 130/260)
+Regime        : Fallback to Classic (SMA 130/260)
 Emergency Mode: 🟢 STANDBY
 Current MDD   : -1.9%
 
