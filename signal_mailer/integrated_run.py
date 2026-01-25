@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE_DIR / "signal_mailer"))
 
 from signal_detector import SignalDetector
-from mailer import MailerService
+from mailer_service import MailerService
 
 
 def load_config():
@@ -52,8 +52,10 @@ def main():
     print("  - 엔진 로직: Dual SMA (110/250) + Top-3 Defensive Ensemble")
 
     # 신호 탐지 실행
+    start_time = datetime.datetime.now()
     detector = SignalDetector()
     signal_info = detector.detect()
+    signal_info["execution_time"] = start_time
 
     # 리포트 생성 (통일된 포맷 사용)
     report = SignalDetector.format_signal_report(signal_info)
@@ -63,7 +65,10 @@ def main():
 
     print("\n[이메일 발송 중...]")
     mailer = MailerService(config)
-    result = mailer.send_email(subject, report["body"])
+    # 리포트 딕셔너리에서 생성된 HTML 본문을 추출하여 전송
+    result = mailer.send_email(
+        subject, report["body"], html_body=report.get("html_body")
+    )
 
     if result["success"]:
         print(f"✓ {result['message']}")

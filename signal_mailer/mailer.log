@@ -147,3 +147,5 @@ QQQ SMA 150: 591.25
 2026-01-23 15:30:01,622 - SignalMailerSystem - INFO - 상태 변화 없음. 메일 발송 스킵.
 2026-01-23 15:30:01,623 - SignalMailerSystem - INFO - 신호 확인 완료
 
+2026-01-23 23:45:54,247 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-23 23:45:54,256 - MailerService - INFO - 신호 이력 저장: NORMAL

@@ -28,5 +28,11 @@
     "is_danger": false,
     "reason": "",
     "mf_score": 60.213089975575855
+  },
+  "2026-01-23T23:45:54.255822": {
+    "status": "NORMAL",
+    "is_danger": false,
+    "reason": "",
+    "mf_score": 63.84079551271262
   }
 }

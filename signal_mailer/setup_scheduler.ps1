@@ -3,7 +3,7 @@
 
 $TaskName = "SignalMailerDaily"
 $PythonPath = "C:\Python313\python.exe"
-$ScriptPath = "d:\gg\signal_mailer\daily_run.py"
+$ScriptPath = "d:\gg\signal_mailer\integrated_run.py"
 $WorkingDirectory = "d:\gg\signal_mailer"
 
 # 1. Existing Task Cleanup
