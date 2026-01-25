@@ -1,0 +1,56 @@
+name: Antigravity Daily Routine
+
+on:
+  schedule:
+    # UTC 00:00 = KST 09:00
+    # Runs Tuesday to Saturday (Captures Mon-Fri US Market Close)
+    - cron: "0 0 * * 2-6"
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  daily-routine:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # REQUIRED: Allow the bot to commit changes back to the repo
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install new requirements for integrated run
+          pip install pandas numpy yfinance pyyaml google-generativeai
+
+      - name: Run Antigravity Integrated Engine (2-Track + The Council)
+        env:
+          # Mapping Secrets to Expected Env Vars
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_ACTIONS: "true"
+        run: python signal_mailer/integrated_run.py
+
+      - name: Persist Logs (Optional)
+        run: |
+          git config --global user.name "Antigravity Bot"
+          git config --global user.email "bot@antigravity.ai"
+
+          # Add any generated logs or reports if needed
+          # (integrated_run saves 'latest_report.md' for debug)
+          git add latest_report.md
+
+          # Commit only if changes exist
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "🤖 Daily Report Log [$(date +'%Y-%m-%d')]"
+            git push
+          fi
