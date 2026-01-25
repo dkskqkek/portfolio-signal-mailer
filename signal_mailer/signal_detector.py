@@ -461,66 +461,86 @@ class SignalDetector:
         quant_score_str = f"{quant_score:.1f}"
 
         # 2. Status Styling & Asset Allocation Logic
+        # 2. Status Styling & Asset Allocation Logic
+        def get_allocation_html(track_name, track_status, track_params):
+            if track_status == "NORMAL":
+                t_color = "#00FF9D"
+                t_emoji = "🟢"
+                # Normal Allocation Content
+                content = """
+                    <div style="margin-bottom: 8px;">
+                        <span style="color: #FFFFFF; font-size: 13px; font-weight: bold;">QLD (2x)</span> <span style="float: right; color: #00FF9D; font-size: 13px;">45%</span>
+                        <div style="background-color: #333; height: 4px; border-radius: 2px; margin-top: 2px;"><div style="background-color: #00FF9D; height: 4px; width: 45%;"></div></div>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <span style="color: #FFFFFF; font-size: 13px;">SPY</span> <span style="float: right; color: #CCC; font-size: 13px;">20%</span>
+                        <div style="background-color: #333; height: 4px; border-radius: 2px; margin-top: 2px;"><div style="background-color: #9013FE; height: 4px; width: 20%;"></div></div>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <span style="color: #FFFFFF; font-size: 13px;">KOSPI</span> <span style="float: right; color: #CCC; font-size: 13px;">20%</span>
+                        <div style="background-color: #333; height: 4px; border-radius: 2px; margin-top: 2px;"><div style="background-color: #4A90E2; height: 4px; width: 20%;"></div></div>
+                    </div>
+                    <div>
+                        <span style="color: #FFFFFF; font-size: 13px;">GOLD</span> <span style="float: right; color: #CCC; font-size: 13px;">15%</span>
+                        <div style="background-color: #333; height: 4px; border-radius: 2px; margin-top: 2px;"><div style="background-color: #F5A623; height: 4px; width: 15%;"></div></div>
+                    </div>
+                """
+            else:
+                t_color = "#FF453A"
+                t_emoji = "🔴" if track_status != "EMERGENCY (STOP)" else "🛑"
+                # Defensive Content
+                def_items = ""
+                medals = ["🥇", "🥈", "🥉"]
+                for i, asset in enumerate(signal_info.get("defensive_assets", [])):
+                    m = medals[i] if i < 3 else "🛡️"
+                    def_items += f'<div style="color: #DDD; font-size: 12px; margin-bottom: 4px;">{m} {asset}</div>'
+
+                content = f"""
+                    <div style="color: #FF453A; font-size: 12px; margin-bottom: 10px; font-weight: bold;">⚠️ DEFENSIVE MODE</div>
+                    {def_items}
+                    <div style="margin-top: 10px; font-size: 11px; color: #999;">Cash/Bonds Focus</div>
+                """
+
+            return f"""
+                <td width="50%" valign="top" style="padding: 10px; background-color: #1E1E1E; border: 1px solid #333; border-radius: 8px;">
+                    <div style="color: #888; font-size: 10px; letter-spacing: 1px; margin-bottom: 5px;">{track_name}</div>
+                    <div style="color: {t_color}; font-size: 16px; font-weight: bold; margin-bottom: 3px;">{t_emoji} {track_status}</div>
+                    <div style="color: #666; font-size: 11px; margin-bottom: 15px;">SMA {track_params[0]}/{track_params[1]}</div>
+                    {content}
+                </td>
+            """
+
+        c_status = signal_info.get("classic_status", "N/A")
+        h_status = signal_info.get("hybrid_status", "N/A")
+        c_params = signal_info.get("classic_params", (0, 0))
+        h_params = signal_info.get("hybrid_params", (0, 0))
+
+        c_card = get_allocation_html("TRACK A (CLASSIC)", c_status, c_params)
+        h_card = get_allocation_html("TRACK B (HYBRID)", h_status, h_params)
+
+        allocation_section = f"""
+            <h3 style="color: #FFFFFF; font-size: 16px; margin: 0 0 15px 5px; border-left: 3px solid #70a1ff; padding-left: 10px;">STRATEGY COMPARISON & ALLOCATION</h3>
+            <table width="100%" cellpadding="0" cellspacing="5" border="0">
+                <tr>
+                    {c_card}
+                    <td width="10"></td> <!-- Spacer -->
+                    {h_card}
+                </tr>
+            </table>
+        """
+
+        # Determine Main Header Status Color (Follow Hybrid as Primary)
+        status = h_status
         if status == "NORMAL":
-            status_color = "#00FF9D"  # Neon Green
+            status_color = "#00FF9D"
             status_emoji = "🟢"
             market_status_display = "NORMAL"
-            sub_status = "Optimized Dual SMA"
-
-            # Normal Allocation Chart
-            allocation_html = """
-                <h3 style="color: #FFFFFF; font-size: 16px; margin: 0 0 15px 5px; border-left: 3px solid #00FF9D; padding-left: 10px;">ASSET ALLOCATION</h3>
-                <div style="background-color: #1E1E1E; border-radius: 12px; padding: 20px;">
-                    <!-- QLD -->
-                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 15px;">
-                        <tr><td style="color: #FFFFFF; font-size: 14px; font-weight: bold;">QLD (2x)</td><td align="right" style="color: #00FF9D; font-size: 14px; font-weight: bold;">45.0%</td></tr>
-                        <tr><td colspan="2" style="padding-top: 5px;"><div style="background-color: #333333; height: 6px; border-radius: 3px; width: 100%;"><div style="background-color: #00FF9D; height: 6px; border-radius: 3px; width: 45%;"></div></div></td></tr>
-                    </table>
-                    <!-- KOSPI -->
-                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 15px;">
-                        <tr><td style="color: #FFFFFF; font-size: 14px;">KOSPI</td><td align="right" style="color: #CCCCCC; font-size: 14px;">20.0%</td></tr>
-                        <tr><td colspan="2" style="padding-top: 5px;"><div style="background-color: #333333; height: 6px; border-radius: 3px; width: 100%;"><div style="background-color: #4A90E2; height: 6px; border-radius: 3px; width: 20%;"></div></div></td></tr>
-                    </table>
-                    <!-- SPY -->
-                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 15px;">
-                        <tr><td style="color: #FFFFFF; font-size: 14px;">SPY</td><td align="right" style="color: #CCCCCC; font-size: 14px;">20.0%</td></tr>
-                        <tr><td colspan="2" style="padding-top: 5px;"><div style="background-color: #333333; height: 6px; border-radius: 3px; width: 100%;"><div style="background-color: #9013FE; height: 6px; border-radius: 3px; width: 20%;"></div></div></td></tr>
-                    </table>
-                    <!-- GOLD -->
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr><td style="color: #FFFFFF; font-size: 14px;">GOLD</td><td align="right" style="color: #CCCCCC; font-size: 14px;">15.0%</td></tr>
-                        <tr><td colspan="2" style="padding-top: 5px;"><div style="background-color: #333333; height: 6px; border-radius: 3px; width: 100%;"><div style="background-color: #F5A623; height: 6px; border-radius: 3px; width: 15%;"></div></div></td></tr>
-                    </table>
-                </div>
-            """
+            sub_status = f"Hybrid Optimized ({h_params[0]}/{h_params[1]})"
         else:
-            # DANGER / EMERGENCY
-            status_color = "#FF453A"  # Neon Red
+            status_color = "#FF453A"
             status_emoji = "🔴" if status != "EMERGENCY (STOP)" else "🛑"
             market_status_display = status
-            sub_status = (
-                "Defensive Mode Activated"
-                if status != "EMERGENCY (STOP)"
-                else "Emergency Stop Loss"
-            )
-
-            # Construct Defensive Asset List String
-            def_assets_html = ""
-            medals = ["🥇", "🥈", "🥉"]
-            for i, asset in enumerate(signal_info.get("defensive_assets", [])):
-                medal = medals[i] if i < 3 else "🛡️"
-                def_assets_html += f'<p style="margin: 0 0 8px 0; color: #DDDDDD; font-size: 13px;">{medal} {asset}</p>'
-
-            # Defensive Allocation Card
-            allocation_html = f"""
-                <h3 style="color: #FFFFFF; font-size: 16px; margin: 0 0 15px 5px; border-left: 3px solid {status_color}; padding-left: 10px;">🛡️ DEFENSIVE ALLOCATION</h3>
-                <div style="background-color: #1E1E1E; border-radius: 12px; padding: 20px;">
-                     <p style="color: #AAAAAA; font-size: 14px; margin-bottom: 15px;">Market Risk Detected. Switched to Defensive Basket.</p>
-                     {def_assets_html}
-                     <div style="height: 1px; background-color: #333333; margin: 15px 0;"></div>
-                     <p style="color: #F5A623; font-size: 13px;">Target: preserve capital until trend restores.</p>
-                </div>
-            """
+            sub_status = "Defensive Mode Activated"
 
         # 3. HTML Template Injection
         html_template = f"""
