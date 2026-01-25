@@ -149,3 +149,7 @@ QQQ SMA 150: 591.25
 
 2026-01-23 23:45:54,247 - MailerService - INFO - ✓ 이메일 발송 성공: gamjatangjo@gmail.com
 2026-01-23 23:45:54,256 - MailerService - INFO - 신호 이력 저장: NORMAL
+2026-01-25 23:01:59,717 - SignalMailerSystem - ERROR - 테스트 이메일 발송 실패: type object 'SignalDetector' has no attribute 'format_signal_report'
+2026-01-25 23:03:19,293 - SignalMailerSystem - ERROR - ✗ Email configuration incomplete
+2026-01-25 23:06:58,975 [INFO] ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-25 23:06:58,975 - SignalMailerSystem - INFO - ✓ Sent

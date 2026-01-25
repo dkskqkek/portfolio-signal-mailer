@@ -20,3 +20,6 @@ __pycache__/
 
 # Windows reserved
 nul
+
+signal_mailer/config.yaml
+debug_sniper.py
