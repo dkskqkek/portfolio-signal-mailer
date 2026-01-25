@@ -1,6 +1,6 @@
 
 ============================================================
-📅 [2026-01-24] PORTFOLIO STRATEGY BRIEFING
+📅 [2026-01-25] PORTFOLIO STRATEGY BRIEFING
 ============================================================
 
 [1] MARKET STATUS: 🟢 NORMAL (Optimized Dual SMA)
