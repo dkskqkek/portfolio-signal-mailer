@@ -88,10 +88,15 @@ class DebateCouncil:
         {news_context}
 
         [INSTRUCTIONS]
-        Adopt three personas sequentially to analyze the situation:
-        1. PROSECUTOR: Identify potential tail risks, negative news, or structural weaknesses. Be pessimistic.
-        2. DEFENDER: Identify bullish factors, resilience, or positive catalysts. Be optimistic.
-        3. JUDGE: Weigh both arguments and decide a 'discount_factor' (0.5 to 1.0) to apply to the portfolio exposure.
+        Adopt three personas sequentially to analyze the situation. 
+        **IMPORTANT: All reasoning and output MUST be in Korean (한국어).**
+
+        1. PROSECUTOR (검사): Identify potential tail risks, negative news, or structural weaknesses. Be pessimistic and critical.
+           - Focus on: "Why might the market crash tomorrow?"
+        2. DEFENDER (변호사): Identify bullish factors, resilience, or positive catalysts. Be optimistic and rational.
+           - Focus on: "Why is the trend still valid?"
+        3. JUDGE (판사): Weigh both arguments and decide a 'discount_factor' (0.5 to 1.0) to apply to the portfolio exposure.
+           - Provide a "verdict_reason" that explains the decision clearly to a human investor.
            - 1.0: "Trust the Quant Signal completely." (No external threat)
            - 0.8: "Minor Caution." (Some noise, tighten stops)
            - 0.5: "Severe Danger." (War, Pandemic, Systemic Crash imminent)
@@ -99,9 +104,9 @@ class DebateCouncil:
         [OUTPUT FORMAT]
         Return ONLY a JSON object with no markdown formatting:
         {{
-            "prosecutor_arg": "Summary of risks...",
-            "defender_arg": "Summary of opportunities...",
-            "verdict_reason": "Final justification...",
+            "prosecutor_arg": "핵심 위험 요인 (한글)...",
+            "defender_arg": "상승 지지 요인 (한글)...",
+            "verdict_reason": "최종 판결 및 조언 (한글)...",
             "discount_factor": 0.xx
         }}
         """

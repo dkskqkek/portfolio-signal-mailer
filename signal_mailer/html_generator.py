@@ -22,13 +22,13 @@ def generate_html_report(signal_info, text_body=None):
 
     # Stability Star Rating
     if quant_score >= 90:
-        stars = "⭐⭐⭐⭐⭐ (Perfect)"
+        stars = "⭐⭐⭐⭐⭐ (최고)"
     elif quant_score >= 70:
-        stars = "⭐⭐⭐⭐ (Healthy)"
+        stars = "⭐⭐⭐⭐ (양호)"
     elif quant_score >= 40:
-        stars = "⭐⭐⭐ (Caution)"
+        stars = "⭐⭐⭐ (주의)"
     else:
-        stars = "⚠️ (Critical)"
+        stars = "⚠️ (위험)"
 
     # 2. Status Styling & Asset Allocation Logic
     def get_allocation_html(track_name, track_status, track_params):
@@ -65,16 +65,16 @@ def generate_html_report(signal_info, text_body=None):
                 def_items += f'<div style="color: #DDD; font-size: 12px; margin-bottom: 4px;">{m} {asset}</div>'
 
             content = f"""
-                <div style="color: #FF453A; font-size: 12px; margin-bottom: 10px; font-weight: bold;">⚠️ DEFENSIVE MODE</div>
+                <div style="color: #FF453A; font-size: 12px; margin-bottom: 10px; font-weight: bold;">⚠️ 방어 모드 발동</div>
                 {def_items}
-                <div style="margin-top: 10px; font-size: 11px; color: #999;">Cash/Bonds Focus</div>
+                <div style="margin-top: 10px; font-size: 11px; color: #999;">현금/채권/달러 집중</div>
             """
 
         return f"""
             <td width="50%" valign="top" style="padding: 10px; background-color: #1E1E1E; border: 1px solid #333; border-radius: 8px;">
                 <div style="color: #888; font-size: 10px; letter-spacing: 1px; margin-bottom: 5px;">{track_name}</div>
                 <div style="color: {t_color}; font-size: 16px; font-weight: bold; margin-bottom: 3px;">{t_emoji} {track_status}</div>
-                <div style="color: #666; font-size: 11px; margin-bottom: 15px;">SMA {track_params[0]}/{track_params[1]}</div>
+                <div style="color: #666; font-size: 11px; margin-bottom: 15px;">이평선 {track_params[0]}/{track_params[1]}</div>
                 {content}
             </td>
         """
@@ -88,7 +88,7 @@ def generate_html_report(signal_info, text_body=None):
     h_card = get_allocation_html("TRACK B (HYBRID)", h_status, h_params)
 
     allocation_section = f"""
-        <h3 style="color: #FFFFFF; font-size: 16px; margin: 0 0 15px 5px; border-left: 3px solid #70a1ff; padding-left: 10px;">STRATEGY COMPARISON & ALLOCATION</h3>
+        <h3 style="color: #FFFFFF; font-size: 16px; margin: 0 0 15px 5px; border-left: 3px solid #70a1ff; padding-left: 10px;">전략 비교 및 투자 비중</h3>
         <table width="100%" cellpadding="0" cellspacing="5" border="0">
             <tr>
                 {c_card}
@@ -138,11 +138,11 @@ def generate_html_report(signal_info, text_body=None):
         percent_view = int(c_discount * 100)
 
         council_html = f"""
-        <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">⚖️ THE COUNCIL (AI RISK COMMITTEE)</h3>
+        <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">⚖️ 리스크 관리 위원회 (AI The Council)</h3>
         <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px; border-left: 4px solid {c_color};">
             <div style="margin-bottom: 8px;">
                 <span style="color: {c_color}; font-size: 14px; font-weight: bold;">{c_icon} {c_title}</span>
-                <span style="float: right; color: #888; font-size: 12px;">Exposure Cap: {percent_view}%</span>
+                <span style="float: right; color: #888; font-size: 12px;">투자 반영률: {percent_view}%</span>
             </div>
             <p style="color: #DDD; font-size: 12px; line-height: 1.5; margin: 0;">
                 "{c_reason}"
@@ -152,9 +152,9 @@ def generate_html_report(signal_info, text_body=None):
     else:
         # Fallback if no API key or error
         council_html = """
-        <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">⚖️ THE COUNCIL</h3>
+        <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">⚖️ 리스크 관리 위원회 (The Council)</h3>
         <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px;">
-             <p style="color: #666; font-size: 11px; margin: 0;">AI Risk Module Offline (No API Key or Recess)</p>
+             <p style="color: #666; font-size: 11px; margin: 0;">AI 리스크 모듈이 휴식 중입니다 (특이사항 없음).</p>
         </div>
         """
 
@@ -172,14 +172,14 @@ def generate_html_report(signal_info, text_body=None):
         <tr>
             <td style="padding: 40px 20px 20px 20px; text-align: center;">
                 <p style="color: #666666; font-size: 10px; letter-spacing: 2px; margin: 0 0 10px 0; text-transform: uppercase;">Antigravity Strategy v3.1</p>
-                <h1 style="color: #FFFFFF; font-size: 24px; margin: 0; letter-spacing: -0.5px;">PORTFOLIO BRIEFING</h1>
+                <h1 style="color: #FFFFFF; font-size: 24px; margin: 0; letter-spacing: -0.5px;">데일리 퀀트 리포트</h1>
                 <p style="color: {status_color}; font-size: 14px; margin: 5px 0 0 0;">{date_str}</p>
             </td>
         </tr>
         <tr>
             <td style="padding: 0 20px 20px 20px;">
                 <div style="background-color: #1E1E1E; border: 1px solid #333333; border-radius: 12px; padding: 30px; text-align: center;">
-                    <p style="color: #AAAAAA; font-size: 12px; margin: 0 0 10px 0;">MARKET STATUS</p>
+                    <p style="color: #AAAAAA; font-size: 12px; margin: 0 0 10px 0;">시장 국면 분석</p>
                     <h2 style="color: {status_color}; font-size: 32px; margin: 0 0 5px 0; text-shadow: 0 0 10px {status_color}4D;">{status_emoji} {market_status_display}</h2>
                     <p style="color: #CCCCCC; font-size: 14px; margin: 0;">{sub_status}</p>
                     <div style="height: 1px; background-color: #333333; margin: 20px 0;"></div>
@@ -204,10 +204,10 @@ def generate_html_report(signal_info, text_body=None):
         </tr>
         <tr>
             <td style="padding: 0 20px 20px 20px;">
-                <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">📊 QUANT SCORE (v2.0)</h3>
+                <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">📊 퀀트 스코어 (시장 건전성)</h3>
                 <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px;">
                     <div style="margin-bottom: 5px;">
-                        <span style="color: #888; font-size: 11px;">TOTAL SCORE</span>
+                        <span style="color: #888; font-size: 11px;">종합 점수</span>
                         <span style="float: right; color: {status_color}; font-size: 14px; font-weight: bold;">{quant_score_str} / 100</span>
                     </div>
                     <div style="margin: 0 0 10px 0; font-size: 12px; color: #EEE;">{stars}</div>
@@ -216,15 +216,15 @@ def generate_html_report(signal_info, text_body=None):
                     </div>
                     <table width="100%" cellpadding="2" cellspacing="0">
                         <tr>
-                            <td style="color: #AAA; font-size: 11px;">Macro (VIX)</td>
+                            <td style="color: #AAA; font-size: 11px;">거시경제 (VIX)</td>
                             <td align="right" style="color: #EEE; font-size: 11px;">{q_breakdown[0]} / 30</td>
                         </tr>
                         <tr>
-                            <td style="color: #AAA; font-size: 11px;">Trend (MA)</td>
+                            <td style="color: #AAA; font-size: 11px;">추세 (이평선)</td>
                             <td align="right" style="color: #EEE; font-size: 11px;">{q_breakdown[1]} / 40</td>
                         </tr>
                         <tr>
-                            <td style="color: #AAA; font-size: 11px;">Efficiency (Vol)</td>
+                            <td style="color: #AAA; font-size: 11px;">효율성 (변동성)</td>
                             <td align="right" style="color: #EEE; font-size: 11px;">{q_breakdown[2]} / 30</td>
                         </tr>
                     </table>
@@ -233,7 +233,7 @@ def generate_html_report(signal_info, text_body=None):
         </tr>
         <tr>
             <td style="padding: 0 20px 20px 20px;">
-                <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">📊 TECHNICALS</h3>
+                <h3 style="color: #FFFFFF; font-size: 14px; margin: 0 0 10px 0;">📊 주요 지표 (Technicals)</h3>
                 <div style="background-color: #1E1E1E; border-radius: 12px; padding: 15px;">
                     <table width="100%">
                         <tr><td style="color:#888; font-size:11px;">RSI (14)</td><td align="right" style="color:#EEE; font-size:12px;">N/A</td></tr>
@@ -247,7 +247,7 @@ def generate_html_report(signal_info, text_body=None):
             <td style="padding: 20px; text-align: center; border-top: 1px solid #222222;">
                 <p style="color: #444444; font-size: 10px; line-height: 1.4; margin: 0;">
                     Automated Daily Report | Golden Combo (110/250)<br>
-                    Investments involve risk. Past performance is not indicative of future results.<br>
+                    모든 투자의 책임은 본인에게 있습니다. 과거 성과가 미래를 보장하지 않습니다.<br>
                     Generated by Antigravity v3.1 Kernel
                 </p>
             </td>
