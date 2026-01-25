@@ -12,7 +12,7 @@ Current MDD   : -1.9%
 [2] DYNAMIC WEIGHTING (Adaptive Balance)
 ------------------------------------------------------------
 Target Split  : [KRW 40%] vs [USD 60%]
-* Alpha Factors: DXY Trend (+0.8%), KOSPI Mom (+66.9%)
+* Alpha Factors: DXY Trend (+0.6%), KOSPI Mom (+66.9%)
 
 [3] ACTIONABLE RECOMMENDATION (Tactical 45%)
 ------------------------------------------------------------
