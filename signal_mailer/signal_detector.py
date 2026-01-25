@@ -787,8 +787,8 @@ class SignalDetector:
         """
         return html_template
 
-    @staticmethod
-    def format_signal_report(signal_info, previous_status=None):
+    @classmethod
+    def format_signal_report(cls, signal_info, previous_status=None):
         if signal_info.get("error"):
             return {
                 "title": "ERROR",
@@ -847,7 +847,7 @@ VIX: {signal_info["vix"]:.1f} | USD/KRW: {signal_info["krw_rate"]:.1f}
 """
 
         # 2. HTML Body
-        html_body = SignalDetector._generate_html_report(signal_info, text_body)
+        html_body = cls._generate_html_report(signal_info, text_body)
 
         return {
             "title": f"{emoji} {status}: {krw_pct} KRW / {usd_pct} USD",
