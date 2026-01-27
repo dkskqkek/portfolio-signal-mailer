@@ -1,0 +1,43 @@
+
+[2026-01-24 13:16:36] TOPIC: MA Signal Implementation & Bug Fixes
+DESCRIPTION: Implemented separate MA signal, fixed JSON serialization error, and cleaned up delisted VXV asset.
+--------------------------------------------------
+
+[2026-01-24 13:28:31] TOPIC: Email Delay & Scheduler Fix
+DESCRIPTION: Adjusted GH Actions cron to 06:00 AM KST, fixed setup_scheduler.ps1, and added execution timestamps to report.
+--------------------------------------------------
+
+[2026-01-24 13:30:17] TOPIC: Server-Side Priority Update
+DESCRIPTION: Refocused on GitHub Actions schedule adjustment (06:00 AM KST) and execution auditing as per user request.
+--------------------------------------------------
+
+[2026-01-25 00:46:10] TOPIC: 2026 Strategy Overhaul & Robustness Verification
+DESCRIPTION:
+1. [Strategy Pivot] Validated "K-Premium" (KOSPI 5000pt) & "Dollar Weakness" (-11%) regime. Realigned portfolio to KOSPI Alpha / Dynamic Dollar Hedge.
+2. [Proxy Verification] Confirmed domestic leverage ETF risks (Time Lag, Fees). Adopted "TIGER KRX Gold Spot" (0.18%, Non-Futures) and Split Execution (Direct Tactical / Proxy Core).
+3. [Robustness Check] Disproved Fixed 110/250 (Grid Search MDD -68%). Validated "Parameter Drift" (80~130 days). Confirmed "Adaptive Logic" Superiority (WFE 1.40).
+4. [System Upgrade] Deployed SignalDetector v2.5:
+   - Regime Detection Engine (Vol-based SMA Switching: 110/250 -> 100/225 -> 80/180)
+   - Split Tactical Allocation (QLD + QQQ/KOSPI)
+   - Dollar Defense Logic (KRW Trend Check)
+--------------------------------------------------
+
+[2026-01-25 00:50:49] TOPIC: Code Review Meta-Verdict & Final Hardening
+DESCRIPTION: Agreed on the "30% Differentiation" verdict (Strategic vs. Engineering synergy). Performing final code hardening based on consolidated findings: 1) Look-Ahead mitigation in signal logic. 2) Fixed trade count logic in verification scripts. 3) Unified 3-state Hysteresis. 4) Validated 'Game Changer' Proxy (TIGER KRX Gold).
+--------------------------------------------------
+
+[2026-01-25 01:06:22] TOPIC: Strategy Hardening v3.0 (Survival Mode)
+DESCRIPTION: 1. Diagnosis: Confirmed 2009 MDD as systemic and Adaptive logic's hyperactivity (297 trades) as source of underperformance. 2. Implementation: Deployed v3.0 Engine with 130/260 Baseline, -40% Emergency Cut-off, and Dynamic KRW Allocation (20-60%) to navigate 2026 Box/Boom market. 3. Safety: Added VIX > 30 auto-switch to 110/250 for fast defense.
+--------------------------------------------------
+
+[2026-01-25 01:22:01] TOPIC: Strategy Execution v3.0 PLUS (User Code Integration)
+DESCRIPTION: 1. Research Sync: Overwrote backtest_2026_scenario.py with User's 'Portfolio2026' class (Look-ahead fixed, Decay/FX corrected). 2. Production Hardening: Upgraded signal_detector.py to v3.0 PLUS with Geometric FX compounding, Volatility Decay awareness, and nuanced Dynamic Allocation (20-60% KRW based on DXY/KOSPI thresholds). 3. Tax Optimization: Documented ISA/Pension-first approach for KRW assets.
+--------------------------------------------------
+
+[2026-01-25 01:33:16] TOPIC: Final Regime-Integrated Hardening (v3.0 PLUS)
+DESCRIPTION: 1. Research Sync: Unified verify_dollar_trend.py with MarketRegimeDetector and Portfolio2026. 2. Verification: Confirmed v3.0 PLUS performance (2024-2026) at +146.9% Return / -16.1% MDD, correctly accounting for Leverage Decay and Geometric FX compounding. 3. Finalization: Production and Research scripts are now 100% synchronized with the "Technical Excellence" standards.
+--------------------------------------------------
+
+[2026-01-25 01:42:38] TOPIC: Final Integrity Hardening (v3.0 PLUS)
+DESCRIPTION: 1. Operation: Fixed "Cold Start" trap with conservative Price>SMA_Slow check. 2. Safety: Fixed "Ghost MDD" by internalizing MDD calculation (MDD -1.9% verified in live run). 3. Integrity: Confirmed 06:00 KST scheduler as the definitive defense against KOSPI/US data lag. 4. Audit: "Devil's Advocate" findings fully integrated into production.
+--------------------------------------------------

@@ -1,0 +1,77 @@
+{
+  "2026-01-25 04:30:05": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 607.0480797400842,
+    "ma_slow": 563.2468154907226,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "일반 (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:30:05",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  },
+  "2026-01-25 04:54:27": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 607.0480797400842,
+    "ma_slow": 563.2468146690956,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "일반 (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:54:27",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  },
+  "2026-01-25 04:59:11": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 607.0480797400842,
+    "ma_slow": 563.246816781851,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "일반 (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:59:11",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  }
+}

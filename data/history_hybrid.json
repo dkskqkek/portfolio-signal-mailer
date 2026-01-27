@@ -1,0 +1,77 @@
+{
+  "2026-01-25 04:30:15": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 605.5758766456887,
+    "ma_slow": 563.5686011590552,
+    "s_params": [
+      135,
+      259
+    ],
+    "regime": "JARVIS Hybrid (S1:135/S2:259)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:30:15",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  },
+  "2026-01-25 04:54:36": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 605.5758766456887,
+    "ma_slow": 563.5686011590552,
+    "s_params": [
+      135,
+      259
+    ],
+    "regime": "JARVIS Hybrid (S1:135/S2:259)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:54:36",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  },
+  "2026-01-25 04:59:19": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 605.5758766456887,
+    "ma_slow": 563.5686003342558,
+    "s_params": [
+      135,
+      259
+    ],
+    "regime": "JARVIS Hybrid (S1:135/S2:259)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:59:19",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  }
+}

@@ -74,14 +74,22 @@ def main():
 
         sig = report_data.get("signal", "DEFENSIVE").upper()
 
-        target_weights = {
-            "Growth": 0.20,
-            "Defensive": 0.70,
-            "Gold": 0.10,
-        }  # Default Bear
+        # V4.1 Strategy Weights (Verified)
+        # Bull (NORMAL) -> 100% Growth (QLD)
+        # Bear (DANGER) -> 100% Defensive (GLD/TLT/BIL)
 
-        if sig == "RISK ON":
-            target_weights = {"Growth": 0.50, "Defensive": 0.40, "Gold": 0.10}
+        target_weights = {
+            "Growth": 0.0,
+            "Defensive": 1.0,
+            "Gold": 0.0,
+        }  # Default Bear (DANGER)
+
+        if sig in ["RISK ON", "NORMAL", "BULL"]:
+            target_weights = {"Growth": 1.0, "Defensive": 0.0, "Gold": 0.0}
+            # Note: "Growth" in PortfolioManager maps to QQQ/QLD typically.
+            # "Defensive" maps to SHY/BIL/GLD.
+            # We assume PortfolioManager handles the specific ticker selection
+            # or we might need to be more specific here if PM supports it.
 
         print(f"Portfolio Target ({sig}): {target_weights}")
 

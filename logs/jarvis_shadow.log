@@ -1,0 +1,4 @@
+2026-01-25 04:17:52,361 [INFO] JARVIS: Regime Classifier 학습 완료. Accuracy: 0.60
+2026-01-25 04:17:52,365 [INFO] JARVIS: Regime Prediction: Normal [5.47003389e-01 4.52827185e-01 1.69425843e-04]
+2026-01-25 04:17:52,583 [INFO] JARVIS: Optuna 최적 파라미터 제안: {'s1': 134, 's2': 299}
+2026-01-25 04:17:52,583 [INFO] JARVIS: Suggested Params: {'s1': 134, 's2': 299}

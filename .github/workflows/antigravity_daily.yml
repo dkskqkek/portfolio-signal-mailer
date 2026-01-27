@@ -2,9 +2,9 @@ name: Antigravity Daily Routine
 
 on:
   schedule:
-    # UTC 22:50 = KST 07:50 (Next Day)
-    # Runs Monday to Friday UTC (Captures Mon-Fri US Market Close -> Tue-Sat KST Morning)
-    - cron: "50 22 * * 1-5"
+    # UTC 12:10 = KST 21:10
+    # Runs Monday to Friday UTC (Pre-market Analysis)
+    - cron: "10 12 * * 1-5"
   workflow_dispatch: # Allow manual trigger for testing
 
 jobs:

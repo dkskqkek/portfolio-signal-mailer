@@ -1,0 +1,58 @@
+{
+  "2026-01-25 02:27:17": {
+    "is_danger": false,
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 600.1476445124699,
+    "ma_slow": 553.3062274639423,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "Normal (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": 0.007535828500477848,
+    "kospi_126d": 0.6687086640472131,
+    "decay_annual": 0.01593250245239756,
+    "fx_compounded_ret": 0.0020822129386899313,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "vix": 16.09000015258789,
+    "krw_rate": 1463.260009765625,
+    "date": "2026-01-25 02:27:17",
+    "error": false
+  },
+  "2026-01-25 02:27:37": {
+    "is_danger": false,
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 600.1476445124699,
+    "ma_slow": 553.3062244121845,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "Normal (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": 0.007535828500477848,
+    "kospi_126d": 0.6687086640472131,
+    "decay_annual": 0.01593250245239754,
+    "fx_compounded_ret": 0.0020822129386899313,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "vix": 16.09000015258789,
+    "krw_rate": 1463.260009765625,
+    "date": "2026-01-25 02:27:37",
+    "error": false
+  }
+}

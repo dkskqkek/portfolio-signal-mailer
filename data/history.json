@@ -1,0 +1,100 @@
+{
+  "2026-01-25 03:38:10": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 600.1476477989784,
+    "ma_slow": 553.3062279334436,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "Normal (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": 0.007535828500477848,
+    "kospi_126d": 0.6687086640472131,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 03:38:10",
+    "vix": 16.09000015258789,
+    "error": false
+  },
+  "2026-01-25 03:49:54": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 607.0480769230769,
+    "ma_slow": 563.246811734713,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "Normal (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 03:49:54",
+    "vix": 16.09000015258789,
+    "error": false
+  },
+  "2026-01-25 04:08:57": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 607.0480797400842,
+    "ma_slow": 563.2468146690956,
+    "s_params": [
+      130,
+      260
+    ],
+    "regime": "일반 (Robust)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:08:57",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  },
+  "2026-01-25 04:21:12": {
+    "status_label": "NORMAL",
+    "is_emergency": false,
+    "calculated_mdd": -0.019264440929023432,
+    "qqq_price": 622.719970703125,
+    "ma_fast": 605.5758766456887,
+    "ma_slow": 563.5686003342558,
+    "s_params": [
+      135,
+      259
+    ],
+    "regime": "JARVIS Hybrid (S1:135/S2:259)",
+    "krw_ratio": 0.4,
+    "dxy_90d": -0.013942259406034108,
+    "kospi_126d": 0.5662442393223486,
+    "defensive_assets": [
+      "GLD",
+      "DBMF",
+      "DBC"
+    ],
+    "date": "2026-01-25 04:21:12",
+    "vix": 16.09000015258789,
+    "tnx": 4.238999843597412,
+    "error": false
+  }
+}

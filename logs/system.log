@@ -1,0 +1,30 @@
+2026-01-25 02:27:16,437 [INFO] Starting analysis. Prev Status: None | Market MDD: -1.93%
+2026-01-25 02:27:17,597 [INFO] ✓ 히스토리 저장 완료: NORMAL
+2026-01-25 02:27:19,390 [ERROR] 이메일 발송 실패: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-2a802fae502sm49961315ad.78 - gsmtp')
+2026-01-25 02:27:36,376 [INFO] Starting analysis. Prev Status: NORMAL | Market MDD: -1.93%
+2026-01-25 02:27:37,532 [INFO] ✓ 히스토리 저장 완료: NORMAL
+2026-01-25 02:27:40,602 [INFO] ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-25 03:38:14,145 [INFO] ✓ Email sent to gamjatangjo@gmail.com
+2026-01-25 03:49:48,142 [INFO] Auditing security context...
+2026-01-25 03:49:48,145 [WARNING] ⚠️ SECURITY WARNING: SMTP credentials NOT set via Environment Variables.
+2026-01-25 03:49:48,146 [INFO] Downloading data for 29 tickers...
+2026-01-25 03:49:51,676 [INFO] TLT: 1d: div-adjust-repair-bad: Removing phantom div(s): ['2022-12-01', '2023-12-14', '2024-12-02']
+2026-01-25 03:49:54,809 [ERROR] Security Check: SMTP Credentials missing. Set Environment Variables.
+2026-01-25 04:08:49,686 [INFO] 보안 컨텍스트 감사 중...
+2026-01-25 04:08:49,686 [WARNING] ⚠️ 보안 경고: SMTP 계정 정보가 환경 변수로 설정되지 않았습니다.
+2026-01-25 04:08:49,687 [INFO] 데이터 다운로드 중 (30개 종목)...
+2026-01-25 04:08:52,682 [INFO] ^TNX: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:08:52,716 [INFO] ^TNX: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:08:57,080 [INFO] ✓ JARVIS 데이터 수집 완료
+2026-01-25 04:08:57,081 [ERROR] 보안 확인: 환경 변수가 설정되지 않았습니다. (메일 발송 불가)
+2026-01-25 04:21:05,886 [INFO] 🧠 JARVIS 제안 로드됨: {'s1': 135, 's2': 259}
+2026-01-25 04:21:05,886 [WARNING] ⚠️ 보안 경고: SMTP 계정 정보가 환경 변수로 설정되지 않았습니다.
+2026-01-25 04:21:05,887 [INFO] 데이터 다운로드 중 (30개 종목)...
+2026-01-25 04:21:08,778 [INFO] DX-Y.NYB: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:21:12,805 [INFO] ✓ JARVIS 데이터 수집 완료
+2026-01-25 04:21:12,805 [ERROR] 보안 확인: 환경 변수가 설정되지 않았습니다.
+2026-01-25 12:30:43,850 [WARNING] 이메일 설정 불충분 (ID/PW/Recipient 확인 필요)
+2026-01-25 14:24:11,671 [WARNING] 이메일 설정 불충분 (ID/PW/Recipient 확인 필요)
+2026-01-25 14:52:47,189 [ERROR] 이메일 발송 실패: Connection unexpectedly closed
+2026-01-25 16:04:38,080 [ERROR] 이메일 발송 실패: Connection unexpectedly closed
+2026-01-25 23:03:19,292 [WARNING] 이메일 설정 불충분 (ID/PW/Recipient 확인 필요)

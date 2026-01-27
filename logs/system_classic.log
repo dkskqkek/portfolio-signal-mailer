@@ -1,0 +1,14 @@
+2026-01-25 04:29:58,235 [Classic] 데이터 다운로드 중 (30개 종목)...
+2026-01-25 04:30:01,483 [Classic] ^TNX: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:30:01,500 [Classic] ^TNX: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:30:05,849 [Classic] JARVIS Feature 저장 완료
+2026-01-25 04:54:20,525 [Classic] 데이터 다운로드 중 (31개 종목)...
+2026-01-25 04:54:23,714 [Classic] ^TNX: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:54:23,726 [Classic] ^TNX: 30m: price-reconstruct: Hit max depth of 2 ('1d'->'1h'->'30m')
+2026-01-25 04:54:27,765 [Classic] JARVIS Feature 저장 완료
+2026-01-25 04:59:04,087 [Classic] 데이터 다운로드 중 (31개 종목)...
+2026-01-25 04:59:09,551 [Classic] ^TNX: 1h: price-reconstruct: Can't calibrate 1h block starting 2025-12-29 so aborting repair
+2026-01-25 04:59:11,075 [Classic] JARVIS Feature 저장 완료
+2026-01-25 04:59:11,076 [Classic] ⚠️ [Constraint] QLD -> 379800 (Lev 제한->1배수 대체)
+2026-01-25 04:59:11,077 [Classic] ✅ Order Executed: BUY 379800 416377sh @ 72.05000305175781
+2026-01-25 04:59:11,079 [Classic] ✅ Order Executed: BUY QLD 297sh @ 72.05000305175781

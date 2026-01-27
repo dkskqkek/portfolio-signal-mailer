@@ -1,0 +1,10 @@
+{
+  "date": "2026-01-25",
+  "suggested_params": {
+    "s1": 135,
+    "s2": 259
+  },
+  "market_regime": "Normal",
+  "crash_probability": 0.00016942584274641452,
+  "confidence_score": 0.5470033887296318
+}

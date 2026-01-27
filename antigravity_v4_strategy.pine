@@ -1,0 +1,130 @@
+//@version=5
+strategy("Antigravity V4.1 [Live Engine]", overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity, default_qty_value=100, currency=currency.USD)
+
+// ==========================================
+// 0. 스크립트 개요
+// ==========================================
+// 이 스크립트는 Antigravity V4.1의 파이썬 로직을 트레이딩뷰용으로 변환한 것입니다.
+// 1. 추세 추종 (Trend Following): QQQ가 110일/250일 이평선 위에 있을 때 상승장(Bull)으로 간주
+// 2. 방어 자산 (Defensive): 하락장일 경우, 모멘텀이 가장 좋은 방어 자산(GLD, TLT, 현금 등)으로 피신
+// 3. 인덱스 스나이퍼 (Index Sniper): 공포 지수(VIX Fix)를 시각화하여 단기 저점 포착
+
+// ==========================================
+// 1. 사용자 입력 (User Inputs)
+// ==========================================
+grp_asset   = "자산 설정"
+t_growth    = input.symbol("QQQ", "공격 자산 (Growth)", group=grp_asset)
+t_lev       = input.symbol("QLD", "레버리지 자산 (Bull Mode)", group=grp_asset)
+t_def1      = input.symbol("GLD", "방어 자산 후보 1 (골드)", group=grp_asset)
+t_def2      = input.symbol("TLT", "방어 자산 후보 2 (미국채)", group=grp_asset)
+t_def3      = input.symbol("BIL", "방어 자산 후보 3 (현금성)", group=grp_asset)
+
+grp_trend   = "추세 설정 (Daily)"
+len_ma1     = input.int(110, "단기 이동평균 (SMA 110)", group=grp_trend)
+len_ma2     = input.int(250, "장기 이동평균 (SMA 250)", group=grp_trend)
+mom_month   = input.int(8, "모멘텀 산출 기간 (월)", group=grp_trend)
+
+grp_sniper  = "인덱스 스나이퍼 설정 (V8.2)"
+show_sniper = input.bool(true, "스나이퍼 공포 구간 표시", group=grp_sniper)
+pd_lookback = input.int(22, "VIX Fix 기간", group=grp_sniper)
+bbl         = input.int(20, "볼린저 밴드 길이", group=grp_sniper)
+mult        = input.float(2.0, "볼린저 밴드 승수", group=grp_sniper)
+lb          = input.int(50, "최대 공포 비교 기간", group=grp_sniper)
+
+// ==========================================
+// 2. 데이터 계산 (Calculations)
+// ==========================================
+// QQQ 데이터 호출 (일봉 기준)
+qqq_close = request.security(t_growth, "D", close)
+sma110    = ta.sma(qqq_close, len_ma1)
+sma250    = ta.sma(qqq_close, len_ma2)
+
+// ==========================================
+// 3. 신호 로직 (Signal Logic)
+// ==========================================
+// 3.1 추세 판단 (Daily Trend)
+// 규칙: 가격이 두 이평선(110, 250) 위에 있어야 상승장(BULL)
+is_bull = (qqq_close > sma110) and (qqq_close > sma250)
+
+// 3.2 방어 자산 선정 (Monthly Momentum)
+// 중요: '지난달 말일' 기준의 모멘텀을 사용해야 리페인팅(Repainting)이 없음
+// [1]은 현재 월 바로 직전 월의 확정된 데이터를 의미함
+calc_mom(sym) =>
+    float p_last = request.security(sym, "M", close[1])       // 전월 종가 (기준)
+    float p_past = request.security(sym, "M", close[1 + mom_month]) // (1+8)개월 전 종가
+    (p_last - p_past) / p_past
+
+mom1 = calc_mom(t_def1)
+mom2 = calc_mom(t_def2)
+mom3 = calc_mom(t_def3)
+
+// 3.3 최적 방어 자산 결정 (Top 1)
+// 가장 모멘텀이 높은 자산을 선택
+best_def_ticker = t_def1
+best_mom = mom1
+
+if mom2 > best_mom
+    best_def_ticker := t_def2
+    best_mom := mom2
+
+if mom3 > best_mom
+    best_def_ticker := t_def3
+    best_mom := mom3
+
+// ==========================================
+// 4. 인덱스 스나이퍼 (Index Sniper V8.2)
+// ==========================================
+// 공포 지수 (Williams VIX Fix) 계산
+wvf = ((ta.highest(close, pd_lookback) - low) / ta.highest(close, pd_lookback)) * 100
+
+// 볼린저 밴드 계산
+s_mid = ta.sma(wvf, bbl)
+s_dev = mult * ta.stdev(wvf, bbl)
+s_upper = s_mid + s_dev
+range_high = ta.highest(wvf, lb) * 0.85
+
+// 공포 구간 판별 (밴드 상단 돌파 또는 최고점 근접)
+is_fear = (wvf >= s_upper) or (wvf >= range_high)
+
+// 배경색 표시 (스나이퍼 기능)
+bgcolor(show_sniper and is_fear ? color.new(color.red, 90) : na, title="공포 구간 (Fear Zone)")
+
+// ==========================================
+// 5. 전략 실행 (Strategy Execution)
+// ==========================================
+// *주의: 트레이딩뷰 전략 스크립트는 현재 차트의 심볼 하나만 매매하는 것이 기본입니다.*
+// *따라서 서로 다른 자산(GLD, TLT 등)으로 갈아타는 로직은 백테스트 수익률에 정확히 반영되지 않을 수 있습니다.*
+// *이 스크립트는 정확한 '신호 발생(Alert)'에 초점을 맞춥니다.*
+
+if is_bull
+    // [상승장] 레버리지 자산(QLD) 매수
+    strategy.close("Defensive") // 방어 포지션 종료
+    strategy.entry("Growth_Buy", strategy.long, comment="🚀 상승장(Bull): " + str.tostring(t_lev))
+else
+    // [하락장] 방어 자산 매수
+    strategy.close("Growth_Buy") // 공격 포지션 종료
+    
+    // 선택된 방어 자산 이름으로 진입 표시
+    // (실제로는 현재 차트 종목을 매수/매도 하므로 시뮬레이션 한계 존재)
+    strategy.entry("Defensive", strategy.long, comment="🛡️ 방어 태세: " + str.tostring(best_def_ticker))
+
+// ==========================================
+// 6. 차트 시각화 (Visuals)
+// ==========================================
+// 이평선 그리기
+plot(sma110, "단기 이평 (110)", color=color.green, linewidth=2)
+plot(sma250, "장기 이평 (250)", color=color.orange, linewidth=2)
+
+// 상태 정보 패널 (우측 상단 라벨)
+var label status_lbl = na
+label.delete(status_lbl) // 이전 라벨 삭제
+
+// 텍스트 구성
+status_text = is_bull ? "🚀 상승장 (BULL)\n보유: " + str.tostring(t_lev) : "🛡️ 방어장 (DEFENSIVE)\n선택: " + str.tostring(best_def_ticker)
+status_color = is_bull ? color.green : color.red // textcolor=color.white
+
+// 라벨 생성 (최신 바 위에 표시)
+status_lbl := label.new(bar_index, high + ta.tr, text=status_text, color=status_color, textcolor=color.white, style=label.style_label_down)
+
+// 스나이퍼 매수 신호 (공포 구간) 삼각형 표시
+plotshape(show_sniper and is_fear, title="공포 매수 기회", style=shape.triangleup, location=location.belowbar, color=color.red, size=size.small, text="공포")
