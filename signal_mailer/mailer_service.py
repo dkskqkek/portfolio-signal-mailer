@@ -7,6 +7,7 @@ import json
 import os
 import logging
 import numpy as np
+import requests
 
 
 class MailerService:
@@ -154,3 +155,30 @@ class MailerService:
             return history[latest_key].get("status_label")
         except:
             return None
+
+    def send_telegram(self, message):
+        """Messenger: Telegram Instant Alert"""
+        telegram_config = self.config.get("telegram", {})
+        if not telegram_config.get("use", False):
+            return
+
+        bot_token = telegram_config.get("bot_token")
+        chat_id = telegram_config.get("chat_id")
+
+        if not bot_token or not chat_id:
+            return
+
+        try:
+            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+            requests.post(
+                url,
+                json={
+                    "chat_id": chat_id,
+                    "text": message,
+                    "parse_mode": "Markdown",
+                },
+                timeout=5,
+            )
+            self.logger.info("✓ Telegram sent.")
+        except Exception as e:
+            self.logger.error(f"Telegram failed: {e}")
