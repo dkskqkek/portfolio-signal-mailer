@@ -281,13 +281,23 @@ def run_daily_check():
 
         res = get_trend_state(asset_series, ticker)
 
-        # Icon
-        icon = "📈" if res["state"] == 1 else "📉"
-        # Action
-        action = "**BUY**" if res["state"] == 1 else "SELL"
+        if res["state"] == 1:
+            # Bull -> Show Sell Trigger
+            icon = "📈"
+            action = "**BUY**"
+            trigger_msg = (
+                f"📉Switch: ${res['lower']:,.2f} ({res['dist_down'] * 100:.1f}%)"
+            )
+        else:
+            # Bear -> Show Buy Trigger
+            icon = "📉"
+            action = "SELL"
+            trigger_msg = (
+                f"📈Switch: ${res['upper']:,.2f} (+{res['dist_up'] * 100:.1f}%)"
+            )
 
-        # Format: 📈 KOSPI: $2500 (BUY)
-        line = f"{icon} **{name}**: ${res['price']:,.2f} ({action})"
+        # Format: 📈 KOSPI: $2500 (BUY) | 📉Switch: $2400 (-4.0%)
+        line = f"{icon} **{name}**: ${res['price']:,.2f} ({action}) | {trigger_msg}"
         watch_text_lines.append(line)
 
     if watch_text_lines:
