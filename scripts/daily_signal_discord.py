@@ -25,14 +25,27 @@ import datetime
 import logging
 
 # Setup Logging
+log_dir = "logs"
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("d:/gg/logs/daily_signal.log"),
-        logging.StreamHandler(),
+        logging.StreamHandler(),  # Print to console (Essential for GitHub Actions)
     ],
 )
+# Add FileHandler only if possible (Local Dev)
+try:
+    file_handler = logging.FileHandler(os.path.join(log_dir, "daily_signal.log"))
+    file_handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    )
+    logging.getLogger().addHandler(file_handler)
+except Exception:
+    pass  # Skip file logging if permission denied or path issue
+
 logger = logging.getLogger("DailySignal")
 
 
@@ -40,11 +53,12 @@ def load_config():
     # Priority: 1. Env Var, 2. Config File
     config = {}
 
-    # 1. Load from file (Local Dev)
-    config_path = "d:/gg/signal_mailer/config.yaml"
-    # Fallback to relative path for GitHub Actions
+    # Check current directory
+    config_path = os.path.join(os.getcwd(), "signal_mailer", "config.yaml")
+
+    # If not found, try hardcoded dev path (Local Windows)
     if not os.path.exists(config_path):
-        config_path = os.path.join(os.getcwd(), "signal_mailer", "config.yaml")
+        config_path = "d:/gg/signal_mailer/config.yaml"
 
     if os.path.exists(config_path):
         try:

@@ -108,6 +108,8 @@ def sync_latest_equity(config):
     Prevents duplicate entries for the same day.
     """
     log_file = os.path.join(current_dir, "data", "equity_log.csv")
+    if not os.path.exists(os.path.dirname(log_file)):
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
 
     try:
         # Initialize KIS API
