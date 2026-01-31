@@ -1,0 +1,10 @@
+{
+    "extraPaths": [],
+    "exclude": [
+        "**/__pycache__",
+        "**/.git",
+        "**/.venv",
+        "data/historical",
+        "archive"
+    ]
+}

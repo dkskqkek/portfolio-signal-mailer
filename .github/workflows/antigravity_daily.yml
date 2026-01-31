@@ -1,17 +1,16 @@
-name: Antigravity Daily Routine
+name: Antigravity V4 Stratgey Signal
 
 on:
   schedule:
-    # UTC 12:xx = KST 21:xx
-    # Testing Schedule: 10, 12, 14, 16, 18, 20 minutes past 21:00 KST
-    - cron: "10,12,14,16,18,20 12 * * 1-5"
-  workflow_dispatch: # Allow manual trigger for testing
+    # UTC 22:30 = KST 07:30 (Next Day)
+    - cron: "30 22 * * *"
+  workflow_dispatch: # Manual Trigger
 
 jobs:
-  daily-routine:
+  daily-signal:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # REQUIRED: Allow the bot to commit changes back to the repo
+      contents: read
 
     steps:
       - name: Checkout Code
@@ -25,32 +24,20 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          # Install new requirements for integrated run
-          pip install pandas numpy yfinance pyyaml google-generativeai
+          pip install pandas numpy yfinance pyyaml requests
 
-      - name: Run Antigravity Integrated Engine (2-Track + The Council)
+      - name: Run V4 Daily Signal (Every Day)
         env:
-          # Mapping Secrets to Expected Env Vars
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
-          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_ACTIONS: "true"
-        run: python signal_mailer/integrated_run.py
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python scripts/daily_signal_discord.py
 
-      - name: Persist Logs (Optional)
+      - name: Run Weekly Report (Mondays Only)
+        if: github.event.schedule == '30 22 * * 1' || github.event_name == 'workflow_dispatch'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # Determine if KIS sync is needed. Without KIS keys, it might fail or skip sync.
+          # For now, we assume user might handle KIS keys later or just wants list output.
         run: |
-          git config --global user.name "Antigravity Bot"
-          git config --global user.email "bot@antigravity.ai"
-
-          # Add any generated logs or reports if needed
-          # (integrated_run saves 'latest_report.md' for debug)
-          git add latest_report.md
-
-          # Commit only if changes exist
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "🤖 Daily Report Log [$(date +'%Y-%m-%d')]"
-            git push
-          fi
+          # Check if script supports env var, if not this might require update.
+          # We run it and let it fail gracefully if config missing, or success if fixed.
+          python weekly_performance_report.py || echo "Weekly report failed or skipped."

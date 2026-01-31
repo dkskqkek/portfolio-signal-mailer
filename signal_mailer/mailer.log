@@ -155,3 +155,5 @@ QQQ SMA 150: 591.25
 2026-01-25 23:06:58,975 - SignalMailerSystem - INFO - ✓ Sent
 2026-01-26 03:25:29,387 [ERROR] 이메일 발송 실패: Connection unexpectedly closed
 2026-01-26 03:26:01,727 [ERROR] 이메일 발송 실패: Connection unexpectedly closed
+2026-01-28 18:11:56,303 [INFO] ✓ 이메일 발송 성공: gamjatangjo@gmail.com
+2026-01-28 19:57:40,378 [INFO] ✓ 이메일 발송 성공: gamjatangjo@gmail.com

@@ -1,0 +1,72 @@
+scheduler:
+  run_time: "09:00"
+  timezone: Asia/Seoul
+
+email:
+  smtp_server: smtp.gmail.com
+  smtp_port: 587
+  sender_email: gamjatangjo@gmail.com
+  sender_password: skekcgozubcmjjqq
+  recipient_email: gamjatangjo@gmail.com
+  subject_template: "[포트폴리오 신호] {status}"
+
+strategy_info:
+  description: "MAMA Lite v4.0 - Attention GNN + Diversified"
+  signal_logic: "Multi-Head Attention GNN (4 heads) + SRL Regime"
+  # Dynamic GNN Candidates (11 tickers)
+  gnn_tickers:
+    [
+      "NVDA",
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN",
+      "META",
+      "TSLA",
+      "AVGO",
+      "LLY",
+      "BRK-B",
+      "JPM",
+      "XOM",
+      "WMT",
+      "V",
+      "UNH",
+      "PG",
+      "MA",
+      "JNJ",
+      "HD",
+      "COST",
+    ]
+  # 9-ETF Universe (MAMA Pro)
+  etf_universe: ["SPY", "QQQ", "IWM", "TLT", "IEF", "SHY", "GLD", "DBC", "BIL"]
+  weights:
+    tactical: 0.45
+    kospi: 0.20
+    spy: 0.20
+    gold: 0.15
+
+trading:
+  slippage_bps: 5.0 # 1bp = 0.01%
+  commission_rate: 0.0025 # 0.25% (Overseas average)
+  max_daily_trades: 15
+
+gemini:
+  api_key: "AIzaSyB37foZBuGH17Vrgv6IXF9_-eeCimZ7HFA"
+  enabled: true
+
+discord:
+  webhook_url: "https://discord.com/api/webhooks/1388381237864960010/svSoTNGsHs7JogqEA8pvEbofgfjGCfIFqqm_0MaMZMKq5ooTZCQAngvSmL3RC1h6IUtF"
+  token: "MTQ2NTI3OTI1OTYxMzU5Nzc5OA.G9MIjE.B0ZE-TnjnSZlY1TSN_RnOxistw6ruCF1c8ruPM"
+  enabled: true
+
+history_file: d:/gg/data/signal_history.json
+log_file: d:/gg/signal_mailer/mailer.log
+debug_mode: false
+
+kis:
+  app_key: "PSKqKzfa2FVwftOotO3WfI2CuBtQ3WtExJX1"
+  app_secret: "gK57cT3fjgdzo7dvIyL6qsOffNTuAS/L6FrYdhzM6dz8glNSR5PdBg4uMeTjBcqN3lbDZamGWKobSsekw6P6i2CmQxm4NcPCCSbLqDZLYPvdd6ShlAuDYI4j8nt5g9XtmQLnQ3GJ6fUQpFcAGxGvMd1ThXPLDmTv/z5C4r7KziQ+Hawkjv8="
+  account_no: "50161248"
+  account_prod_code: "01"
+  is_mock: true
+  url_base: "https://openapivts.koreainvestment.com:29443"

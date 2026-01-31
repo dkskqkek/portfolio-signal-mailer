@@ -1,5 +1,5 @@
 {
-    "updated_at": "2026-01-26",
+    "updated_at": "2026-01-28",
     "currency": "KRW",
     "accounts": [
         {
@@ -8,22 +8,22 @@
                 {
                     "ticker": "KODEX US S&P500",
                     "class": "Defensive",
-                    "value": 4533480
+                    "value": 4493132
                 },
                 {
                     "ticker": "KODEX US Nasdaq100",
                     "class": "Growth",
-                    "value": 4491900
+                    "value": 4471237
                 },
                 {
                     "ticker": "KODEX Korea Value",
                     "class": "Defensive",
-                    "value": 2276960
+                    "value": 2332973
                 },
                 {
                     "ticker": "ACE Gold",
                     "class": "Gold",
-                    "value": 657500
+                    "value": 684063
                 }
             ],
             "cash": 247153
@@ -34,32 +34,32 @@
                 {
                     "ticker": "KODEX US S&P500",
                     "class": "Defensive",
-                    "value": 30439080
+                    "value": 30169468
                 },
                 {
                     "ticker": "KODEX US Nasdaq100",
                     "class": "Growth",
-                    "value": 20712650
+                    "value": 20617163
                 },
                 {
                     "ticker": "TIGER US Div+7%",
                     "class": "Defensive",
-                    "value": 18536700
+                    "value": 18251520
                 },
                 {
                     "ticker": "TIGER Korea Top10",
                     "class": "Defensive",
-                    "value": 9709200
+                    "value": 9964020
                 },
                 {
                     "ticker": "KODEX Korea Value",
                     "class": "Defensive",
-                    "value": 7405440
+                    "value": 7587613
                 },
                 {
                     "ticker": "ACE Gold",
                     "class": "Gold",
-                    "value": 5029875
+                    "value": 5233402
                 }
             ],
             "cash": 102887
@@ -70,44 +70,44 @@
                 {
                     "ticker": "GOOGL (Alphabet)",
                     "class": "Growth",
-                    "value": 29444941
+                    "value": 29436550
                 },
                 {
                     "ticker": "VGT (Tech ETF)",
                     "class": "Growth",
-                    "value": 21097370
+                    "value": 20849943
                 },
                 {
                     "ticker": "COWZ (Cash Cow)",
                     "class": "Defensive",
-                    "value": 14307237
+                    "value": 14015072
                 },
                 {
                     "ticker": "XLV (Healthcare)",
                     "class": "Defensive",
-                    "value": 12052381
+                    "value": 11660434
                 },
                 {
                     "ticker": "CVX (Chevron)",
                     "class": "Defensive",
-                    "value": 11263172
+                    "value": 11023240
                 },
                 {
                     "ticker": "VXUS (Intl)",
                     "class": "Defensive",
-                    "value": 10787354
+                    "value": 10671031
                 },
                 {
                     "ticker": "GLDM (Gold)",
                     "class": "Gold",
-                    "value": 9146912
+                    "value": 9077239
                 }
             ],
-            "cash": 0
+            "cash": 2339513
         }
     ],
     "summary": {
-        "total_value": 212000000,
+        "total_value": 213180470,
         "exchange_rate": 1430
     }
 }

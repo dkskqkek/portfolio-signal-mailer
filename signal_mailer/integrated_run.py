@@ -7,11 +7,11 @@ import yaml
 from pathlib import Path
 
 # Add project root to path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from signal_detector import SignalDetector
-from mailer_service import MailerService
-from html_generator import generate_html_report
+from signal_mailer.signal_detector import SignalDetector
+from signal_mailer.mailer_service import MailerService
+from signal_mailer.html_generator import generate_html_report
 
 
 def load_config():
@@ -38,7 +38,7 @@ def load_config():
     return config
 
 
-from portfolio_manager import PortfolioManager
+from signal_mailer.portfolio_manager import PortfolioManager
 
 
 def main():

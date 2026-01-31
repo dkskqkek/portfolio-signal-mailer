@@ -13,7 +13,7 @@ Components:
 
 import pandas as pd
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Tuple, Optional
 from dataclasses import dataclass
 
 
@@ -126,7 +126,7 @@ class IndexSniper:
             intercept = (np.sum(y) - slope * np.sum(x_vals)) / n
             return intercept + slope * (n - 1)  # Value at last point
 
-        return diff.rolling(self.mom_len).apply(linreg_val, raw=False)
+        return diff.rolling(self.mom_len).apply(linreg_val, raw=False)  # type: ignore
 
     def _calc_supertrend(
         self, close: pd.Series, high: pd.Series, low: pd.Series

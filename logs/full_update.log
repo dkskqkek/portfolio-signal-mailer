@@ -1,0 +1,183 @@
+2026-01-31 14:52:41,112 [INFO] ============================================================
+2026-01-31 14:52:41,112 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:52:41,112 [INFO] ============================================================
+2026-01-31 14:52:41,112 [INFO] 🚀 Starting: Universe Selection (Top 20)
+2026-01-31 14:52:47,261 [ERROR] ❌ Failed: Universe Selection (Top 20)
+2026-01-31 14:52:47,261 [ERROR] Error Output: 2026-01-31 14:52:46,719 [INFO] Starting Universe Update...
+2026-01-31 14:52:46,720 [INFO] Fetching S&P 500 list from https://en.wikipedia.org/wiki/List_of_S%26P_500_companies...
+2026-01-31 14:52:47,153 [ERROR] Failed to fetch S&P 500 list: HTTP Error 403: Forbidden
+
+2026-01-31 14:53:08,472 [INFO] ============================================================
+2026-01-31 14:53:08,473 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:53:08,473 [INFO] ============================================================
+2026-01-31 14:53:08,473 [INFO] 🚀 Starting: Universe Selection (Top 20)
+2026-01-31 14:53:23,370 [INFO] ✅ Completed: Universe Selection (Top 20)
+2026-01-31 14:53:23,370 [INFO] 🚀 Starting: Adjacency Matrix Update
+2026-01-31 14:53:25,145 [ERROR] ❌ Failed: Adjacency Matrix Update
+2026-01-31 14:53:25,145 [ERROR] Error Output: Traceback (most recent call last):
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 146, in <module>
+    new_adj, corr_matrix = update_adjacency_matrix(threshold=0.5, lookback_days=252)
+                           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 86, in update_adjacency_matrix
+    corr_matrix = calculate_correlation_matrix(lookback_days)
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 34, in calculate_correlation_matrix
+    print(f"\U0001f4e5 Downloading {lookback_days} days of data...")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp949' codec can't encode character '\U0001f4e5' in position 0: illegal multibyte sequence
+
+2026-01-31 14:53:46,773 [INFO] ============================================================
+2026-01-31 14:53:46,773 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:53:46,774 [INFO] ============================================================
+2026-01-31 14:53:46,774 [INFO] Starting: Universe Selection (Top 20)
+2026-01-31 14:53:59,953 [INFO] Completed: Universe Selection (Top 20)
+2026-01-31 14:53:59,953 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:54:04,769 [ERROR] Failed: Adjacency Matrix Update
+2026-01-31 14:54:04,769 [ERROR] Error Output: Traceback (most recent call last):
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 146, in <module>
+    new_adj, corr_matrix = update_adjacency_matrix(threshold=0.5, lookback_days=252)
+                           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 125, in update_adjacency_matrix
+    print(f"\n\U0001f4ca 통계:")
+    ~~~~~^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp949' codec can't encode character '\U0001f4ca' in position 2: illegal multibyte sequence
+
+2026-01-31 14:54:27,445 [INFO] ============================================================
+2026-01-31 14:54:27,446 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:54:27,446 [INFO] ============================================================
+2026-01-31 14:54:27,446 [INFO] Starting: Universe Selection (Top 20)
+2026-01-31 14:54:40,625 [INFO] Completed: Universe Selection (Top 20)
+2026-01-31 14:54:40,625 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:54:43,035 [INFO] Completed: Adjacency Matrix Update
+2026-01-31 14:54:43,036 [INFO] Starting: Model Retraining (Attention GNN)
+2026-01-31 14:54:51,890 [ERROR] Failed: Model Retraining (Attention GNN)
+2026-01-31 14:54:51,890 [ERROR] Error Output: 
+1 Failed download:
+['NFLX']: YFRateLimitError('Too Many Requests. Rate limited. Try after a while.')
+Traceback (most recent call last):
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 200, in <module>
+    model, losses = train_attention_gnn(X_list, y_list, adj_norm, epochs=50, lr=0.005)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 179, in train_attention_gnn
+    avg_loss = total_loss / len(X_list)
+               ~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero
+
+2026-01-31 14:55:29,876 [INFO] ============================================================
+2026-01-31 14:55:29,876 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:55:29,877 [INFO] ============================================================
+2026-01-31 14:55:29,877 [INFO] Starting: Universe Selection (Top 20)
+2026-01-31 14:55:52,537 [INFO] Completed: Universe Selection (Top 20)
+2026-01-31 14:55:52,537 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:55:55,304 [INFO] Completed: Adjacency Matrix Update
+2026-01-31 14:55:55,304 [INFO] Starting: Model Retraining (Attention GNN)
+2026-01-31 14:56:01,442 [ERROR] Failed: Model Retraining (Attention GNN)
+2026-01-31 14:56:01,442 [ERROR] Error Output: 
+20 Failed downloads:
+['NCLH', 'NFLX', 'OXY', 'NTAP', 'NWSA', 'NEM', 'NVDA', 'MNST', 'NVR', 'NKE', 'MMM', 'NTRS', 'MPWR', 'MSFT', 'NXPI', 'MOH', 'MAA', 'NWS', 'MSI', 'NRG']: YFRateLimitError('Too Many Requests. Rate limited. Try after a while.')
+Traceback (most recent call last):
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 209, in <module>
+    model, losses = train_attention_gnn(X_list, y_list, adj_norm, epochs=50, lr=0.005)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 188, in train_attention_gnn
+    avg_loss = total_loss / len(X_list)
+               ~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero
+
+2026-01-31 14:56:24,330 [INFO] ============================================================
+2026-01-31 14:56:24,330 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:56:24,330 [INFO] ============================================================
+2026-01-31 14:56:24,330 [INFO] Starting: Universe Selection (Top 20)
+2026-01-31 14:56:34,977 [INFO] Completed: Universe Selection (Top 20)
+2026-01-31 14:56:34,978 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:56:37,638 [INFO] Completed: Adjacency Matrix Update
+2026-01-31 14:56:37,638 [INFO] Starting: Model Retraining (Attention GNN)
+2026-01-31 14:56:42,270 [ERROR] Failed: Model Retraining (Attention GNN)
+2026-01-31 14:56:42,270 [ERROR] Error Output: Traceback (most recent call last):
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 230, in <module>
+    model, losses = train_attention_gnn(X_list, y_list, adj_norm, epochs=50, lr=0.005)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 209, in train_attention_gnn
+    avg_loss = total_loss / len(X_list)
+               ~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero
+
+2026-01-31 14:57:43,708 [INFO] ============================================================
+2026-01-31 14:57:43,708 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:57:43,708 [INFO] ============================================================
+2026-01-31 14:57:43,708 [INFO] Starting: Universe Selection (Top 20)
+2026-01-31 14:57:55,359 [INFO] Completed: Universe Selection (Top 20)
+2026-01-31 14:57:55,359 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:58:00,830 [INFO] Completed: Adjacency Matrix Update
+2026-01-31 14:58:00,830 [INFO] Starting: Model Retraining (Attention GNN)
+2026-01-31 14:58:05,562 [ERROR] Failed: Model Retraining (Attention GNN)
+2026-01-31 14:58:05,562 [ERROR] Error Output: Traceback (most recent call last):
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 230, in <module>
+    model, losses = train_attention_gnn(X_list, y_list, adj_norm, epochs=50, lr=0.005)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 209, in train_attention_gnn
+    avg_loss = total_loss / len(X_list)
+               ~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero
+
+2026-01-31 14:58:14,375 [INFO] ============================================================
+2026-01-31 14:58:14,376 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:58:14,376 [INFO] ============================================================
+2026-01-31 14:58:14,376 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:58:19,577 [INFO] Completed: Adjacency Matrix Update
+2026-01-31 14:58:19,577 [INFO] Starting: Model Retraining (Attention GNN)
+2026-01-31 14:58:24,197 [ERROR] Failed: Model Retraining (Attention GNN)
+2026-01-31 14:58:24,197 [ERROR] Error Output: Traceback (most recent call last):
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 230, in <module>
+    model, losses = train_attention_gnn(X_list, y_list, adj_norm, epochs=50, lr=0.005)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 209, in train_attention_gnn
+    avg_loss = total_loss / len(X_list)
+               ~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero
+
+2026-01-31 14:59:06,105 [INFO] ============================================================
+2026-01-31 14:59:06,105 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 14:59:06,105 [INFO] ============================================================
+2026-01-31 14:59:06,106 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 14:59:14,010 [ERROR] Failed: Adjacency Matrix Update
+2026-01-31 14:59:14,010 [ERROR] Error Output: 
+20 Failed downloads:
+['AMZN', 'COST', 'AAPL', 'UNH', 'BRK-B', 'TSLA', 'PG', 'JPM', 'LLY', 'MA', 'AVGO', 'XOM', 'HD', 'META', 'NVDA', 'WMT', 'JNJ', 'GOOGL', 'V', 'MSFT']: YFRateLimitError('Too Many Requests. Rate limited. Try after a while.')
+Traceback (most recent call last):
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 58, in calculate_correlation_matrix
+    raise ValueError("Bulk download failed (empty)")
+ValueError: Bulk download failed (empty)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 194, in <module>
+    new_adj, corr_matrix = update_adjacency_matrix(threshold=0.5, lookback_days=252)
+                           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 134, in update_adjacency_matrix
+    corr_matrix = calculate_correlation_matrix(lookback_days)
+  File "D:\gg\signal_mailer\update_adjacency_matrix.py", line 82, in calculate_correlation_matrix
+    raise ValueError("All download attempts failed.")
+ValueError: All download attempts failed.
+
+2026-01-31 15:00:14,104 [INFO] ============================================================
+2026-01-31 15:00:14,104 [INFO] Antigravity Dynamic Universe & Model Update Pipeline
+2026-01-31 15:00:14,104 [INFO] ============================================================
+2026-01-31 15:00:14,105 [INFO] Starting: Adjacency Matrix Update
+2026-01-31 15:00:20,336 [INFO] Completed: Adjacency Matrix Update
+2026-01-31 15:00:20,336 [INFO] Starting: Model Retraining (Attention GNN)
+2026-01-31 15:00:27,061 [ERROR] Failed: Model Retraining (Attention GNN)
+2026-01-31 15:00:27,062 [ERROR] Error Output: Traceback (most recent call last):
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 230, in <module>
+    model, losses = train_attention_gnn(X_list, y_list, adj_norm, epochs=50, lr=0.005)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\gg\signal_mailer\train_attention_gnn.py", line 209, in train_attention_gnn
+    avg_loss = total_loss / len(X_list)
+               ~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero
+
+2026-01-31 15:00:27,062 [WARNING] Training Failed. Using existing weights.
+2026-01-31 15:00:27,062 [INFO] ============================================================
+2026-01-31 15:00:27,062 [INFO] All Updates Completed Successfully!
+2026-01-31 15:00:27,063 [INFO] New universe selected, data updated, and model retrained.
+2026-01-31 15:00:27,063 [INFO] ============================================================

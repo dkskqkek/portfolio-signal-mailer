@@ -1,0 +1,14 @@
+{
+  "period": "2019-2024",
+  "initial_capital": 100000,
+  "final_value": 206993.34731561277,
+  "cagr": 0.15710683765694555,
+  "total_return": 1.0699334731561279,
+  "sharpe_ratio": 0.9208327732314115,
+  "max_drawdown": -0.2711824827041128,
+  "calmar_ratio": 0.5793399193426694,
+  "win_rate": 0.5195530726256983,
+  "volatility": 0.1756698144801337,
+  "total_trades": 157,
+  "avg_trade_cost": 44.11034668590764
+}

@@ -4,13 +4,14 @@ import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
 import warnings
-import json
-import os
 
+# Filter warnings before importing specific modules if they generate noise
 warnings.filterwarnings("ignore")
 
-from debate_council import DebateCouncil
-from index_sniper import IndexSniper
+import json
+from typing import List, Dict, Optional, Any
+from signal_mailer.debate_council import DebateCouncil
+from signal_mailer.index_sniper import IndexSniper
 # from html_generator import generate_html_report # We will update this later
 
 
@@ -24,7 +25,7 @@ class SignalDetector:
     """
 
     @staticmethod
-    def _to_py_type(val):
+    def _to_py_type(val: Any) -> Any:
         if isinstance(val, (np.bool_, bool)):
             return bool(val)
         if isinstance(val, (np.floating, float)):
@@ -37,7 +38,7 @@ class SignalDetector:
             return {k: SignalDetector._to_py_type(v) for k, v in val.__dict__.items()}
         return val
 
-    def __init__(self, api_key=None):
+    def __init__(self, api_key: Optional[str] = None):
         self.council = DebateCouncil(api_key) if api_key else None
         self.sniper = IndexSniper()  # Initialize Sniper V8.2
 
@@ -57,7 +58,7 @@ class SignalDetector:
             "GSY",  # Expanded slightly for robustness
         ]
 
-    def fetch_data(self, days_back=400):
+    def fetch_data(self, days_back: int = 400) -> Optional[pd.DataFrame]:
         # Fetch enough data for SMA250 and 8-month momentum
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days_back)
@@ -105,7 +106,7 @@ class SignalDetector:
             print(f"[Data Error] {e}")
             return None
 
-    def get_monthly_selection(self, close_data):
+    def get_monthly_selection(self, close_data: pd.DataFrame) -> List[str]:
         """
         Determines the Defensive Asset to hold based on LAST MONTH END's momentum.
         Returns: list of tickers (Top 3)
@@ -150,7 +151,7 @@ class SignalDetector:
 
         return top3
 
-    def detect(self, verbose=True):
+    def detect(self, verbose: bool = True) -> Dict[str, Any]:
         print(">>> Running Signal Detection (v4.1 Live)...")
 
         # 1. Fetch
@@ -277,7 +278,13 @@ class SignalDetector:
 
         return report
 
-    def _generate_action_plan(self, signal, def_assets, discount, sniper=None):
+    def _generate_action_plan(
+        self,
+        signal: str,
+        def_assets: List[str],
+        discount: float,
+        sniper: Optional[Any] = None,
+    ) -> str:
         """
         Synthesizes the specific executable instruction.
         """
@@ -294,11 +301,11 @@ class SignalDetector:
         # Add Sniper Insight
         if sniper:
             if sniper.is_buy:
-                plan += f"\n🎯 **SNIPER BUY SIGNAL** detected on QQQ! Confirm Weekly Momentum."
+                plan += "\n🎯 **SNIPER BUY SIGNAL** detected on QQQ! Confirm Weekly Momentum."
             elif sniper.is_sell:
-                plan += f"\n⚠️ **SNIPER SELL SIGNAL** detected on QQQ! Consider trimming exposure."
+                plan += "\n⚠️ **SNIPER SELL SIGNAL** detected on QQQ! Consider trimming exposure."
             elif sniper.buy_window:
-                plan += f"\n🟠 In **Sniper Buy Window**. Watch for momentum shift."
+                plan += "\n🟠 In **Sniper Buy Window**. Watch for momentum shift."
 
         return plan
 

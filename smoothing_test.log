@@ -1,0 +1,9 @@
+Loaded KMeans model (trained on 2004-01-01 to 2024-12-31)
+Bull Regime: Cluster 0
+Fetching market data...
+Current Regime: Cluster 0 (Bull ID: 0)
+Regime History (recent 1 days): [0]
+Bull Probability (5-day avg): 100.00%
+[SMOOTHING] Stock Weight: 100.00%, Bond Weight: 0.00%
+Stock Weight: 100.00% -> Engaging GNN (v3.2: 10 features)
+GNN Selection: ['NFLX', 'AVGO', 'GOOGL']

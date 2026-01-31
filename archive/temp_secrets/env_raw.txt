@@ -1,0 +1,27 @@
+﻿# === 紐⑥쓽?ъ옄 紐⑤뱶 ?ㅼ젙 ===
+IS_MOCK=True
+
+# === ?ㅼ쟾 怨꾩쥖 ===
+APP_KEY_REAL=PSADxjm3PjQDxv956AHVKhb0Yw7AXURsDtCf
+APP_SECRET_REAL=JewAKbfOo95oFRmeznTYcSk1sKkHv9df906QbiN+cOYYk8xfy5X+h8w5WquoA4awRI2we4R3oB+g5ejbFcGnXjsSxZjZUKnDVvuIW2stoD33mH3No3fy5jKiTd1CqqAmpbmwi8ens4e5KXuzJEjpf0w464dk0XjAmsQ3d6SB9rRtIIR9o1Y=
+CANO_REAL=74701552
+
+# === 紐⑥쓽?ъ옄 怨꾩쥖 ===
+APP_KEY_MOCK=PSj5A4WELAmaSLk8iM3uNicCy8D6o3xsHHlc
+APP_SECRET_MOCK=PdAs2wHopqnXgkd8y1vuxEzhSL4MJXjlgnf9L442HB1I7hrdVBzd0zjhcZWmqUAroZj9Ik23l6WmrCUCigWF+4B1vM19z4bTzujZmoe0ZEF8fRbgAr2YSuZlHy0ccrrQWLqVrNCQtoCEFIgOBXwcPnK1O2wATOckLbHsko05HY1x2eeX9is=
+CANO_MOCK=50160736
+
+# === ?꾩옱 ?ъ슜 以묒씤 怨꾩젙 (IS_MOCK=True硫?紐⑥쓽?ъ옄, False硫??ㅼ쟾) ===
+APP_KEY=PSj5A4WELAmaSLk8iM3uNicCy8D6o3xsHHlc
+APP_SECRET=PdAs2wHopqnXgkd8y1vuxEzhSL4MJXjlgnf9L442HB1I7hrdVBzd0zjhcZWmqUAroZj9Ik23l6WmrCUCigWF+4B1vM19z4bTzujZmoe0ZEF8fRbgAr2YSuZlHy0ccrrQWLqVrNCQtoCEFIgOBXwcPnK1O2wATOckLbHsko05HY1x2eeX9is=
+CANO=50160736
+
+# === 怨듯넻 ?ㅼ젙 ===
+ACNT_PRDT_CD=01
+URL_BASE_REAL=https://openapi.koreainvestment.com:9443
+URL_BASE_MOCK=https://openapivts.koreainvestment.com:29443
+
+# === Discord ?ㅼ젙 ===
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1388381237864960010/svSoTNGsHs7JogqEA8pvEbofgfjGCfIFqqm_0MaMZMKq5ooTZCQAngvSmL3RC1h6IUtF"
+
+DISCORD_BOT_TOKEN="MTQ2NTI3OTI1OTYxMzU5Nzc5OA.G9MIjE.B0ZE-TnjnSZlY1TSN_RnOxistw6ruCF1c8ruPM"
