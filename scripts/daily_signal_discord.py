@@ -101,160 +101,213 @@ def send_discord_message(webhook_url, title, color, fields, footer_text):
         logger.error(f"Failed to send Discord message: {e}")
 
 
-def run_daily_check():
-    logger.info("Starting Daily Strategy Check...")
+def get_trend_state(df, ticker, ma_window=185, buffer=0.03):
+    """
+    Calculate Trend State using MA + Buffer Hysteresis.
+    Returns dict with current state, price, ma, bands, etc.
+    """
+    # Calculate MA and Bands
+    series = df[ticker]
+    ma = series.rolling(window=ma_window).mean()
+    upper = ma * (1 + buffer)
+    lower = ma * (1 - buffer)
 
-    # 1. Config
+    # Hysteresis Loop
+    states = np.zeros(len(df))
+    # Init based on price vs ma
+    curr = 1 if series.iloc[0] > ma.iloc[0] else -1
+
+    vals = series.values
+    uppers = upper.values
+    lowers = lower.values
+
+    for i in range(len(df)):
+        if vals[i] > uppers[i]:
+            curr = 1
+        elif vals[i] < lowers[i]:
+            curr = -1
+        states[i] = curr
+
+    last_idx = -1
+    state = states[last_idx]
+    price = vals[last_idx]
+    curr_ma = ma.iloc[last_idx]
+    curr_upper = upper.iloc[last_idx]
+    curr_lower = lower.iloc[last_idx]
+
+    dist_to_upper = (curr_upper - price) / price
+    dist_to_lower = (price - curr_lower) / price
+
+    return {
+        "ticker": ticker,
+        "price": price,
+        "state": state,  # 1: Bull, -1: Bear
+        "ma": curr_ma,
+        "upper": curr_upper,
+        "lower": curr_lower,
+        "dist_up": dist_to_upper,
+        "dist_down": dist_to_lower,
+    }
+
+
+def run_daily_check():
+    logger.info("Starting Daily Strategy Check (Multi-Asset)...")
+
+    # 1. Config & Webhook
     config = load_config()
     webhook_url = config.get("discord", {}).get("webhook_url")
 
     if not webhook_url:
-        print("⚠️ Warning: No Discord Webhook URL found in config.yaml")
-        # For testing, we proceed but don't fail hard if user just wants dry run output
+        logger.warning("No Webhook URL found.")
 
-    # 2. Data
-    # Need enough history for MA185 + Lag
+    # 2. Define Tickers
+    # Main Portfolio
+    main_ticker = "VTI"
+    macro_tickers = ["^TNX", "^IRX"]
+
+    # Watchlist (User Request)
+    # KOSPI(^KS11), Bitcoin(BTC-USD), Google, Chevron, NVR
+    watchlist = {
+        "^KS11": "🇰🇷 KOSPI",
+        "BTC-USD": "🪙 Bitcoin",
+        "GOOGL": "🔎 Google",
+        "CVX": "🛢️ Chevron",
+        "NVR": "🏠 NVR (Cons)",
+    }
+
+    all_tickers = [main_ticker] + macro_tickers + list(watchlist.keys())
+
+    # 3. Download Data
     start_date = (datetime.datetime.now() - datetime.timedelta(days=400)).strftime(
         "%Y-%m-%d"
     )
     end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(
         "%Y-%m-%d"
-    )
+    )  # +1 for safely getting today/yesterday
 
-    tickers = ["VTI", "^TNX", "^IRX"]
-
-    logger.info(f"Downloading data from {start_date}...")
     try:
-        data = yf.download(tickers, start=start_date, end=end_date, progress=False)
+        data = yf.download(all_tickers, start=start_date, end=end_date, progress=False)
     except Exception as e:
         logger.error(f"Download failed: {e}")
         return
 
-    # Flatten
+    # Flatten Data
     if isinstance(data.columns, pd.MultiIndex):
         if "Close" in data.columns.levels[0]:
             df = data["Close"].copy()
         else:
-            df = data.copy()
+            df = data.copy()  # Might differ by version
+            # If columns are (Ticker, PriceType), we might need to adjust.
+            # Usually yfinance with group_by='ticker' is safer, but default is by column.
+            # If MultiIndex with 'Close' level missing, we assume simple columns or handle it.
+            pass
     else:
         df = data.copy()
 
-    df = df.ffill().dropna()
+    df = df.ffill()  # Fill missing first
 
-    if df.empty:
-        logger.error("Dataframe is empty after download.")
+    # 4. Analyze Main Strategy (VTI)
+    if main_ticker not in df.columns or "^TNX" not in df.columns:
+        logger.error("Critical Data Missing (VTI or Yields)")
         return
 
-    # 3. Indicators
-    # MA185
-    df["MA185"] = df["VTI"].rolling(window=185).mean()
+    df = (
+        df.dropna()
+    )  # Drop rows where any data missing (might truncate history for BTC, be careful)
+    # Actually, BTC trades weekends, stocks don't. Aligning indexes might drop weekends or leave NaNs.
+    # It's better to analyze each series independently or ffill thoroughly.
 
-    # Buffer Band
-    buffer = 0.03
-    df["Upper"] = df["MA185"] * (1 + buffer)
-    df["Lower"] = df["MA185"] * (1 - buffer)
+    # Analyze VTI
+    vti_res = get_trend_state(df.dropna(), main_ticker)
 
-    # Macro Spread
-    # Handle older data where TNX/IRX might be missing slightly, assume ffill did job
-    df["Spread"] = df["^TNX"] - df["^IRX"]
+    # Analyze Macros
+    # Handle Yield Spread
+    last_tnx = df["^TNX"].iloc[-1]
+    last_irx = df["^IRX"].iloc[-1]
+    yield_spread = last_tnx - last_irx
 
-    df.dropna(inplace=True)
-
-    # 4. Determine State (Hysteresis)
-    # We need to iterate to find current state
-    # 1 = Bull, -1 = Bear
-    states = np.zeros(len(df))
-    # Init state
-    current_state = 1 if df["VTI"].iloc[0] > df["MA185"].iloc[0] else -1
-
-    prices = df["VTI"].values
-    uppers = df["Upper"].values
-    lowers = df["Lower"].values
-
-    for i in range(len(df)):
-        p = prices[i]
-        if p > uppers[i]:
-            current_state = 1
-        elif p < lowers[i]:
-            current_state = -1
-        # Else hold previous state
-        states[i] = current_state
-
-    df["State"] = states
-
-    # 5. Latest Status
-    last_row = df.iloc[-1]
-    last_date = df.index[-1].strftime("%Y-%m-%d")
-
-    curr_state = last_row["State"]
-    curr_spread = last_row["Spread"]
-    curr_price = last_row["VTI"]
-    curr_ma = last_row["MA185"]
-    curr_upper = last_row["Upper"]
-    curr_lower = last_row["Lower"]
-
-    dist_to_upper = (curr_upper - curr_price) / curr_price
-    dist_to_lower = (curr_price - curr_lower) / curr_price
-
-    # Allocation Logic (Antigravity V4 Sortino Optimized)
+    # Build Main Report Logic
     allocation_text = ""
     color = 0x000000
     regime_name = ""
 
-    if curr_state == 1:
-        # BULL
+    if vti_res["state"] == 1:  # Bull
         regime_name = "🚀 BULL MARKET (상승장)"
         color = 0x00FF00  # Green
-        allocation_text = "✅ **주식 (Stock): 100%**\n🛡️ 현금 (Defensive): 0%"
-
-        # Buffer Info
-        buffer_msg = f"📉 매도 전환가: ${curr_lower:.2f} (동공지진까지 {dist_to_lower * 100:.2f}% 남음)"
-
-    else:
-        # BEAR
-        if curr_spread < 0:
-            # INVERTED (CRISIS)
-            regime_name = "💀 BEAR + INVERTED (금융 위기)"
+        allocation_text = "✅ **주식 (Stock): 100%**"
+        buffer_msg = f"📉 매도 전환가: ${vti_res['lower']:.2f} ({vti_res['dist_down'] * 100:.2f}%)"
+    else:  # Bear
+        if yield_spread < 0:  # Crisis
+            regime_name = "💀 BEAR + CRISIS (위기)"
             color = 0xFF0000  # Red
-            allocation_text = "⛔ 주식 (Stock): 0%\n✅ **현금/달러 (Defensive): 100%**"
-            buffer_msg = f"📈 매수 전환가: ${curr_upper:.2f} (회복까지 {dist_to_upper * 100:.2f}% 남음)"
-
-        else:
-            # NORMAL BEAR (CORRECTION)
-            regime_name = "🐻 BEAR + NORMAL (단순 하락장)"
+            allocation_text = "⛔ 주식 0% / ✅ **현금 100%**"
+            buffer_msg = f"📈 매수 전환가: ${vti_res['upper']:.2f} ({vti_res['dist_up'] * 100:.2f}%)"
+        else:  # Correction
+            regime_name = "🐻 BEAR + NORMAL (조정)"
             color = 0xFFA500  # Orange
-            allocation_text = (
-                "⚠️ **주식 (Stock): 30%**\n✅ **현금/달러 (Defensive): 70%**"
-            )
-            buffer_msg = f"📈 매수 전환가: ${curr_upper:.2f} (회복까지 {dist_to_upper * 100:.2f}% 남음)"
+            allocation_text = "⚠️ **주식 30%** / ✅ 현금 70%"
+            buffer_msg = f"📈 매수 전환가: ${vti_res['upper']:.2f} ({vti_res['dist_up'] * 100:.2f}%)"
 
-    # message fields
+    # Fields Construction
     fields = [
-        {"name": "📅 기준일 (Data Date)", "value": last_date, "inline": True},
-        {"name": "📊 현재 주가 (VTI)", "value": f"${curr_price:.2f}", "inline": True},
-        {"name": "📉 MA 185", "value": f"${curr_ma:.2f}", "inline": True},
         {
-            "name": "🚥 현재 상태 (Regime)",
-            "value": f"**{regime_name}**",
+            "name": "🚦 메인 포트폴리오 (VTI)",
+            "value": f"{regime_name}\n{allocation_text}",
             "inline": False,
         },
         {
-            "name": "💼 추천 비중 (Allocation)",
-            "value": allocation_text,
+            "name": "📉 VTI 가격 / 버퍼",
+            "value": f"${vti_res['price']:.2f} / {buffer_msg}",
             "inline": False,
         },
-        {"name": "📏 버퍼 현황 (Buffer Status)", "value": buffer_msg, "inline": False},
         {
-            "name": "🏦 수익률 곡선 (Yield Spread)",
-            "value": f"{curr_spread:.2f}bp ({'Inverted!' if curr_spread < 0 else 'Normal'})",
+            "name": "🏦 금리차 (10Y-3M)",
+            "value": f"{yield_spread:.2f}bp ({'Inverted' if yield_spread < 0 else 'Normal'})",
             "inline": True,
         },
     ]
 
+    # 5. Analyze Watchlist
+    watch_text_lines = []
+
+    for ticker, name in watchlist.items():
+        if ticker not in df.columns:
+            continue
+
+        # Separate DropNA for each asset to handle different trading calendars (Crypto vs Stock)
+        asset_series = df[[ticker]].dropna()
+        if len(asset_series) < 200:
+            continue
+
+        res = get_trend_state(asset_series, ticker)
+
+        # Icon
+        icon = "📈" if res["state"] == 1 else "📉"
+        # Action
+        action = "**BUY**" if res["state"] == 1 else "SELL"
+
+        # Format: 📈 KOSPI: $2500 (BUY)
+        line = f"{icon} **{name}**: ${res['price']:,.2f} ({action})"
+        watch_text_lines.append(line)
+
+    if watch_text_lines:
+        fields.append(
+            {
+                "name": "🔭 주요 자산 신호 (Watchlist)",
+                "value": "\n".join(watch_text_lines),
+                "inline": False,
+            }
+        )
+
+    # Send
+    last_date = df.index[-1].strftime("%Y-%m-%d")
+
     print("-" * 50)
     print(f"Date: {last_date}")
     print(f"Regime: {regime_name}")
-    print(f"Alloc: {allocation_text.replace('**', '').replace(chr(10), ', ')}")
+    print("Watchlist:")
+    for l in watch_text_lines:
+        print(l)
     print("-" * 50)
 
     if webhook_url:
@@ -263,10 +316,8 @@ def run_daily_check():
             "🔮 Antigravity V4 Daily Signal",
             color,
             fields,
-            "Powered by Gemini & Antigravity Engine",
+            f"기준일: {last_date} | Powered by Gemini",
         )
-    else:
-        print("Skipping Discord output (No URL).")
 
 
 if __name__ == "__main__":
