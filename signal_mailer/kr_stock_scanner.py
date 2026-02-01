@@ -57,6 +57,13 @@ class KRStockScanner:
             logger.error("No active tickers to scan.")
             return []
 
+        # 0. Weekend Safeguard
+        from datetime import datetime
+
+        if datetime.now().weekday() >= 5:  # 5=Sat, 6=Sun
+            logger.warning("⛔ Skipping scan: Weekend (Market Closed)")
+            return []
+
         logger.info(
             f"Scanning {len(active_tickers)} tickers using Hybrid Alpha (KIS Only)..."
         )
