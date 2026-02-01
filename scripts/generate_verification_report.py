@@ -156,15 +156,28 @@ def generate_report():
         imm_row = df_lag[df_lag["Strategy"].str.contains("Immediate")].iloc[0]
         lag_row = df_lag[df_lag["Strategy"].str.contains("Lag")].iloc[0]
 
-        # Decision Logic
-        better_mdd = lag_row["MDD"] > imm_row["MDD"] * 1.05  # 5% better?
-        better_cagr = lag_row["CAGR"] > imm_row["CAGR"] * 1.05  # 5% better?
+        # Decision Logic (Sensitivity Thresholds)
+        # User Requirement: CAGR > 0.5%p or MDD > 1.0%p improvement to claim "Edge".
+        diff_cagr = lag_row["CAGR"] - imm_row["CAGR"]
+        diff_mdd = (
+            lag_row["MDD"] - imm_row["MDD"]
+        )  # MDD is negative. -20 - (-25) = +5% (Better)
 
-        verdict = "REJECTED"
-        reason = "No significant improvement (Complexity Penalty)."
-        if better_mdd or better_cagr:
+        threshold_cagr = 0.005  # 0.5%
+        threshold_mdd = 0.01  # 1.0%
+
+        if diff_cagr > threshold_cagr or diff_mdd > threshold_mdd:
             verdict = "ACCEPTED"
-            reason = "Clear Edge detected."
+            reason = "Clear Edge detected (> 0.5% CAGR or > 1% MDD improvement)."
+            action = "Adopt 3-Month Lag."
+        elif diff_cagr < -threshold_cagr or diff_mdd < -threshold_mdd:
+            verdict = "REJECTED"
+            reason = "Performance Degraded (> 0.5% CAGR or > 1% MDD worse)."
+            action = "Keep Immediate Logic."
+        else:
+            verdict = "REJECTED"
+            reason = "No Significant Difference (Diff < Threshold). Complexity Penalty applies."
+            action = "Keep Immediate Logic (Simplicity Wins)."
 
         report_lines.append(f"### 3.1 Result Comparison")
         report_lines.append("| Strategy | CAGR | MDD | Sharpe |")
@@ -180,7 +193,60 @@ def generate_report():
         report_lines.append(f"### 3.2 Automated Conclusion")
         report_lines.append(f"*   **Status:** **{verdict}**")
         report_lines.append(f"*   **Reason:** {reason}")
-        report_lines.append(f"*   **Action:** Keep **Immediate** Logic.")
+        report_lines.append(f"*   **Action:** **{action}**")
+        report_lines.append("---\n")
+
+    # 4. Monte Carlo Simulation (V4 Final)
+    mc_path = os.path.join("d:/gg/data/backtest_results", "monte_carlo_v4_result.json")
+    if os.path.exists(mc_path):
+        import json
+
+        with open(mc_path, "r") as f:
+            mc_data = json.load(f)
+
+        report_lines.append("## 4. Monte Carlo Risk Analysis (V4 Final)")
+        report_lines.append(
+            f"> **Method:** Bootstrap 10,000 runs ({mc_data['years']}y horizon)."
+        )
+        report_lines.append(
+            f"> **Target:** SCHG Asset + Hybrid Signal + Immediate Crisis Logic."
+        )
+        report_lines.append("")
+
+        cagr = mc_data["cagr"]
+        mdd = mc_data["mdd"]
+
+        report_lines.append(f"### 4.1 Expectancy vs Worst Case")
+        report_lines.append(
+            "| Scenario | Annual Return (CAGR) | Max Drawdown (MDD) | Interpretation |"
+        )
+        report_lines.append("| :--- | :--- | :--- | :--- |")
+        report_lines.append(
+            f"| **Expectancy (Mean)** | **{format_pct(cagr['mean'])}** | **{format_pct(mdd['mean'])}** | Average Outcome |"
+        )
+        report_lines.append(
+            f"| Worst 5% Case | {format_pct(cagr['worst_5_percent'])} | {format_pct(mdd['worst_5_percent'])} | Unlucky Scenario |"
+        )
+        report_lines.append(
+            f"| Best 5% Case | {format_pct(cagr['best_5_percent'])} | {format_pct(mdd['safe_95_percent'])} | Lucky Scenario |"
+        )
+
+        report_lines.append("")
+        report_lines.append(f"### 4.2 Automated Conclusion")
+
+        # Logic: If Worst Case MDD > -40%, it's "Resilient". Else "High Risk".
+        risk_level = "Secure"
+        if mdd["worst_5_percent"] < -0.40:
+            risk_level = "High Risk (Crash Prone)"
+        elif mdd["worst_5_percent"] < -0.30:
+            risk_level = "Moderate Risk"
+
+        report_lines.append(
+            f"*   **Risk Profile:** **{risk_level}** (Worst Case MDD {format_pct(mdd['worst_5_percent'])})"
+        )
+        report_lines.append(
+            f"*   **Expectancy:** Expected to double capital every {72 / (cagr['mean'] * 100):.1f} years (Rule of 72)."
+        )
         report_lines.append("---\n")
 
     # Save File
