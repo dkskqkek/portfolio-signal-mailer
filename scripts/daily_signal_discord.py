@@ -21,6 +21,7 @@ import numpy as np
 import yaml
 import requests
 import os
+import sys
 import datetime
 import logging
 
@@ -165,109 +166,159 @@ def run_daily_check():
     main_ticker = "VTI"
     macro_tickers = ["^TNX", "^IRX"]
 
-    # Watchlist (User Request)
-    # KOSPI(^KS11), Bitcoin(BTC-USD), Google, Chevron, NVR
-    watchlist = {
-        "^KS11": "🇰🇷 KOSPI",
-        "BTC-USD": "🪙 Bitcoin",
-        "GOOGL": "🔎 Google",
-        "CVX": "🛢️ Chevron",
-        "NVR": "🏠 NVR (Cons)",
-    }
-
-    all_tickers = [main_ticker] + macro_tickers + list(watchlist.keys())
-
-    # 3. Download Data
-    start_date = (datetime.datetime.now() - datetime.timedelta(days=400)).strftime(
-        "%Y-%m-%d"
-    )
-    end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(
-        "%Y-%m-%d"
-    )  # +1 for safely getting today/yesterday
-
-    try:
-        data = yf.download(all_tickers, start=start_date, end=end_date, progress=False)
-    except Exception as e:
-        logger.error(f"Download failed: {e}")
-        return
-
-    # Flatten Data
-    if isinstance(data.columns, pd.MultiIndex):
-        if "Close" in data.columns.levels[0]:
-            df = data["Close"].copy()
-        else:
-            df = data.copy()  # Might differ by version
-            # If columns are (Ticker, PriceType), we might need to adjust.
-            # Usually yfinance with group_by='ticker' is safer, but default is by column.
-            # If MultiIndex with 'Close' level missing, we assume simple columns or handle it.
-            pass
-    else:
-        df = data.copy()
-
-    df = df.ffill()  # Fill missing first
+    # ... (existing VTI macro logic) ...
 
     # 4. Analyze Main Strategy (VTI)
     if main_ticker not in df.columns or "^TNX" not in df.columns:
         logger.error("Critical Data Missing (VTI or Yields)")
         return
 
-    df = (
-        df.dropna()
-    )  # Drop rows where any data missing (might truncate history for BTC, be careful)
-    # Actually, BTC trades weekends, stocks don't. Aligning indexes might drop weekends or leave NaNs.
-    # It's better to analyze each series independently or ffill thoroughly.
+    # Ensure SPY is present for MAMA Opt
+    if "SPY" not in df.columns:
+        logger.warning("SPY missing for MAMA Opt, skipping MAMA section.")
+        spy_available = False
+    else:
+        spy_available = True
 
-    # Analyze VTI
-    vti_res = get_trend_state(df.dropna(), main_ticker)
+    df = df.dropna()
+
+    # Analyze VTI (V4)
+    vti_res = get_trend_state(df, main_ticker)
 
     # Analyze Macros
-    # Handle Yield Spread
     last_tnx = df["^TNX"].iloc[-1]
     last_irx = df["^IRX"].iloc[-1]
     yield_spread = last_tnx - last_irx
 
-    # Build Main Report Logic
+    # V4 Report Logic
     allocation_text = ""
     color = 0x000000
     regime_name = ""
 
     if vti_res["state"] == 1:  # Bull
-        regime_name = "🚀 BULL MARKET (상승장)"
+        regime_name = "🚀 V4: BULL (상승장)"
         color = 0x00FF00  # Green
-        allocation_text = "✅ **주식 (Stock): 100%**"
-        buffer_msg = f"📉 매도 전환가: ${vti_res['lower']:.2f} ({vti_res['dist_down'] * 100:.2f}%)"
+        allocation_text = "✅ **주식 100% (VTI)**"
+        buffer_msg = (
+            f"📉 매도 전환: ${vti_res['lower']:.2f} ({vti_res['dist_down'] * 100:.2f}%)"
+        )
     else:  # Bear
         if yield_spread < 0:  # Crisis
-            regime_name = "💀 BEAR + CRISIS (위기)"
+            regime_name = "💀 V4: CRISIS (위기)"
             color = 0xFF0000  # Red
             allocation_text = "⛔ 주식 0% / ✅ **현금 100%**"
-            buffer_msg = f"📈 매수 전환가: ${vti_res['upper']:.2f} ({vti_res['dist_up'] * 100:.2f}%)"
+            buffer_msg = f"📈 매수 전환: ${vti_res['upper']:.2f} ({vti_res['dist_up'] * 100:.2f}%)"
         else:  # Correction
-            regime_name = "🐻 BEAR + NORMAL (조정)"
+            regime_name = "🐻 V4: CORRECTION (조정)"
             color = 0xFFA500  # Orange
             allocation_text = "⚠️ **주식 30%** / ✅ 현금 70%"
-            buffer_msg = f"📈 매수 전환가: ${vti_res['upper']:.2f} ({vti_res['dist_up'] * 100:.2f}%)"
+            buffer_msg = f"📈 매수 전환: ${vti_res['upper']:.2f} ({vti_res['dist_up'] * 100:.2f}%)"
+
+    # MAMA Opt Logic
+    mama_field = {}
+    if spy_available:
+        try:
+            # Need to append path for signal_mailer imports
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            parent_dir = os.path.dirname(current_dir)
+            if parent_dir not in sys.path:
+                sys.path.append(parent_dir)
+            if os.path.join(parent_dir, "signal_mailer") not in sys.path:
+                sys.path.append(os.path.join(parent_dir, "signal_mailer"))
+
+            from signal_mailer.mama_lite_predictor import MAMAPredictor
+
+            # Predictor needs config path
+            predictor = MAMAPredictor(
+                config_path=os.path.join(parent_dir, "signal_mailer", "config.yaml")
+            )
+
+            # 1. AI Prop Check
+            # Need to feed data to predictor or use its fetch mechanism?
+            # Predictor has fetch_data. Let's use it or calculate features manually.
+            # Using predictor.predict_portfolio() is easiest but it fetches data again.
+            # Let's calculate manually to be fast and use same DF.
+
+            # But predictor needs specific features.
+            # Let's rely on predict_portfolio() but suppress its logging or just use helper?
+            # Actually, calculate_gnn_features needs close prices.
+
+            # Simplest: Just re-calculate features here.
+            # Features: VIX_Z, TNX_MOM, SPY_MOM
+
+            # Ensure enough history
+            if len(df) > 260:
+                vix_z = (df["^VIX"] - df["^VIX"].rolling(252).mean()) / df[
+                    "^VIX"
+                ].rolling(252).std()
+                tnx_mom = df["^TNX"].pct_change(20)
+                spy_mom = df["SPY"].pct_change(60)
+
+                feat = pd.DataFrame(
+                    {"vix_z": vix_z, "tnx_mom": tnx_mom, "spy_mom": spy_mom}
+                ).dropna()
+
+                if not feat.empty:
+                    X_srl = predictor.scaler.transform(feat)
+                    regime_labels = predictor.kmeans.predict(X_srl)
+
+                    bull_id = predictor.bull_regime_id
+                    is_bull = (regime_labels == bull_id).astype(int)
+
+                    # Rolling 5 mean
+                    bull_prob = pd.Series(is_bull).rolling(5).mean().iloc[-1]
+
+                    # 2. Trend Check (SPY MA120)
+                    spy_ma120 = df["SPY"].rolling(120).mean().iloc[-1]
+                    spy_price = df["SPY"].iloc[-1]
+                    trend_bull = spy_price > spy_ma120
+
+                    # 3. Decision
+                    ai_bull = bull_prob >= 0.5
+
+                    if ai_bull:
+                        mama_status = "🟢 적극 매수 (Buy)"
+                        mama_desc = "AI가 상승장을 확신합니다."
+                    elif trend_bull:  # AI Bear but Trend Bull
+                        mama_status = "🟡 버티기 (Hold)"
+                        mama_desc = (
+                            "AI는 불안해하지만, 추세(MA120)가 살아있습니다. 매도 금지."
+                        )
+                    else:  # Both Bear
+                        mama_status = "🔴 전량 매도 (Sell)"
+                        mama_desc = "AI와 추세 모두 하락을 가리킵니다. 도망치세요."
+
+                    mama_val = f"**{mama_status}**\n• AI 확률: {bull_prob:.0%} (Bull)\n• 추세 확인: {'✅ 살아있음' if trend_bull else '❌ 꺾임'} (Price > MA120)\n• {mama_desc}"
+
+                    mama_field = {
+                        "name": "⚡ MAMA Opt (AI + Trend)",
+                        "value": mama_val,
+                        "inline": False,
+                    }
+        except Exception as e:
+            logger.error(f"MAMA Opt calculation failed: {e}")
 
     # Fields Construction
     fields = [
         {
-            "name": "🚦 메인 포트폴리오 (VTI)",
-            "value": f"{regime_name}\n{allocation_text}",
+            "name": "🛡️ Antigravity V4 (Main)",
+            "value": f"{regime_name}\n{allocation_text}\n{buffer_msg}",
             "inline": False,
-        },
-        {
-            "name": "📉 VTI 가격 / 버퍼",
-            "value": f"${vti_res['price']:.2f} / {buffer_msg}",
-            "inline": False,
-        },
+        }
+    ]
+
+    if mama_field:
+        fields.append(mama_field)
+
+    fields.append(
         {
             "name": "🏦 금리차 (10Y-3M)",
             "value": f"{yield_spread:.2f}bp ({'Inverted' if yield_spread < 0 else 'Normal'})",
             "inline": True,
-        },
-    ]
+        }
+    )
 
-    # 5. Analyze Watchlist
+    # 5. Analyze Watchlist (Keep as is)
     watch_text_lines = []
 
     for ticker, name in watchlist.items():
