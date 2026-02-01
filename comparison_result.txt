@@ -1,0 +1,81 @@
+================================================================================
+📅 Signal Change Comparison (Risk Off = Bear/Crisis)
+================================================================================
+Date         | Strategy   | Action          | Note
+--------------------------------------------------------------------------------
+2020-01-07   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2020-02-20   | V4         | 🔴 SELL          | Risk On/Off
+2020-02-26   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2020-03-03   | V4         | 🟢 BUY           | Risk On/Off
+2020-03-06   | V4         | 🔴 SELL          | Risk On/Off
+2020-06-03   | V4         | 🟢 BUY           | Risk On/Off
+2020-06-17   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2020-08-13   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2020-09-14   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2020-10-06   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2020-12-10   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2020-12-22   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2020-12-31   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2021-01-08   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2021-02-10   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2021-02-17   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2021-04-08   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2021-08-31   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2021-09-07   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2021-09-21   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2021-10-28   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2021-11-29   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2021-12-10   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2022-01-04   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2022-01-25   | V4         | 🔴 SELL          | Risk On/Off
+2022-08-04   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2022-08-23   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2022-11-23   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2023-01-05   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2023-01-09   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2023-02-16   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2023-03-20   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2023-05-25   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2023-06-01   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2023-06-13   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2023-06-16   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2023-08-14   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2023-08-31   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2023-09-25   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2023-11-06   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2024-04-08   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2024-05-07   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2024-07-30   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2024-07-31   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2024-08-02   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2024-08-19   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2024-09-05   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2024-09-23   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2024-10-02   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2024-11-12   | V4         | 🟢 BUY           | Risk On/Off
+2024-11-19   | V4         | 🔴 SELL          | Risk On/Off
+2024-11-21   | V4         | 🟢 BUY           | Risk On/Off
+2024-11-22   | V4         | 🔴 SELL          | Risk On/Off
+2024-11-26   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2024-12-11   | V4         | 🟢 BUY           | Risk On/Off
+2024-12-20   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2025-01-23   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2025-02-25   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2025-03-03   | V4         | 🔴 SELL          | Risk On/Off
+2025-03-04   | V4         | 🟢 BUY           | Risk On/Off
+2025-03-11   | V4         | 🔴 SELL          | Risk On/Off
+2025-05-16   | V4         | 🟢 BUY           | Risk On/Off
+2025-06-04   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+2025-11-19   | MAMA Lite  | 🔴 SELL          | Risk On/Off
+2025-11-26   | MAMA Lite  | 🟢 BUY           | Risk On/Off
+--------------------------------------------------------------------------------
+
+🧐 Major Crisis Analysis:
+1. COVID-19 (2020-02-15 ~ 2020-04-01)
+   - V4 Sold:   2020-03-06
+   - MAMA Sold: 2020-02-26
+
+2. 2022 Inflation Bear (2022-01-01 ~ )
+   - V4 Sold:   2022-01-25
+   - MAMA Sold: 2022-01-04
+================================================================================
