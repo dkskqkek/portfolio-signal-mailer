@@ -57,11 +57,12 @@ class KRStockScanner:
             logger.error("No active tickers to scan.")
             return []
 
-        # 0. Weekend Safeguard
-        from datetime import datetime
+        # 0. Smart Market Schedule Check
+        from signal_mailer import market_schedule
 
-        if datetime.now().weekday() >= 5:  # 5=Sat, 6=Sun
-            logger.warning("⛔ Skipping scan: Weekend (Market Closed)")
+        is_open, reason = market_schedule.is_market_open("KR")
+        if not is_open:
+            logger.warning(f"⛔ Skipping scan: Market Closed ({reason})")
             return []
 
         logger.info(
