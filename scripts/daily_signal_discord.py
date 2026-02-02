@@ -84,13 +84,18 @@ def fetch_data(tickers):
         return pd.DataFrame()
 
 
-def calculate_double_key_v2(df, target="VTI", canary_assets=["VWO", "BND"]):
+def calculate_double_key_v3(
+    df, target="VTI", canary_assets=["VWO", "BND"], risk_asset="^VIX"
+):
     """
-    Calculates the full state of the Double-Key V2 Strategy.
+    Calculates the full state of the Double-Key V3 Strategy.
+    Features:
+    - Smart Cash (SHY)
+    - VIX Panic Filter (>30)
+    - Trend Hysteresis (MA185)
     """
-    # 1. Macro Key (Canary)
+    # 1. Macro Key (Canary - VWO/BND)
     # 12-month momentum (252 days)
-    # Bad if Mom <= 0
     canary_mom = df[canary_assets].pct_change(252).iloc[-1]
     vwo_bad = canary_mom["VWO"] <= 0
     bnd_bad = canary_mom["BND"] <= 0
@@ -98,43 +103,49 @@ def calculate_double_key_v2(df, target="VTI", canary_assets=["VWO", "BND"]):
     canary_status = "🟢 SAFE"
     if vwo_bad and bnd_bad:
         canary_status = "🔴 CRISIS (All Bad)"
-        risk_level = 2  # High Risk
+        risk_level = 2
     elif vwo_bad or bnd_bad:
         canary_status = "🟡 CAUTION (Partial)"
-        risk_level = 1  # Moderate Risk
+        risk_level = 1
     else:
-        risk_level = 0  # Low Risk
+        risk_level = 0
 
-    # 2. Price Key (185 MA Tunnel)
-    # Logic: Exit if < 0.97 * MA. Re-entry if > MA for 3 days.
+    # 2. VIX Panic Filter (The "Insurance")
+    current_vix = df[risk_asset].iloc[-1]
+    vix_panic = current_vix >= 30
+
+    if vix_panic:
+        canary_status = f"🔥 PANIC (VIX {current_vix:.1f})"
+        risk_level = 3  # Override to Max Risk
+
+    # 3. Price Key (185 MA Tunnel)
     series = df[target]
     ma185 = series.rolling(185).mean()
     lower_band = ma185 * 0.97
 
-    # We need history to determine current state (Hysteresis)
-    # Let's run a quick loop for the last 30 days to determine current state accurately
-    lookback = 400  # Surpass 252 for momentum + buffer
+    # Hysteresis Logic
+    lookback = 400
     subset = df.iloc[-lookback:].copy()
-
     p_vals = subset[target].values
     ma_vals = subset[target].rolling(185).mean().values
     low_vals = ma_vals * 0.97
 
-    # Init state (approx)
+    # Init state
     state = 1 if p_vals[0] > low_vals[0] else 0
     days_above = 0
 
     for i in range(len(subset)):
         if np.isnan(ma_vals[i]):
             continue
-
         p = p_vals[i]
         ma = ma_vals[i]
         low = low_vals[i]
 
+        # VIX Check roughly? No, VIX filter is instant.
+        # But for 'Trend State', we keep simple Price Logic, then Override at the end.
         if state == 1:  # Invested
             if p < low:
-                state = 0  # Exit
+                state = 0
                 days_above = 0
         else:  # Cash
             if p > ma:
@@ -143,14 +154,13 @@ def calculate_double_key_v2(df, target="VTI", canary_assets=["VWO", "BND"]):
                 days_above = 0
 
             if days_above >= 3:
-                state = 1  # Re-entry
+                state = 1
 
     # Current Snapshot
     current_price = p_vals[-1]
     current_ma = ma_vals[-1]
     current_low = low_vals[-1]
 
-    # Distances
     dist_ma = (current_price - current_ma) / current_ma
     dist_low = (current_price - current_low) / current_low
 
@@ -170,33 +180,41 @@ def calculate_double_key_v2(df, target="VTI", canary_assets=["VWO", "BND"]):
             f"Target: ${current_ma:.2f} ({dist_ma * 100:.1f}%) | {reentry_info}"
         )
 
-    # 3. Final Decision
-    # Cash Logic:
-    # Risk 0 (Safe) + Bull = 0% Cash
-    # Risk 1 (Caution) + Bull = 10% Cash
-    # Risk 2 (Crisis) + Bull = 25% Cash
-    # Bear (State 0) = 50% Cash (Minimum) OR 100%?
-    # User said: "Exit -> 50% Cash".
-    # Wait, usually Bear means we are OUT.
-    # If the strategy is "Asset Alloc", maybe 50% is the defensive postion.
-    # Let's assume 50% Cash is the "Bear" stance, and the rest depends on Canary.
-    # But Price Key is the "Micro" trigger. If Price Key says OUT, we must be defensive.
+    # 4. Final Allocation Logic (V3)
+    # Default: Aggressive (100% Equity)
+    # If Risk 1 (Caution): 10% Cash
+    # If Risk 2 (Crisis): 25% Cash
+    # If State 0 (Bear): 50% Cash (Defensive Base)
+    # If VIX Panic (Risk 3): 50% Cash (Force Defense) OR even more?
+    # Let's align with V3 backtest: (Trend=0 OR VIX>30) -> 50% Cash
 
     target_cash = 0
     action = "HOLD"
+    reason = "Normal Market"
 
-    if state == 0:  # Price Key Broken
+    # Priority 1: Trend Break or VIX Panic
+    if state == 0:
         target_cash = 50
-        action = "DEFENSIVE (50% Cash)"
-    else:  # Price Key Bullish
-        if risk_level == 2:
+        action = "DEFENSIVE (Bear Trend)"
+        reason = "Price < MA185 (Trend Broken)"
+    elif vix_panic:
+        target_cash = 50
+        action = "DEFENSIVE (VIX Panic)"
+        reason = f"VIX {current_vix:.1f} > 30 (Crash Insurance)"
+    else:
+        # Priority 2: Canary Tuning (In Bull Trend)
+        if risk_level == 2:  # All Bad
             target_cash = 25
-        elif risk_level == 1:
+            action = "CAUTION (Macro Bad)"
+            reason = "VWO & BND Momentum Negative"
+        elif risk_level == 1:  # One Bad
             target_cash = 10
+            action = "ALERT (Macro Mixed)"
+            reason = "VWO or BND Momentum Negative"
         else:
             target_cash = 0
-
-        action = "AGGRESSIVE (Invest)"
+            action = "AGGRESSIVE (Full Invest)"
+            reason = "All Systems Go"
 
     return {
         "target": target,
@@ -210,6 +228,8 @@ def calculate_double_key_v2(df, target="VTI", canary_assets=["VWO", "BND"]):
         "target_cash": target_cash,
         "risk_level": risk_level,
         "state": state,
+        "reason": reason,
+        "vix": current_vix,
     }
 
 
@@ -274,70 +294,102 @@ def generate_status_chart(df, ticker, ma_window=185, buffer=0.03):
     return buf
 
 
-def send_discord_dashboard(webhook_url, data_dict, market_data, chart_img=None):
+def send_discord_dashboard(
+    webhook_url, market_data, portfolio_results, chart_img=None, chart_ticker="VTI"
+):
     """
-    Sends a premium visual dashboard.
+    Sends a premium visual dashboard (V3 Portfolio Edition).
     """
-    v = data_dict
+    # 1. Global Market HUD
+    vix = portfolio_results[0]["vix"]  # VIX is same for all
+    tnx = market_data.get("^TNX", {}).get("price", 0)
 
-    # 1. Header Color
-    # Green if State=1 and Risk=0. Yellow if Risk>0. Red if State=0.
-    if v["state"] == 0:
+    # Global Canary Status (From the first result, as it's shared)
+    canary_status = portfolio_results[0]["canary_status"]
+    vwo_icon = "✅" if portfolio_results[0]["canary_mom"]["VWO"] > 0 else "❌"
+    bnd_icon = "✅" if portfolio_results[0]["canary_mom"]["BND"] > 0 else "❌"
+    vix_icon = "🔥" if vix >= 30 else "✅"
+
+    # Header Color based on Global Risk
+    # Red if VIX Panic or Canary Crisis
+    if vix >= 30 or "CRISIS" in canary_status:
         color = 0xFF0000  # Red
-    elif v["risk_level"] > 0:
+    elif "CAUTION" in canary_status:
         color = 0xFFA500  # Orange
     else:
         color = 0x00FF00  # Green
 
-    # 2. Market HUD
-    vix = market_data.get("^VIX", {}).get("price", 0)
-    tnx = market_data.get("^TNX", {}).get("price", 0)
-
-    hud_text = f"**{v['target']}**: ${v['price']:.2f} | **VIX**: {vix:.1f} | **10Y**: {tnx:.2f}%"
-
-    # 3. Logic Breakdown
-    # Canary Icons
-    vwo_icon = "✅" if v["canary_mom"]["VWO"] > 0 else "❌"
-    bnd_icon = "✅" if v["canary_mom"]["BND"] > 0 else "❌"
-
-    # Price Icons
-    state_icon = "✅" if v["state"] == 1 else "❌"
-
-    logic_text = (
-        f"**🔑 Key 1 (Canary)**\n"
-        f"• Status: **{v['canary_status']}**\n"
-        f"• VWO({vwo_icon}) | BND({bnd_icon})\n\n"
-        f"**🔑 Key 2 (Price Tunnel)**\n"
-        f"• Status: **{v['price_status']}**\n"
-        f"• Logic: {v['price_details']}\n"
-        f"• MA185: ${v['ma']:.2f}"
+    hud_text = (
+        f"**🌍 Market Health (Key 1)**\n"
+        f"• VIX: **{vix_icon} {vix:.1f}**\n"
+        f"• Canary: **{canary_status}** (VWO{vwo_icon} BND{bnd_icon})\n"
+        f"• 10Y Rate: {tnx:.2f}%"
     )
 
-    # 4. Action Box
+    # 2. Portfolio Scan (Key 2: Price Trend)
+    scan_text = "**📊 Asset Trend (Key 2)**\n"
+
+    for res in portfolio_results:
+        ticker = res["target"]
+        price = res["price"]
+        ma = res["ma"]
+        state = res["state"]
+        dist_ma = (price - ma) / ma * 100
+
+        # Icon & Status
+        if state == 1:
+            status_icon = "🟢"
+            val_str = f"+{dist_ma:.1f}%"
+        else:
+            status_icon = "🔴"
+            val_str = f"{dist_ma:.1f}%"
+
+        # Re-entry check check
+        if state == 0 and "확인 중" in res["price_details"]:
+            status_icon = "⏳"
+
+        # Name aliases
+        if ticker == "^KS11":
+            name = "KOSPI"
+        else:
+            name = ticker
+
+        scan_text += f"`{name:<6}` {status_icon} ${price:,.2f} ({val_str})\n"
+
+    # 3. Action Recommendation (Global)
+    # Based on Global V3 Logic from Proxy (VTI) or Consensus?
+    # Usually we follow the Lead Asset (VTI) for "Allocation" advice, or show individual?
+    # V3 Logic says: If VIX > 30, Risk Level is Panic.
+    # Let's show the recommendation based on VTI (first element) or general macro.
+
+    res0 = portfolio_results[0]
+    target_cash = res0["target_cash"]
+    action = res0["action"]
+    reason = res0["reason"]
+    cash_asset = "SHY (Smart Cash)" if target_cash > 0 else "None"
+
     action_text = (
-        f"# 📢 {v['action']}\n"
-        f"**Target Portfolio**:\n"
-        f"• Stock: {100 - v['target_cash']}%\n"
-        f"• Cash : {v['target_cash']}%"
+        f"\n# 📢 Strategy: {action}\n"
+        f"> Reason: {reason}\n"
+        f"**Rec. Alloc (Based on Market)**:\n"
+        f"• Equity: **{100 - target_cash}%**\n"
+        f"• Cash ({cash_asset}): **{target_cash}%**"
     )
 
     embed = {
-        "title": f"🔮 Antigravity V4 Signal ({datetime.date.today()})",
-        "description": f"{hud_text}\n\n{logic_text}\n\n{action_text}",
+        "title": f"🛡️ Antigravity V3 Portfolio ({datetime.date.today()})",
+        "description": f"{hud_text}\n\n{scan_text}{action_text}",
         "color": color,
-        "footer": {"text": "Double-Key V2 Strategy | Powered by Gemini"},
+        "footer": {"text": "V3 Logic: MA185 Trend + VIX/Canary Macro"},
         "timestamp": datetime.datetime.now().isoformat(),
     }
 
-    # Add Image if provided
     if chart_img:
         embed["image"] = {"url": "attachment://chart.png"}
 
     try:
         if chart_img:
-            # Multipart upload for Image + Embed
             files = {"file": ("chart.png", chart_img, "image/png")}
-            # Discord requires 'payload_json' field when sending files with embeds
             payload = {"username": "Antigravity HQ", "embeds": [embed]}
             requests.post(
                 webhook_url, files=files, data={"payload_json": json.dumps(payload)}
@@ -346,14 +398,13 @@ def send_discord_dashboard(webhook_url, data_dict, market_data, chart_img=None):
             requests.post(
                 webhook_url, json={"username": "Antigravity HQ", "embeds": [embed]}
             )
-
         logger.info("Dashboard sent.")
     except Exception as e:
         logger.error(f"Failed to send: {e}")
 
 
 def run_daily_check():
-    logger.info("Generating Premium Dashboard...")
+    logger.info("Generating Premium Dashboard (V3 Portfolio)...")
     config = load_config()
     webhook_url = config.get("discord", {}).get("webhook_url")
 
@@ -362,12 +413,13 @@ def run_daily_check():
         return
 
     # Assets
-    main_target = "VTI"
-    canaries = ["VWO", "BND"]
-    macros = ["^VIX", "^TNX"]
-    watchlist = ["BTC-USD", "GC=F"]
+    portfolio = ["^KS11", "VXUS", "GOOGL", "CVX", "NVR", "VTI"]
+    # ^KS11 = KOSPI, VXUS = Intl, GOOGL, CVX, NVR
 
-    all_tickers = list(set([main_target] + canaries + macros + watchlist))
+    canaries = ["VWO", "BND"]
+    macros = ["^VIX", "^TNX", "SHY"]
+
+    all_tickers = list(set(portfolio + canaries + macros))
 
     df = fetch_data(all_tickers)
     if df.empty:
@@ -379,16 +431,29 @@ def run_daily_check():
         if t in df.columns:
             market_data[t] = {"price": df[t].iloc[-1]}
 
-    # Main Strategy Calc
-    # VTI analysis
-    vti_res = calculate_double_key_v2(df, main_target, canaries)
+    # Calculate V3 for EACH asset
+    results = []
+    for ticker in portfolio:
+        if ticker not in df.columns:
+            logger.warning(f"Ticker {ticker} not found in data.")
+            continue
 
-    # Generate Chart
-    logger.info("Generating Chart...")
-    chart_bytes = generate_status_chart(df, main_target)
+        res = calculate_double_key_v3(df, ticker, canaries)
+        results.append(res)
+
+    if not results:
+        return
+
+    # Generate Chart for the MAIN asset (VTI)
+    chart_ticker = "VTI"
+    if chart_ticker not in df.columns and results:
+        chart_ticker = results[0]["target"]  # Fallback
+
+    logger.info(f"Generating Chart for {chart_ticker}...")
+    chart_bytes = generate_status_chart(df, chart_ticker)
 
     # Send
-    send_discord_dashboard(webhook_url, vti_res, market_data, chart_bytes)
+    send_discord_dashboard(webhook_url, market_data, results, chart_bytes, chart_ticker)
 
 
 if __name__ == "__main__":

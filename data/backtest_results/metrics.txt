@@ -1,0 +1,5 @@
+--- Strategy Performance ---
+[Buy & Hold] CAGR: 14.72% | MDD: -33.72% | Sharpe: 0.86
+[V2 (Zero Cash)] CAGR: 12.48% | MDD: -26.31% | Sharpe: 0.94
+[V3 (Smart Cash + VIX)] CAGR: 12.33% | MDD: -22.52% | Sharpe: 0.96
+[Golden Club (50/200)] CAGR: 8.48% | MDD: -33.72% | Sharpe: 0.65

@@ -1,0 +1,4 @@
+Total Premature Sells: 98
+Success Rate: 27.6%
+Avg Loss Avoided: -2.26%
+Avg Gain Missed: 3.56%
