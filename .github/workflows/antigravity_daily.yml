@@ -2,8 +2,8 @@ name: Antigravity V4 Stratgey Signal
 
 on:
   schedule:
-    # UTC 22:30 = KST 07:30 (Next Day)
-    - cron: "30 22 * * *"
+    # UTC 15:00 = KST 00:00 (Midnight)
+    - cron: "0 15 * * *"
   workflow_dispatch: # Manual Trigger
 
 jobs:

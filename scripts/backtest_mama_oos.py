@@ -155,40 +155,95 @@ def run_oos_backtest():
 
         mama_opt_sig.iloc[i] = curr
 
-    # C. V4 Benchmark (for comparison)
-    # (Simplified V4: just MA185 +3% buffer for illustration)
-    vti = df["SPY"]  # Use SPY as proxy
+    # C. V4 Full Logic (CORRECTED)
+    # Bull: 100% SCHG
+    # Bear: 30% SCHG + 70% BIL
+    # Crisis (Yield Inversion): 100% BIL
+
+    vti = df["SPY"]  # Use SPY as proxy for VTI
     ma185 = vti.rolling(185).mean()
     upper = ma185 * 1.03
     lower = ma185 * 0.97
 
-    v4_sig = pd.Series(index=df.index, dtype=int)
-    curr_v4 = 1
+    # Yield Curve
+    yield_spread = df["^TNX"] - df["^IRX"]
+    is_inverted = (yield_spread < 0).astype(int)
+
+    v4_position = pd.Series(index=df.index, dtype=float)  # 0.0-1.0 (asset ratio)
+    curr_state = "bull"  # bull, bear, crisis
+
     for i in range(len(df)):
         price = vti.iloc[i]
-        if price > upper.iloc[i]:
-            curr_v4 = 1
-        elif price < lower.iloc[i]:
-            curr_v4 = 0
-        v4_sig.iloc[i] = curr_v4
+        inverted = is_inverted.iloc[i] == 1
 
-    # 6. Backtest All Strategies
+        # Determine state
+        if inverted:
+            curr_state = "crisis"
+        elif price > upper.iloc[i]:
+            curr_state = "bull"
+        elif price < lower.iloc[i]:
+            curr_state = "bear"
+        # else: maintain current state
+
+        # Set position
+        if curr_state == "bull":
+            v4_position.iloc[i] = 1.0  # 100% SCHG
+        elif curr_state == "bear":
+            v4_position.iloc[i] = 0.3  # 30% SCHG, 70% BIL
+        else:  # crisis
+            v4_position.iloc[i] = 0.0  # 100% BIL
+
+    # 6. Backtest All Strategies (with weighted positions for V4)
     results = []
 
-    strategies = [
+    # For binary strategies
+    for name, sig in [
         ("Buy & Hold (SPY)", pd.Series(1, index=df.index)),
         ("MAMA Lite (Base)", mama_base_sig),
         ("MAMA Opt (AI+Trend)", mama_opt_sig),
-        ("V4 (MA185+3%)", v4_sig),
-    ]
-
-    for name, sig in strategies:
+    ]:
         eq, tr = backtest_signal(sig, df["SCHG"], df["BIL"], cost_rate=0.0025)
         cagr, mdd, sharpe, _ = calculate_stats(eq, tr)
-
         results.append(
             {"Strategy": name, "CAGR": cagr, "MDD": mdd, "Sharpe": sharpe, "Trades": tr}
         )
+
+    # V4 with weighted position (needs special handling)
+    equity_v4 = 1.0
+    equity_curve_v4 = [1.0]
+    trades_v4 = 0
+    prev_pos = v4_position.iloc[0]
+
+    asset_ret = df["SCHG"].pct_change().fillna(0)
+    defensive_ret = df["BIL"].pct_change().fillna(0)
+
+    for i in range(1, len(v4_position)):
+        pos = v4_position.iloc[i]
+
+        # Calculate weighted return
+        ret = pos * asset_ret.iloc[i] + (1 - pos) * defensive_ret.iloc[i]
+
+        # Transaction cost
+        if abs(pos - prev_pos) > 0.01:  # Position changed
+            equity_v4 = equity_v4 * (1 - 0.0025)
+            trades_v4 += 1
+
+        equity_v4 = equity_v4 * (1 + ret)
+        equity_curve_v4.append(equity_v4)
+        prev_pos = pos
+
+    cagr_v4, mdd_v4, sharpe_v4, _ = calculate_stats(
+        np.array(equity_curve_v4), trades_v4
+    )
+    results.append(
+        {
+            "Strategy": "V4 (Full Logic)",
+            "CAGR": cagr_v4,
+            "MDD": mdd_v4,
+            "Sharpe": sharpe_v4,
+            "Trades": trades_v4,
+        }
+    )
 
     # 7. Output
     lines = []
